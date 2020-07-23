@@ -23,12 +23,12 @@ const env = process.env.NODE_ENV;
 
 if (env === 'dev') {
     REDIS_CONF = new RedisConfig(6379, '127.0.0.1');
-    MONGO_CONF = new MongoConfig('mongodb://127.0.0.1:27017/dbs');
+    MONGO_CONF = new MongoConfig('mongodb://127.0.0.1:27017/noctchil');
 }
 
 if (env === 'production') {
     REDIS_CONF = new RedisConfig(6379, '127.0.0.1');
-    MONGO_CONF = new MongoConfig('mongodb://127.0.0.1:27017/dbs');
+    MONGO_CONF = new MongoConfig('mongodb://127.0.0.1:27017/noctchil');
 }
 
 export { REDIS_CONF, MONGO_CONF };

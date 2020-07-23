@@ -9,9 +9,8 @@ const userSchema = new Schema({
     email: String,
     url: String,
     status: { type: Boolean, default: false, required: true },
-    last_login_time: Date,
-    valid: { type: Boolean, default: false, required: true },
-    is_registry: { type: Boolean, default: false, required: true }
+    last_login_time: { type: Date, default: new Date() },
+    valid: { type: Boolean, default: false, required: true }
 });
 
 export interface UserDocument extends Document {
@@ -25,7 +24,6 @@ export interface UserDocument extends Document {
     status: boolean;
     last_login_time: Date;
     valid: boolean;
-    is_registry: boolean;
 }
 
 export default model('User', userSchema);

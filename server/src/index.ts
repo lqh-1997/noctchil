@@ -8,6 +8,8 @@ import * as session from 'koa-session';
 import * as redisStore from 'koa-redis';
 import * as user from './routes/user';
 
+import haveSession from './middlewares/haveSession';
+
 const app = new Koa();
 
 app.use(
@@ -20,6 +22,8 @@ app.keys = ['EagI_$%d42'];
 app.use(
     session(
         {
+            key: 'noctchil_s',
+            // 访问某个url时才会带上的路径，比如访问'/'时才会带上'noctchil_s'
             path: '/',
             httpOnly: false,
             // session的有效时间
@@ -35,11 +39,17 @@ app.use(
     )
 );
 
+app.use(haveSession);
+
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose.connect(MONGO_CONF.getDbs(), {
     useNewUrlParser: true,
     useUnifiedTopology: true
+});
+const mongodb = mongoose.connection;
+mongodb.on('open', (err) => {
+    err ? console.error('mongoDb连接失败') : console.log('mongoDb连接成功');
 });
 
 app.use(user.routes());
