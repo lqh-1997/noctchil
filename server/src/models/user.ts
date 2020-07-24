@@ -4,13 +4,14 @@ const userSchema = new Schema({
     username: { type: String, trim: true, unique: true, index: true, required: true },
     password: { type: String, select: false },
     nicename: String,
-    salt: String,
+    salt: { type: String, select: false },
     avatar: String,
     email: String,
     url: String,
     status: { type: Boolean, default: false, required: true },
     last_login_time: { type: Date, default: new Date() },
-    valid: { type: Boolean, default: false, required: true }
+    valid: { type: Boolean, default: true, required: true, select: false },
+    isAdmin: { type: Boolean, default: false }
 });
 
 export interface UserDocument extends Document {
@@ -22,8 +23,9 @@ export interface UserDocument extends Document {
     email: string;
     url: string;
     status: boolean;
+    isAdmin: boolean;
     last_login_time: Date;
     valid: boolean;
 }
 
-export default model('User', userSchema);
+export default model<UserDocument>('User', userSchema);

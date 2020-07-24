@@ -7,6 +7,7 @@ import { REDIS_CONF, MONGO_CONF } from './config/db';
 import * as session from 'koa-session';
 import * as redisStore from 'koa-redis';
 import * as user from './routes/user';
+import * as article from './routes/article';
 
 import haveSession from './middlewares/haveSession';
 
@@ -54,5 +55,7 @@ mongodb.on('open', (err) => {
 
 app.use(user.routes());
 app.use(user.allowedMethods());
+app.use(article.routes());
+app.use(article.allowedMethods());
 
 export = app;

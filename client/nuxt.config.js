@@ -81,5 +81,12 @@ export default {
      */
     build: {
         transpile: [/^element-ui/]
+    },
+    /**
+     * set the port and the host
+     */
+    server: {
+        port: 1919,
+        host: '0.0.0.0'
     }
 };

@@ -25,9 +25,8 @@ router.post('/signUp', notLogin, async (ctx) => {
         url: ctx.request.body.url
     });
     const result = await user.save();
-    // 注册完即直接登录
-    ctx.session && (ctx.session.userId = result._id);
-    ctx.body = new SuccessModule('注册成功');
+    // 注册完不登陆，跳转回登录页面
+    ctx.body = new SuccessModule('注册成功, 将要跳转回登录页面');
 });
 
 // 登录
@@ -49,10 +48,13 @@ router.post('/login', notLogin, async (ctx: Context) => {
     if (user) {
         // 用户名存在更新登录时间和登录状态
         await User.findByIdAndUpdate(user._id, {
-            last_login_time: Date.now(),
+            last_login_time: new Date(),
             status: true
         });
-        ctx.session && (ctx.session.userId = user._id);
+        if (ctx.session) {
+            ctx.session.userId = user._id;
+            ctx.session.isAdmin = user.isAdmin;
+        }
         ctx.body = new SuccessModule('登陆成功');
     } else {
         ctx.body = new ErrorModule('用户名或密码错误');
@@ -64,7 +66,7 @@ router.post('/logout', isLogin, async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
     // 修改登录时间和登录状态
     await User.findByIdAndUpdate(id, {
-        last_login_time: Date.now(),
+        last_login_time: new Date(),
         status: false
     });
     // 直接将session的userId置0表示未登录
@@ -75,7 +77,7 @@ router.post('/logout', isLogin, async (ctx: Context) => {
 // 获取当前用户的信息
 router.get('/user', isLogin, async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
-    const user = await User.findById(id);
+    const user = await User.findById(id).select('-isAdmin');
     ctx.body = new SuccessModule('获取成功', user);
 });
 
