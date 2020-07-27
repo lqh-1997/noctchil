@@ -48,10 +48,6 @@ mongoose.connect(MONGO_CONF.getDbs(), {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
-const mongodb = mongoose.connection;
-mongodb.on('open', (err) => {
-    err ? console.error('mongoDb连接失败') : console.log('mongoDb连接成功');
-});
 
 app.use(user.routes());
 app.use(user.allowedMethods());

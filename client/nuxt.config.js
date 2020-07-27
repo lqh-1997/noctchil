@@ -50,7 +50,7 @@ export default {
      ** Plugins to load before mounting the App
      ** https://nuxtjs.org/guide/plugins
      */
-    plugins: ['@/plugins/element-ui'],
+    plugins: ['@/plugins/element-ui', '@/plugins/axios'],
     /*
      ** Auto import components
      ** See https://nuxtjs.org/api/configuration-components
@@ -74,7 +74,20 @@ export default {
      ** Axios module configuration
      ** See https://axios.nuxtjs.org/options
      */
-    axios: {},
+    axios: {
+        proxy: true,
+        prefix: '/api',
+        credentials: true
+    },
+    proxy: {
+        '/api/': {
+            target: 'http://127.0.0.1:8000',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/api': '/api'
+            }
+        }
+    },
     /*
      ** Build configuration
      ** See https://nuxtjs.org/api/configuration-build/

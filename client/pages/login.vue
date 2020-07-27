@@ -9,7 +9,7 @@
                     <el-input v-model="loginForm.password"></el-input>
                 </el-form-item>
                 <el-form-item class="form-button">
-                    <el-button style="margin-right: 10px;">登录</el-button>
+                    <el-button style="margin-right: 10px;" @click="handleLogin">登录</el-button>
                     <el-button>注册</el-button>
                 </el-form-item>
             </el-form>
@@ -18,10 +18,12 @@
                 ><span class="forget-pass">忘记密码</span>
             </div>
         </div>
+        <div>{{ a }}</div>
     </div>
 </template>
 
 <script>
+import { login } from '../api/user';
 export default {
     data() {
         return {
@@ -29,6 +31,18 @@ export default {
                 username: '',
                 password: ''
             }
+        };
+    },
+    methods: {
+        handleLogin() {
+            login(this, this.loginForm).then((res) => {
+                console.log(res);
+            });
+        }
+    },
+    async asyncData() {
+        return {
+            a: '123'
         };
     }
 };
