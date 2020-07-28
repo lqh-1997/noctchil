@@ -26,7 +26,7 @@ router.post('/signUp', notLogin, async (ctx) => {
     });
     const result = await user.save();
     // 注册完不登陆，跳转回登录页面
-    ctx.body = new SuccessModule('注册成功, 将要跳转回登录页面');
+    ctx.body = new SuccessModule('注册成功, 请重新登录');
 });
 
 // 登录

@@ -10,11 +10,12 @@
                 </dl>
             </li>
         </ul>
-        <div></div>
+        <div style="float: right;" @click="handleLogout">注销</div>
     </header>
 </template>
 
 <script>
+import { logout } from '../api/user';
 export default {
     data() {
         return {
@@ -48,6 +49,16 @@ export default {
                 }
             ]
         };
+    },
+    methods: {
+        handleLogout() {
+            logout(this).then((res) => {
+                this.$message({
+                    message: res.data.message,
+                    type: 'success'
+                });
+            });
+        }
     }
 };
 </script>

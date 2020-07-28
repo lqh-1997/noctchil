@@ -66,7 +66,7 @@ router.put('/article', isAdmin, async (ctx) => {
 
 // 获取单个文章
 router.get('/article', async (ctx) => {
-    const { id } = ctx.params;
+    const { id } = ctx.request.query;
     const res = await Article.findById(id);
     if (res) {
         ctx.body = new SuccessModule('查询成功', res);
@@ -77,7 +77,7 @@ router.get('/article', async (ctx) => {
 
 // 分页查找所有文章信息
 router.get('/articles', async (ctx) => {
-    const { pageSize, pageNumber } = ctx.request.body;
+    const { pageSize, pageNumber } = ctx.request.query;
     let result: ArticlePage = {
         total: 0,
         data: []

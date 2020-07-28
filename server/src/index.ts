@@ -32,8 +32,8 @@ app.use(
             // 每次响应的时候刷新expire的有效期
             rolling: true,
             store: redisStore({
-                port: REDIS_CONF.port,
-                host: REDIS_CONF.host
+                port: REDIS_CONF.getPort(),
+                host: REDIS_CONF.getHost()
             })
         },
         app

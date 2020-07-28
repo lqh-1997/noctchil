@@ -32,6 +32,8 @@ export default {
 .main {
     width: $defaultLayoutWidth;
     margin: 0 auto;
+    padding: 0;
+    overflow: visible;
 }
 .el-footer {
     padding: 0;

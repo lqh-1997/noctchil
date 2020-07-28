@@ -1,9 +1,15 @@
 class RedisConfig {
-    public port: number;
-    public host: string;
+    private port: number;
+    private host: string;
     constructor(port: number, host: string) {
         this.port = port;
         this.host = host;
+    }
+    getPort(): number {
+        return this.port;
+    }
+    getHost(): string {
+        return this.host;
     }
 }
 

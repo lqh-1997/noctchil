@@ -10,7 +10,7 @@
                 </el-form-item>
                 <el-form-item class="form-button">
                     <el-button style="margin-right: 10px;" @click="handleLogin">登录</el-button>
-                    <el-button>注册</el-button>
+                    <el-button @click="handleSignup">注册</el-button>
                 </el-form-item>
             </el-form>
             <div class="login-choose">
@@ -18,12 +18,11 @@
                 ><span class="forget-pass">忘记密码</span>
             </div>
         </div>
-        <div>{{ a }}</div>
     </div>
 </template>
 
 <script>
-import { login } from '../api/user';
+import { login, signUp } from '../api/user';
 export default {
     data() {
         return {
@@ -36,15 +35,23 @@ export default {
     methods: {
         handleLogin() {
             login(this, this.loginForm).then((res) => {
-                console.log(res);
+                this.$message({
+                    message: res.data.message,
+                    type: 'success'
+                });
+                this.$router.push('/home');
+            });
+        },
+        handleSignup() {
+            signUp(this, this.loginForm).then((res) => {
+                this.$message({
+                    message: res.data.message,
+                    type: 'success'
+                });
             });
         }
     },
-    async asyncData() {
-        return {
-            a: '123'
-        };
-    }
+    async asyncData() {}
 };
 </script>
 
