@@ -10,7 +10,8 @@
                 </dl>
             </li>
         </ul>
-        <div style="float: right;" @click="handleLogout">注销</div>
+        <div style="float: right; margin-right: 20px;" @click="handleLogout">注销</div>
+        <div style="float: right; margin-right: 20px;" @click="handleLogout">登录</div>
     </header>
 </template>
 
@@ -28,6 +29,9 @@ export default {
                         },
                         {
                             name: '首页2'
+                        },
+                        {
+                            name: '首页3'
                         }
                     ]
                 },
@@ -75,6 +79,7 @@ header ul {
     margin: 0 auto;
 }
 header ul li {
+    list-style: none;
     float: left;
     min-width: 100px;
     height: 100%;
@@ -87,15 +92,31 @@ header ul li {
         &:hover {
             background-color: rgba($color: #ffffff, $alpha: 0.2);
             cursor: pointer;
-            & + dl dd {
-                display: block;
+            & + dl {
+                opacity: 1;
+                visibility: visible;
             }
         }
     }
 }
-header ul li dl dd {
-    background-color: rgba($color: #fff, $alpha: 1);
-    height: 0px;
+header ul li {
+    dl {
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        background-color: rgba($color: #4e4e4e, $alpha: 0.8);
+        &:hover {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+    dd {
+        transition: background-color 0.3s ease;
+        &:hover {
+            background-color: rgba($color: #fff, $alpha: 0.2);
+            cursor: pointer;
+        }
+    }
 }
 @media screen and (max-width: $defaultLayoutWidth) {
     header ul {

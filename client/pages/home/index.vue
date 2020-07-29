@@ -1,6 +1,10 @@
 <template>
     <section>
         <ul class="list">
+            <li class="message" v-if="!articleList || articleList.length === 0">
+                <h1>暂无文章</h1>
+                <article>没有啊 爬</article>
+            </li>
             <template v-for="item of articleList">
                 <li class="message" :key="item.id" v-if="item.type === 'message'">
                     <h1>{{ item.title }}</h1>
@@ -66,22 +70,24 @@ export default {
 @import '@/assets/scss/mixins.scss';
 @import '@/assets/scss/global.scss';
 section {
-    height: 100%;
-    display: inline-block;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
 .side {
-    float: right;
-    width: 25%;
+    flex-basis: 260px;
     height: 300px;
     background-color: wheat;
     margin-top: 20px;
     padding: 20px;
     position: sticky;
+    margin-left: 20px;
     top: 20px;
 }
 .list {
-    float: left;
-    width: 70%;
+    flex-basis: 700px;
+    flex-grow: 1;
     .message,
     .article {
         min-height: 160px;

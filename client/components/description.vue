@@ -19,6 +19,7 @@ export default {};
     flex-wrap: wrap;
     justify-content: center;
     flex-direction: column;
+    z-index: -1;
 }
 h1 {
     font-size: 3rem;
