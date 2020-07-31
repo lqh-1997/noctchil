@@ -1,22 +1,28 @@
 <template>
     <div class="login">
-        <div class="login-column">
-            <el-form label-position="left" label-width="80px" :model="loginForm">
-                <el-form-item label="用户名">
-                    <el-input v-model="loginForm.username"></el-input>
+        <div class="container">
+            <el-form :model="loginForm" :rules="loginRules">
+                <el-form-item prop="username">
+                    <input
+                        type="text"
+                        v-model="loginForm.username"
+                        class="input"
+                        placeholder="username"
+                    />
                 </el-form-item>
-                <el-form-item label="密码">
-                    <el-input v-model="loginForm.password"></el-input>
+                <el-form-item>
+                    <input
+                        type="password"
+                        v-model="loginForm.password"
+                        class="input"
+                        placeholder="password"
+                        autocomplete="current-password"
+                    />
                 </el-form-item>
-                <el-form-item class="form-button">
-                    <el-button style="margin-right: 10px;" @click="handleLogin">登录</el-button>
-                    <el-button @click="handleSignup">注册</el-button>
+                <el-form-item>
+                    <button type="button" class="button" @click="handleLogin">Login</button>
                 </el-form-item>
             </el-form>
-            <div class="login-choose">
-                <span class="back-home"><i class="el-icon-d-arrow-left"></i>返回首页</span
-                ><span class="forget-pass">忘记密码</span>
-            </div>
         </div>
     </div>
 </template>
@@ -29,6 +35,10 @@ export default {
             loginForm: {
                 username: '',
                 password: ''
+            },
+            type: 'login',
+            loginRules: {
+                username: [{ required: true, message: '请输入用户名', trigger: 'blur' }]
             }
         };
     },
@@ -57,72 +67,60 @@ export default {
 
 <style scoped lang="scss">
 @import '@/assets/scss/global.scss';
-$form-width: 400px;
-$form-right: 80px;
-$form-media: $form-width + $form-right;
 .login {
-    background-color: rgba($color: rgb(48, 48, 48), $alpha: 1);
+    background-image: linear-gradient(0deg, #0093dd, #50d0d0);
     height: 100%;
     width: 100%;
-}
-.login-column {
     display: flex;
-    position: absolute;
-    width: $form-width;
-    height: 100%;
-    top: 50%;
-    right: 100px;
-    transform: translateY(-50%);
-    background-color: rgba($color: #fff, $alpha: 0.1);
-    align-content: center;
-    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
-    overflow: hidden;
-    .el-form {
-        margin-right: 10px;
-        margin-left: 10px;
-        width: 100%;
+    .container {
+        width: 320px;
+        height: 500px;
         display: flex;
-        align-content: center;
-        flex-wrap: wrap;
         justify-content: center;
-        background-color: rgba($color: black, $alpha: 0.2);
-        height: 260px;
-        .el-form-item {
-            width: 90%;
-            /deep/ .el-form-item__label {
-                color: white;
-            }
-        }
-        .form-button {
-            /deep/ .el-form-item__content {
-                margin-left: 60px !important;
-                text-align: center;
-            }
-        }
+        justify-self: center;
+        flex-direction: column;
     }
-    .login-choose {
-        margin-top: 15px;
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-around;
+    .input {
         width: 100%;
-        color: white;
+        height: 35px;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 2px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 17px;
+        font-weight: 400;
+        padding: 4px;
+        &:hover {
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        &:focus {
+            outline: none;
+            border: 1px solid rgba(255, 255, 255, 1);
+            color: rgba(255, 255, 255, 1);
+        }
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
     }
-}
-@media screen and (max-width: $form-media) {
-    .login-column {
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-    }
-}
-@media screen and (max-width: $form-width) {
-    .login-column {
-        left: 0;
-        right: 0;
-        margin: 0 auto;
+    .button {
         width: 100%;
+        height: 35px;
+        background: #fff;
+        border: 1px solid #fff;
+        cursor: pointer;
+        border-radius: 2px;
+        color: #0093dd;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 4px;
+        margin-top: 10px;
+        box-sizing: content-box;
+        &:focus {
+            outline: none;
+        }
     }
 }
 </style>
