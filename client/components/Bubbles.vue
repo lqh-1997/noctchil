@@ -5,11 +5,11 @@
             :key="i"
             class="single-bubble"
             :style="`
-              bottom: ${random(bottom[0], bottom[1])}%;left: ${random(left[0], left[1])}%;
-              width: ${getBubbleShape(i)}px;height: ${getBubbleShape(i)}px;
-              animation-delay: -${random(0, 30) / 10}s;animation-duration: ${speed}s;
-              background-color: ${color};
-              `"
+                bottom: ${random(bottom[0], bottom[1])}%;left: ${random(left[0], left[1])}%;
+                width: ${getBubbleShape(i)}px;height: ${getBubbleShape(i)}px;
+                animation-delay: -${random(0, 30) / 10}s;animation-duration: ${speed}s;
+                background-color: ${color};
+                `"
         />
     </div>
 </template>

@@ -21,7 +21,7 @@
                     />
                 </el-form-item>
                 <el-form-item>
-                    <button type="button" class="button" @click="handleLogin">Login</button>
+                    <button type="button" class="button" @click="handleSignup">signUp</button>
                 </el-form-item>
             </el-form>
         </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { login, signUp } from '../api/user';
+import { signUp } from '../api/user';
 export default {
     data() {
         return {
@@ -44,15 +44,6 @@ export default {
         };
     },
     methods: {
-        handleLogin() {
-            login(this, this.loginForm).then((res) => {
-                this.$message({
-                    message: res.data.message,
-                    type: 'success'
-                });
-                this.$router.push('/home');
-            });
-        },
         handleSignup() {
             signUp(this, this.loginForm).then((res) => {
                 this.$message({

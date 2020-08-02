@@ -32,7 +32,10 @@ export default {
 .content {
     height: 100vh;
     width: 100%;
-    background-color: rgba($color: #000000, $alpha: 0.8);
+    background-image: linear-gradient(0deg, #0093dd, #50d0d0);
+    // background: url('../assets/image/EX4icBFWoAEr5se.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
     position: relative;
 }
 .title {

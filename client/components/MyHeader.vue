@@ -73,6 +73,9 @@ header {
     height: 46px;
     background-color: rgba($color: #4e4e4e, $alpha: 0.8);
     line-height: 46px;
+    position: fixed;
+    width: 100%;
+    top: 0;
 }
 header ul {
     width: $defaultLayoutWidth;
