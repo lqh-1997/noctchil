@@ -12,7 +12,7 @@ export default {};
 <style lang="scss" scoped>
 @import '@/assets/scss/global.scss';
 .description {
-    background-color: rgba($color: $defaultColor, $alpha: 0.4);
+    background-color: rgba($color: #000000, $alpha: 0.1);
     height: 320px;
     display: flex;
     align-content: center;
@@ -20,7 +20,6 @@ export default {};
     flex-wrap: wrap;
     justify-content: center;
     flex-direction: column;
-    z-index: -1;
 }
 h1 {
     font-size: 3rem;

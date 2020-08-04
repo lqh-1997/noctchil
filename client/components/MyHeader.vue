@@ -126,4 +126,9 @@ header ul li {
         width: 100%;
     }
 }
+@media screen and(max-width: $defaultMiddleWidth) {
+    header {
+        display: none;
+    }
+}
 </style>
