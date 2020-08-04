@@ -6,8 +6,11 @@ import { REDIS_CONF, MONGO_CONF } from './config/db';
 
 import * as session from 'koa-session';
 import * as redisStore from 'koa-redis';
+import * as staticFile from 'koa-static';
 import * as user from './routes/user';
 import * as article from './routes/article';
+import * as file from './routes/file';
+import path = require('path');
 
 import haveSession from './middlewares/haveSession';
 
@@ -42,6 +45,8 @@ app.use(
 
 app.use(haveSession);
 
+app.use(staticFile(path.resolve(__dirname, '/uploads')));
+
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose.connect(MONGO_CONF.getDbs(), {
@@ -53,5 +58,7 @@ app.use(user.routes());
 app.use(user.allowedMethods());
 app.use(article.routes());
 app.use(article.allowedMethods());
+app.use(file.routes());
+app.use(file.allowedMethods());
 
 export = app;

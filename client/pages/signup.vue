@@ -37,7 +37,6 @@ export default {
                 username: '',
                 password: ''
             },
-            type: 'login',
             loginRules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }]
             }

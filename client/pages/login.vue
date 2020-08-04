@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { login, signUp } from '../api/user';
+import { login } from '../api/user';
 export default {
     data() {
         return {
@@ -37,7 +37,6 @@ export default {
                 username: '',
                 password: ''
             },
-            type: 'login',
             loginRules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }]
             }
@@ -51,14 +50,6 @@ export default {
                     type: 'success'
                 });
                 this.$router.push('/home');
-            });
-        },
-        handleSignup() {
-            signUp(this, this.loginForm).then((res) => {
-                this.$message({
-                    message: res.data.message,
-                    type: 'success'
-                });
             });
         }
     },

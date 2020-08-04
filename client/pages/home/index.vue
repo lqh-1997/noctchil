@@ -2,12 +2,14 @@
     <section>
         <ul class="list">
             <li class="article" v-if="!articleList || articleList.length === 0">
-                <h1>暂无文章</h1>
-                <article>
-                    没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊
-                    爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊
-                    爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬没有啊 爬
-                </article>
+                <div class="article-container">
+                    <h1>
+                        <nuxt-link to="#">暂无文章</nuxt-link>
+                    </h1>
+                    <article>
+                        没有啊 给爷爬
+                    </article>
+                </div>
                 <ul class="info">
                     <li>2020 8 2</li>
                     <li>0条评论</li>
@@ -25,7 +27,7 @@
                         <div class="date">2020年5月22日 08:56</div>
                     </div>
                 </div>
-                <div class="content">
+                <div class="message-content">
                     你好啊你好啊你好啊你好啊你好啊你
                 </div>
                 <ul class="info">
@@ -34,27 +36,41 @@
                 </ul>
             </li>
             <template v-for="item of articleList">
-                <li class="message" :key="item.id" v-if="item.type === 'message'">
+                <li class="message" :key="item._id" v-if="item.type === 'message'">
                     <div class="user">
                         <div class="avatar"></div>
                         <div class="user-info">
-                            <div class="username"></div>
-                            <div class="date"></div>
+                            <div class="username">{{ item.username }}</div>
+                            <div class="date">{{ item.createTime }}</div>
                         </div>
                     </div>
-                    <div class="content"></div>
+                    <div class="message-content">{{ item.content }}</div>
                     <ul class="info">
                         <li>点赞</li>
                         <li>阅读</li>
                     </ul>
                 </li>
-                <li class="article" :key="item.id" v-else-if="item.type === 'article'">
-                    <h1>{{ item.title }}</h1>
-                    <article>{{ item.content }}</article>
+                <li class="article" :key="item._id" v-else-if="item.type === 'article'">
+                    <div class="article-container">
+                        <h1>
+                            <nuxt-link :to="'/article/' + item._id">{{ item.title }}</nuxt-link>
+                        </h1>
+                        <article>
+                            {{ item.content }}
+                        </article>
+                    </div>
+                    <ul class="info">
+                        <li>2020 8 2</li>
+                        <li>0条评论</li>
+                        <li>0次阅读</li>
+                        <li>2人点赞</li>
+                        <li>fantasy</li>
+                        <li>阅读全文</li>
+                    </ul>
                 </li>
             </template>
         </ul>
-        <side-flow class="side" ref="side"></side-flow>
+        <side-flow></side-flow>
     </section>
 </template>
 
@@ -66,35 +82,12 @@ export default {
     components: {
         SideFlow
     },
-    methods: {
-        /**
-         * 1、在window resize的时候 不会自动修改以下数据 会导致bug 所以该方法deprecated
-         * 2、比较懒 所以现在采用的为position:sticky的方式 缺点是不兼容ie
-         */
-        /* sideSticky() {
-            const side = this.$refs.side.$refs.sideFlow;
-            const sideTop = side.offsetTop;
-            const sideLeft = side.offsetLeft;
-            const sideWidth = side.clientWidth;
-            document.onscroll = () => {
-                const docTop = document.body.scrollTop || document.documentElement.scrollTop;
-                side.setAttribute(
-                    'style',
-                    docTop > sideTop
-                        ? `position: fixed;top: 0px;left: ${sideLeft}px; width: ${sideWidth - 40}px`
-                        : ''
-                );
-            };
-        } */
-    },
     mounted() {},
     async asyncData(Context) {
-        let articleList;
         const pageNumber = 1;
         const pageSize = 10;
-        await getAllArticle(Context, pageNumber, pageSize).then((res) => {
-            articleList = res.data.data.data;
-        });
+        const res = await getAllArticle(Context, pageNumber, pageSize);
+        const articleList = res.data.data.data;
         return {
             articleList,
             pageNumber,
@@ -112,27 +105,20 @@ section {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
-}
-.side {
-    flex-basis: 200px;
-    height: 300px;
-    background-color: wheat;
-    margin-top: 20px;
-    padding: 20px;
-    position: sticky;
-    margin-left: 20px;
-    top: 20px;
+    margin-top: $articleGap;
 }
 .list {
     flex-basis: 700px;
     flex-grow: 1;
     .message,
     .article {
+        &:not(:first-child) {
+            margin-top: $articleGap;
+        }
         min-height: 100px;
         background: #fff;
-        border: 1px solid #444;
+        border: 1px solid #ddd;
         border-radius: 8px;
-        margin-top: 20px;
         display: flex;
         flex-direction: column;
     }
@@ -160,7 +146,7 @@ section {
                 }
             }
         }
-        .content {
+        .message-content {
             margin-left: 40px;
             margin-right: 20px;
         }
@@ -183,21 +169,44 @@ section {
         }
     }
     .article {
-        justify-content: center;
-        align-items: center;
-        h1 {
-            margin-top: 100px;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        article {
-            margin: 40px 15px 40px 15px;
-            @include text-overflow();
-            line-height: 22px;
+        min-height: 200px;
+        justify-content: space-between;
+        .article-container {
+            text-align: center;
+            &:hover {
+                background-color: rgba($color: #000000, $alpha: 0.2);
+                article {
+                    opacity: 1;
+                    transform: translateY(-10px);
+                }
+                h1 {
+                    transform: translateY(-15px);
+                }
+            }
+            h1 {
+                margin: 100px 50px 20px 50px;
+                flex-grow: 1;
+                font-size: 36px;
+                font-weight: bold;
+                @include text-overflow(1);
+                transition: all 0.3s ease;
+                a {
+                    color: black;
+                }
+            }
+            article {
+                transition: all 0.3s ease;
+                height: 44px;
+                margin: 0 20px 30px 20px;
+                @include text-overflow(2);
+                line-height: 22px;
+                opacity: 0;
+            }
         }
         ul {
-            border-top: black 1px solid;
+            border-radius: 0 0 8px 8px;
+            flex-basis: 36px;
+            border-top: #ddd 1px solid;
             height: 36px;
             line-height: 36px;
             width: 100%;
@@ -218,9 +227,6 @@ section {
             margin-right: 20px;
             margin-left: 20px;
         }
-    }
-    .side {
-        display: none;
     }
 }
 </style>

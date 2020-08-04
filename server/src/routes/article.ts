@@ -4,7 +4,9 @@ import isAdmin from '../middlewares/isAdmin';
 import { DefaultState, Context } from 'koa';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { ArticleDocument } from '../models/article';
+import * as mongoose from 'mongoose';
 
+const { ObjectId } = mongoose.Types;
 const router = new Router<DefaultState, Context>();
 
 interface ArticlePage {
@@ -67,6 +69,10 @@ router.put('/article', isAdmin, async (ctx) => {
 // 获取单个文章
 router.get('/article', async (ctx) => {
     const { id } = ctx.request.query;
+    if (!ObjectId.isValid(id)) {
+        ctx.body = new ErrorModule('请输入合法id');
+        return;
+    }
     const res = await Article.findById(id);
     if (res) {
         ctx.body = new SuccessModule('查询成功', res);
