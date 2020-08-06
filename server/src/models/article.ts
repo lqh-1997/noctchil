@@ -1,25 +1,66 @@
 import { Schema, model, Document } from 'mongoose';
 import { UserDocument } from './user';
+import { CommentDocument } from './comment';
+
+enum ArticleType {
+    paragraph = 'paragraph',
+    article = 'article'
+}
+
+enum ArticleState {
+    publish = 'publish',
+    draft = 'draft'
+}
 
 const articleSchema = new Schema({
-    createTime: { type: Date, default: new Date(), required: true, index: true },
-    title: { type: String, required: true, unique: true },
+    title: { type: String, required: true, unique: true, validate: /\S+/ },
+    desc: String,
     content: String,
-    type: { type: String, enum: ['paragraph', 'article'], required: true, default: 'article' },
-    tag: { type: [String] },
-    creator: { type: Schema.Types.ObjectId, ref: 'User' },
-    private: { type: Boolean, default: false, required: true }
+    type: { type: String, enum: ['message', 'article'], required: true, default: 'article' },
+    state: { type: String, enum: ['publish', 'draft'], required: true, default: 'draft' },
+    tags: { type: [String] },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', require: true }],
+    creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    invisible: { type: Boolean, default: false, required: true },
+    meta: {
+        likes: { type: Number, default: 0, required: true },
+        views: { type: Number, default: 0, required: true },
+        comments: { type: Number, default: 0, required: true }
+    },
+    createTime: { type: Date, default: new Date(), required: true, index: true },
+    updateTime: { type: Date, default: new Date(), required: true }
 });
 
 export interface ArticleDocument extends Document {
     _id: Schema.Types.ObjectId;
+    // 标题
     title: string;
-    createTime: Date;
+    // 描述
+    desc: string;
+    // 内容
     content: string;
-    type: string;
+    // 文章类别 分为message 和 article
+    type: ArticleType;
+    // 文章状态 分为 publish 和 draft
+    state: ArticleState;
+    // 文章标签
     tag: [string];
+    // 文章评论
+    comments: [CommentDocument];
+    // 创建者
     creator: UserDocument;
-    private: Boolean;
+    // 是否要登录后才可查看
+    invisible: boolean;
+    // 元信息 存储数量
+    meta: {
+        likes: number;
+        views: number;
+        comments: number;
+    };
+    // 创建时间
+    createTime: Date;
+    // 更新时间
+    updateTime: Date;
 }
 
 export default model<ArticleDocument>('Article', articleSchema);

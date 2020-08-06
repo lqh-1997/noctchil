@@ -32,7 +32,7 @@ export default {
 @import '@/assets/scss/global.scss';
 .side {
     flex-basis: 200px;
-    min-height: 300px;
+    height: 300px;
     background-color: wheat;
     padding: 20px;
     position: sticky;

@@ -31,6 +31,7 @@ export default {
     // background-image: url('../assets/image/EYmkjO1VcAEFR9e.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: fixed;
 }
 .main {
     width: $defaultLayoutWidth;

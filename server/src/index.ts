@@ -3,6 +3,7 @@ import * as bodyparser from 'koa-bodyparser';
 
 import * as mongoose from 'mongoose';
 import { REDIS_CONF, MONGO_CONF } from './config/db';
+import { fileDir } from './config/global';
 
 import * as session from 'koa-session';
 import * as redisStore from 'koa-redis';
@@ -45,7 +46,7 @@ app.use(
 
 app.use(haveSession);
 
-app.use(staticFile(path.resolve(__dirname, '/uploads')));
+app.use(staticFile(path.resolve(__dirname, fileDir)));
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
