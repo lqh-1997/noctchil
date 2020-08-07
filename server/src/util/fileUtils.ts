@@ -38,3 +38,21 @@ export function getAllImage(path: string): string[] {
     let files = getAllFile(path);
     return files.filter((item) => /(.png|.jpg|.gif|.jpeg)$/.test(item));
 }
+
+/**
+ * 判断文件夹是否存在 若不存在则新建文件夹
+ * @param path
+ */
+export function createFolder(path: string) {
+    let exist = false;
+    // 可以传递三个参数 http://nodejs.cn/api/fs.html#fs_fs_access_path_mode_callback 第二个可选
+    // 第三个为回调 若err不存在则代表文件存在
+    fs.access(path, (err) => {
+        exist = !err;
+    });
+    if (!exist) {
+        fs.mkdir(path, { recursive: true }, (err) => {
+            if (err) throw err;
+        });
+    }
+}

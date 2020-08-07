@@ -3,7 +3,7 @@ import * as multer from '@koa/multer';
 import { DefaultContext, Context } from 'koa';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { FileDocument } from '../models/file';
-import { getAllImage } from '../util/fileUtils';
+import { getAllImage, createFolder } from '../util/fileUtils';
 import { fileDir } from '../config/global';
 import * as mongoose from 'mongoose';
 import fs = require('fs');
@@ -13,7 +13,9 @@ const router = new Router<DefaultContext, Context>();
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, `${fileDir}/${file.fieldname}`);
+        const path = `${fileDir}/${file.fieldname}`;
+        createFolder(path);
+        cb(null, path);
     },
     filename: function (req, file, cb) {
         cb(null, `${Date.now()}_${file.originalname}`);
@@ -36,7 +38,7 @@ router.post('/photo', upload.single('avatar'), async (ctx: DefaultContext) => {
 
 // 获取某个目录下的所有图片(只包含指定文件夹)
 router.get('/photos', async (ctx) => {
-    const readDir = getAllImage(path.resolve(__dirname, fileDir));
+    const readDir = getAllImage(fileDir);
     ctx.body = new SuccessModule('获取成功', readDir);
 });
 

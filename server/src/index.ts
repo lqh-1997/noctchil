@@ -46,7 +46,7 @@ app.use(
 
 app.use(haveSession);
 
-app.use(staticFile(path.resolve(__dirname, fileDir)));
+app.use(staticFile(fileDir));
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);

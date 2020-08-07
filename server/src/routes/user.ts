@@ -3,6 +3,7 @@ import User from '../models/user';
 import isLogin from '../middlewares/isLogin';
 import notLogin from '../middlewares/notLogin';
 import { DefaultState, Context } from 'koa';
+import { errorCapture } from '../util/error';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 
 const router = new Router<DefaultState, Context>();
@@ -12,7 +13,13 @@ router.prefix('/api');
 // 注册
 router.post('/signUp', notLogin, async (ctx) => {
     // 查看用户名是否重复
-    let user = await User.findOne({ username: ctx.request.body.username });
+    let [err, user] = await errorCapture(User, User.findOne, {
+        username: ctx.request.body.username
+    });
+    if (err) {
+        ctx.body = new ErrorModule(err);
+        return;
+    }
     if (user) {
         ctx.body = new ErrorModule('用户名已存在');
         return;
@@ -24,7 +31,11 @@ router.post('/signUp', notLogin, async (ctx) => {
         email: ctx.request.body.email,
         url: ctx.request.body.url
     });
-    const result = await user.save();
+    const [saveErr, result] = await errorCapture(user, user.save);
+    if (saveErr) {
+        ctx.body = new ErrorModule(saveErr);
+        return;
+    }
     // 注册完不登陆，跳转回登录页面
     ctx.body = new SuccessModule('注册成功, 请重新登录');
 });
