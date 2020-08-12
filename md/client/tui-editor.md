@@ -1,4 +1,4 @@
-## 引入tui.editor
+## 引入 tui.editor
 
 使用 tui.editor 作为 markdown 的编辑器 [github](https://github.com/nhn/tui.editor)地址
 
@@ -6,40 +6,38 @@
 
 `npm install --save @toast-ui/vue-editor`
 
-tui.editor分为editor和viewer
+tui.editor 分为 editor 和 viewer
 
-由于使用了nuxt，所以引入方法和官方文档有些许不同
+由于使用了 nuxt，所以引入方法和官方文档有些许不同
 
-首先要在nuxt的plugins目录下新建对应的`tui_editor.js`和`tui_viewer.js`分别写上以下内容
+首先要在 nuxt 的 plugins 目录下新建对应的`tui_editor.client.js`和`tui_viewer.client.js`分别写上以下内容
 
 ```javascript
-import Vue from 'vue';
-import { Editor } from '@toast-ui/vue-editor';
-import 'codemirror/lib/codemirror.css';
-import '@toast-ui/editor/dist/toastui-editor.css';
+import Vue from "vue";
+import { Editor } from "@toast-ui/vue-editor";
+import "codemirror/lib/codemirror.css";
+import "@toast-ui/editor/dist/toastui-editor.css";
 
-Vue.component('editor', Editor);
-
+Vue.component("editor", Editor);
 ```
 
 ```javascript
-import Vue from 'vue';
-import { Viewer } from '@toast-ui/vue-editor';
-import '@toast-ui/editor/dist/toastui-editor-viewer.css';
+import Vue from "vue";
+import { Viewer } from "@toast-ui/vue-editor";
+import "@toast-ui/editor/dist/toastui-editor-viewer.css";
 
-Vue.component('viewer', Viewer);
-
+Vue.component("viewer", Viewer);
 ```
 
-然后在`nuxt.config.js`文件中导入这两个js文件
+然后在`nuxt.config.js`文件中导入这两个 js 文件
 
 ```javascript
 plugins: [
-    '@/plugins/element-ui',
-    '@/plugins/axios',
-    { src: '@/plugins/tui_editor', mode: 'client' },
-    { src: '@/plugins/tui_viewer', mode: 'client' }
-]
+  "@/plugins/element-ui",
+  "@/plugins/axios",
+  "@/plugins/tui_editor.client.js",
+  "@/plugins/tui_viewer.client.js",
+];
 ```
 
 这样子就能防止出现在服务端渲染的时候出现`window is not defined`的情况了
@@ -55,13 +53,13 @@ plugins: [
 调用挂载的方法通过`this.$refs.xxx.invoke(methodName, ...args)`,例子
 
 ```javascript
-export default{
-    methods: {
-        getHtml(){
-            return this.$refs.toastuiEditor.invoke('getHtml')
-        }
-    }
-}
+export default {
+  methods: {
+    getHtml() {
+      return this.$refs.toastuiEditor.invoke("getHtml");
+    },
+  },
+};
 ```
 
 事件回调
