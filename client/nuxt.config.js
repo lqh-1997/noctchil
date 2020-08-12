@@ -57,8 +57,9 @@ export default {
     plugins: [
         '@/plugins/element-ui',
         '@/plugins/axios',
-        { src: '@/plugins/tui_editor', mode: 'client' },
-        { src: '@/plugins/tui_viewer', mode: 'client' }
+        '@/plugins/navigation-guard',
+        '@/plugins/tui_editor.client.js',
+        '@/plugins/tui_viewer.client.js'
     ],
     /*
      ** Auto import components

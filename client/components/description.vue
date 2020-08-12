@@ -6,6 +6,7 @@
 </template>
 
 <script>
+// 标题以及小标题栏
 export default {};
 </script>
 
@@ -26,5 +27,6 @@ h1 {
 }
 h2 {
     font-size: 2rem;
+    white-space: nowrap;
 }
 </style>

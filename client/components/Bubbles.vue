@@ -15,20 +15,25 @@
 </template>
 
 <script>
+// 气泡组件
 export default {
     props: {
+        // 数量
         count: {
             type: Number,
             default: 20
         },
+        // 速度
         speed: {
             type: Number,
             default: 3
         },
+        // 颜色
         color: {
             type: String,
             default: 'rgba(255, 100, 0, 0.8)'
         },
+        // 组件覆盖大小
         width: {
             type: [String, Number],
             default: '100%'
@@ -37,6 +42,7 @@ export default {
             type: [String, Number],
             default: '100vh'
         },
+        // 气泡的大小
         bubbleSize: {
             type: Array,
             default() {
