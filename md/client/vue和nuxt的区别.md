@@ -72,3 +72,51 @@ export default ({ app, redirect }) => {
 ```
 
 然后再`nuxt.config.js`里面注册这个文件即可
+
+## 链接跳转
+
+`router-link`和`nuxt-link`用法一样
+
+## 关于页面meta
+
+vue单页面
+
+nuxt可以在每一个page里面添加meta
+
+```js
+export default {
+    head() {//set meta tags for this page}
+}
+```
+
+## 路由错误拦截
+
+vue一般会在route的最后面加上一个全局的path拦截
+
+```
+{
+	path: '*',
+	redirect: '/404'
+}
+```
+
+nuxt则是在layouts里面增加一个error.vue文件，该文件只能拦截客户端的错误，不能拦截在服务端渲染的错误
+
+如果要拦截服务端渲染时的错误可以使用try和catch，catch到错误的时候使用`context.error(error)`即可将错误抛出到错误页面
+
+```
+<template>
+  <div>
+    <h1 v-if="error.statusCode === 404">Page not found</h1>
+    <h1 v-else>An error occurred</h1>
+    <NuxtLink to="/">Home page</NuxtLink>
+  </div>
+</template>
+
+<script>
+  export default {
+    props: ['error'],
+    layout: 'error' // you can set a custom layout for the error page
+  }
+</script>
+```

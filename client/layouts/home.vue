@@ -13,7 +13,7 @@
 
 <script>
 import myHeader from '@/components/MyHeader';
-import description from '@/components/description';
+import description from '@/components/Description';
 import myFooter from '@/components/MyFooter';
 export default {
     components: {

@@ -23,14 +23,18 @@ export default {
     },
     async asyncData(Context) {
         const id = Context.params.id;
-        const res = await getArticleById(Context, id);
-        const article = res.data.data;
-        const viewer = article.content;
-        return {
-            id,
-            article,
-            viewer
-        };
+        try {
+            const res = await getArticleById(Context, id);
+            const article = res.data.data;
+            const viewer = article.content;
+            return {
+                id,
+                article,
+                viewer
+            };
+        } catch (error) {
+            Context.error(error);
+        }
     }
 };
 </script>

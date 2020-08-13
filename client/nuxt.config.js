@@ -66,6 +66,10 @@ export default {
      ** See https://nuxtjs.org/api/configuration-components
      */
     components: true,
+    /**
+     * 进度条样式
+     */
+    loading: '@/components/loading',
     /*
      ** Nuxt.js dev-modules
      */
