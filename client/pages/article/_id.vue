@@ -52,6 +52,7 @@ export default {
         article {
             border: #ddd 1px solid;
             padding: 20px;
+            border-radius: 8px;
             h1 {
                 text-align: center;
                 font-size: 46px;

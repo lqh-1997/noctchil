@@ -30,6 +30,7 @@
 
 <script>
 import { login } from '../api/user';
+import { mapMutations } from 'vuex';
 export default {
     data() {
         return {
@@ -43,12 +44,14 @@ export default {
         };
     },
     methods: {
+        ...mapMutations(['SET_USERID']),
         handleLogin() {
             login(this, this.loginForm).then((res) => {
                 this.$message({
                     message: res.data.message,
                     type: 'success'
                 });
+                this.SET_USERID(res.data.data);
                 this.$router.push('/home');
             });
         }

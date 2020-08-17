@@ -10,16 +10,25 @@
                 </dl>
             </li>
         </ul>
-        <div style="float: right; margin-right: 20px;" @click="handleLogout">注销</div>
-        <div style="float: right; margin-right: 20px;" @click="handleLogout">登录</div>
+        <div style="float: right; margin-right: 20px;" @click="handleLogout" v-if="isLogin">
+            注销
+        </div>
+        <div style="float: right; margin-right: 20px;" v-if="!isLogin">
+            <nuxt-link to="/login">登录</nuxt-link>
+        </div>
+        <div style="float: right; margin-right: 20px;" @click="handleSignup" v-if="!isLogin">
+            <nuxt-link to="/signup">注册</nuxt-link>
+        </div>
     </header>
 </template>
 
 <script>
 import { logout } from '../api/user';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
     data() {
         return {
+            isLogin: false,
             headList: [
                 {
                     name: '首页',
@@ -55,7 +64,10 @@ export default {
         };
     },
     methods: {
+        ...mapMutations(['SET_USERID']),
+        // FIXME 清空cookie
         handleLogout() {
+            this.SET_USERID(0);
             logout(this).then((res) => {
                 this.$message({
                     message: res.data.message,
@@ -63,6 +75,17 @@ export default {
                 });
             });
         }
+    },
+    computed: {
+        ...mapGetters(['getUserId'])
+    },
+    watch: {
+        getUserId(data) {
+            this.isLogin = !!data;
+        }
+    },
+    mounted() {
+        this.isLogin = !!this.$store.state.userId;
     }
 };
 </script>

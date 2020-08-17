@@ -66,7 +66,7 @@ router.post('/login', notLogin, async (ctx: Context) => {
             ctx.session.userId = user._id;
             ctx.session.isAdmin = user.isAdmin;
         }
-        ctx.body = new SuccessModule('登陆成功');
+        ctx.body = new SuccessModule('登陆成功', user._id);
     } else {
         ctx.body = new ErrorModule('用户名或密码错误');
     }
@@ -85,10 +85,26 @@ router.post('/logout', isLogin, async (ctx: Context) => {
     ctx.body = new SuccessModule('登出成功');
 });
 
-// 获取当前用户的信息
+//服务端获取当前用户的信息
 router.get('/user', isLogin, async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
-    const user = await User.findById(id).select('-isAdmin');
+    const user = await User.findById(id);
+    ctx.body = new SuccessModule('获取成功', user);
+});
+
+// 客户端获取当前用户的信息
+router.get('/user/client', async (ctx: Context) => {
+    const id = ctx.session && ctx.session.userId;
+    let user = null;
+    if (id !== 0) {
+        user = await User.findById(id).select('-isAdmin');
+    } else {
+        user = {
+            username: '未登录',
+            nicename: '未登录',
+            _id: 0
+        };
+    }
     ctx.body = new SuccessModule('获取成功', user);
 });
 

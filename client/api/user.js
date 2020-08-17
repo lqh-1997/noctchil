@@ -24,7 +24,7 @@ export function logout(env) {
 export function getUserInfo(env) {
     return env.$axios({
         method: 'get',
-        url: '/user'
+        url: '/user/client'
     });
 }
 

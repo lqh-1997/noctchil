@@ -19,22 +19,6 @@
                     <li>阅读全文</li>
                 </ul>
             </li>
-            <li class="message">
-                <div class="user">
-                    <div class="avatar"></div>
-                    <div class="user-info">
-                        <div class="username">fantasy</div>
-                        <div class="date">2020年5月22日 08:56</div>
-                    </div>
-                </div>
-                <div class="message-content">
-                    你好啊你好啊你好啊你好啊你好啊你
-                </div>
-                <ul class="info">
-                    <li>点赞</li>
-                    <li>阅读</li>
-                </ul>
-            </li>
             <template v-for="item of articleList">
                 <li class="message" :key="item._id" v-if="item.type === 'message'">
                     <div class="user">
