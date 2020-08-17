@@ -79,6 +79,7 @@ export default {
         overflow: auto;
     }
     .comment-tool {
+        background-color: white;
         padding-left: 10px;
         position: relative;
         height: 40px;

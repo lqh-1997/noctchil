@@ -33,7 +33,7 @@ export default {
     height: 100vh;
     width: 100%;
     background-image: linear-gradient(0deg, #0093dd, #50d0d0);
-    // background: url('../assets/image/EX4icBFWoAEr5se.jpg');
+    background: url('../assets/image/EX4icBFWoAEr5se.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     position: relative;

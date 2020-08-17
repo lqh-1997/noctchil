@@ -6,6 +6,9 @@
                 <viewer :initialValue="viewer" class="viewer" />
             </article>
             <comment></comment>
+            <template v-for="item of commentsList">
+                <comments :key="item.id"></comments>
+            </template>
         </div>
         <side-flow class="article-side-flow"></side-flow>
     </div>
@@ -13,13 +16,26 @@
 
 <script>
 import Comment from '../../components/Comment';
+import Comments from '../../components/Comments';
 import SideFlow from '../../components/SideFlow';
 import { getArticleById } from '../../api/article';
 export default {
     layout: 'home',
     components: {
         SideFlow,
-        Comment
+        Comment,
+        Comments
+    },
+    data() {
+        return {
+            commentsList: [
+                {
+                    id: 1,
+                    content: '123',
+                    user: 123
+                }
+            ]
+        };
     },
     async asyncData(Context) {
         const id = Context.params.id;
@@ -50,9 +66,10 @@ export default {
         flex-basis: 700px;
         flex-grow: 1;
         article {
+            background-color: white;
             border: #ddd 1px solid;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 4px;
             h1 {
                 text-align: center;
                 font-size: 46px;
