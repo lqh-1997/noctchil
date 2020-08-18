@@ -2,14 +2,18 @@
     <div class="login">
         <div class="container">
             <div class="title">NOCTCHIL</div>
-            <el-form :model="loginForm" :rules="loginRules">
+            <el-form :model="loginForm">
                 <el-form-item prop="username">
                     <input
                         type="text"
                         v-model="loginForm.username"
                         class="input"
                         placeholder="username"
+                        @blur="hasUsername"
                     />
+                    <div v-show="tipsShow">
+                        用户名不得为空
+                    </div>
                 </el-form-item>
                 <el-form-item>
                     <input
@@ -38,22 +42,35 @@ export default {
                 username: '',
                 password: ''
             },
-            loginRules: {
-                username: [{ required: true, message: '请输入用户名', trigger: 'blur' }]
-            }
+            // 是否显示错误提示
+            tipsShow: false
         };
     },
     methods: {
         ...mapMutations(['SET_USERID']),
+        // 点击登录
         handleLogin() {
+            if (!this.hasUsername(this.loginForm.username)) {
+                return;
+            }
+            // 调用函数
             login(this, this.loginForm).then((res) => {
                 this.$message({
                     message: res.data.message,
                     type: 'success'
                 });
+                // 登录成功就设置userId，并且跳转到home页面
                 this.SET_USERID(res.data.data);
                 this.$router.push('/home');
             });
+        },
+        // 判断有没有username
+        hasUsername(e) {
+            // object为事件取value string直接使用
+            const value = typeof e === 'object' ? e.target.value : e;
+            const hasValue = value !== '';
+            this.tipsShow = !hasValue;
+            return hasValue;
         }
     },
     async asyncData() {}
@@ -73,6 +90,8 @@ export default {
     align-items: center;
     justify-content: center;
     .container {
+        z-index: 10;
+        padding: 30px;
         width: 320px;
         display: flex;
         justify-content: center;
@@ -107,6 +126,14 @@ export default {
         &::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
+    }
+    .input + div {
+        color: red;
+        font-size: 12px;
+        position: absolute;
+        height: 22px;
+        line-height: 22px;
+        padding-left: 5px;
     }
     .button {
         width: 100%;

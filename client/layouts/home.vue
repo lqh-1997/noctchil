@@ -1,8 +1,8 @@
 <template>
-    <el-container class="container">
+    <el-container class="home-container">
         <my-header />
         <description></description>
-        <el-main class="main">
+        <el-main class="home-main">
             <nuxt />
         </el-main>
         <el-footer>
@@ -26,13 +26,14 @@ export default {
 
 <style lang="scss" scope>
 @import '@/assets/scss/global.scss';
-.container {
+.home-container {
     width: 100%;
+    background-attachment: fixed;
     background-image: url('../assets/image/EYmkjO1VcAEFR9e.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 }
-.main {
+.home-main {
     width: $defaultLayoutWidth;
     margin: 0 auto;
     padding: 0;
