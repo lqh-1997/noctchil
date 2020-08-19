@@ -11,6 +11,7 @@ import * as staticFile from 'koa-static';
 import * as user from './routes/user';
 import * as article from './routes/article';
 import * as file from './routes/file';
+import * as comment from './routes/comment';
 import path = require('path');
 
 import haveSession from './middlewares/haveSession';
@@ -61,5 +62,7 @@ app.use(article.routes());
 app.use(article.allowedMethods());
 app.use(file.routes());
 app.use(file.allowedMethods());
+app.use(comment.routes());
+app.use(comment.allowedMethods());
 
 export = app;

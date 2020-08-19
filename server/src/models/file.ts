@@ -11,10 +11,15 @@ const fileSchema = new Schema({
 
 export interface FileDocument extends Document {
     _id: Schema.Types.ObjectId;
+    // 创建日期
     createTime: Date;
+    // 标题
     title: string;
+    // 存放的路径
     path: string;
+    // 文件类型
     type: string;
+    // 上传者
     creator: UserDocument;
 }
 

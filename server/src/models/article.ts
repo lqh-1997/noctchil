@@ -44,7 +44,7 @@ export interface ArticleDocument extends Document {
     // 文章状态 分为 publish 和 draft
     state: ArticleState;
     // 文章标签
-    tag: [string];
+    tags: [string];
     // 文章评论
     comments: [CommentDocument];
     // 创建者
