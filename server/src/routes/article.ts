@@ -5,6 +5,7 @@ import { DefaultState, Context } from 'koa';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { ArticleDocument } from '../models/article';
 import * as mongoose from 'mongoose';
+import { errorCapture } from 'src/util/error';
 
 const { ObjectId } = mongoose.Types;
 const router = new Router<DefaultState, Context>();
@@ -109,29 +110,28 @@ router.get('/articles', async (ctx) => {
         total: 0,
         data: []
     };
-    await Article.find({}, async (err, res) => {
-        if (err) {
-            ctx.body = new ErrorModule('获取失败');
-            return;
-        }
-        result.total = res.length;
-        await Article.find({})
+    let [err, res] = await errorCapture(Article, Article.find, {});
+    if (err) {
+        ctx.body = new ErrorModule('获取失败');
+        return;
+    }
+    result.total = res.length;
+    try {
+        // 原理 跳过pageNumber -1 * pageSize条 然后取pageSize条数据 数据量大应该会有性能瓶颈
+        const listRes = await Article.find({})
             .skip((pageNumber - 1) * parseInt(pageSize))
-            .limit(parseInt(pageSize))
-            .exec((err, res) => {
-                if (err) {
-                    ctx.body = new ErrorModule('获取失败');
-                    return;
-                }
-                result.data = res;
-            });
-    });
-    ctx.body = new SuccessModule('获取成功', result);
+            .limit(parseInt(pageSize));
+        result.data = listRes;
+        ctx.body = new SuccessModule('获取成功', result);
+    } catch (err) {
+        ctx.body = new ErrorModule(err);
+    }
 });
 
-// 给文章点赞
-router.post('/article/like', async (ctx) => {
-    const { id } = ctx.request.query;
+// 给文章点赞/取消点赞 由doLike决定
+router.put('/article/like', async (ctx) => {
+    let { id, doLike = true } = ctx.request.query;
+    doLike = JSON.parse(doLike);
     let res = null;
     try {
         res = await Article.findById(id);
@@ -141,7 +141,7 @@ router.post('/article/like', async (ctx) => {
     }
     if (res) {
         let { meta } = res;
-        meta.likes++;
+        doLike ? meta.likes++ : meta.likes--;
         try {
             await Article.findByIdAndUpdate(id, {
                 meta: meta
@@ -150,7 +150,7 @@ router.post('/article/like', async (ctx) => {
             ctx.body = new ErrorModule(err);
             return;
         }
-        ctx.body = new SuccessModule('点赞成功');
+        ctx.body = doLike ? new SuccessModule('点赞成功') : new SuccessModule('取消成功');
     } else {
         ctx.body = new ErrorModule('文章不存在');
     }

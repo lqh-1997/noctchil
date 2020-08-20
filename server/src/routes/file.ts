@@ -1,6 +1,7 @@
 import * as Router from 'koa-router';
 import * as multer from '@koa/multer';
 import { DefaultContext, Context } from 'koa';
+import { errorCapture } from '../util/error';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { FileDocument } from '../models/file';
 import { getAllImage, createFolder } from '../util/fileUtils';

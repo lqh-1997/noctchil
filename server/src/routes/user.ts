@@ -51,17 +51,25 @@ router.post('/login', notLogin, async (ctx: Context) => {
         ctx.body = new ErrorModule('密码不得为空');
         return;
     }
-    // todo 寻找匹配的用户名密码 密码之后会修改成加盐加密
-    const user = await User.findOne({
-        username: username,
-        password: password
-    });
+    // TODO 寻找匹配的用户名密码 密码之后会修改成加盐加密
+    const [err, user] = await errorCapture(User, User.findOne, { username, password });
+    if (err) {
+        ctx.body = new ErrorModule(err);
+        return;
+    }
+    // 如果用户存在的话
     if (user) {
         // 用户名存在更新登录时间和登录状态
-        await User.findByIdAndUpdate(user._id, {
+        const [updateErr] = await errorCapture(User, User.findByIdAndUpdate, user._id, {
             last_login_time: new Date(),
             status: true
         });
+        // 错误监控
+        if (updateErr) {
+            ctx.body = new ErrorModule(updateErr);
+            return;
+        }
+        // 在session中存储用户的基础信息
         if (ctx.session) {
             ctx.session.userId = user._id;
             ctx.session.isAdmin = user.isAdmin;
@@ -76,10 +84,14 @@ router.post('/login', notLogin, async (ctx: Context) => {
 router.post('/logout', isLogin, async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
     // 修改登录时间和登录状态
-    await User.findByIdAndUpdate(id, {
+    const [err] = await errorCapture(User, User.findByIdAndUpdate, id, {
         last_login_time: new Date(),
         status: false
     });
+    if (err) {
+        ctx.body = new SuccessModule(err);
+        return;
+    }
     // 直接将session的userId置0表示未登录
     ctx.session && (ctx.session.userId = 0);
     ctx.body = new SuccessModule('登出成功');
@@ -88,7 +100,11 @@ router.post('/logout', isLogin, async (ctx: Context) => {
 //服务端获取当前用户的信息
 router.get('/user', isLogin, async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
-    const user = await User.findById(id);
+    const [err, user] = await errorCapture(User, User.findById, id);
+    if (err) {
+        ctx.body = new ErrorModule(err);
+        return;
+    }
     ctx.body = new SuccessModule('获取成功', user);
 });
 
@@ -97,7 +113,11 @@ router.get('/user/client', async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
     let user = null;
     if (id !== 0) {
-        user = await User.findById(id).select('-isAdmin');
+        try {
+            user = await User.findById(id).select('-isAdmin');
+        } catch (err) {
+            ctx.body = new ErrorModule(err);
+        }
     } else {
         user = {
             username: '未登录',

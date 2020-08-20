@@ -51,10 +51,17 @@ app.use(staticFile(fileDir));
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
-mongoose.connect(MONGO_CONF.getDbs(), {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+mongoose
+    .connect(MONGO_CONF.getDbs(), {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then((res) => {
+        console.log('数据库连接成功');
+    })
+    .catch((err) => {
+        console.log('数据库连接失败' + err);
+    });
 
 app.use(user.routes());
 app.use(user.allowedMethods());
