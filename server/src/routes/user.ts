@@ -17,7 +17,7 @@ router.post('/signUp', notLogin, async (ctx) => {
         username: ctx.request.body.username
     });
     if (err) {
-        ctx.body = new ErrorModule(err);
+        ctx.body = new ErrorModule(err.message);
         return;
     }
     if (user) {
@@ -33,7 +33,7 @@ router.post('/signUp', notLogin, async (ctx) => {
     });
     const [saveErr, result] = await errorCapture(user, user.save);
     if (saveErr) {
-        ctx.body = new ErrorModule(saveErr);
+        ctx.body = new ErrorModule(saveErr.message);
         return;
     }
     // 注册完不登陆，跳转回登录页面
@@ -54,7 +54,7 @@ router.post('/login', notLogin, async (ctx: Context) => {
     // TODO 寻找匹配的用户名密码 密码之后会修改成加盐加密
     const [err, user] = await errorCapture(User, User.findOne, { username, password });
     if (err) {
-        ctx.body = new ErrorModule(err);
+        ctx.body = new ErrorModule(err.message);
         return;
     }
     // 如果用户存在的话
@@ -66,7 +66,7 @@ router.post('/login', notLogin, async (ctx: Context) => {
         });
         // 错误监控
         if (updateErr) {
-            ctx.body = new ErrorModule(updateErr);
+            ctx.body = new ErrorModule(updateErr.message);
             return;
         }
         // 在session中存储用户的基础信息
@@ -89,7 +89,7 @@ router.post('/logout', isLogin, async (ctx: Context) => {
         status: false
     });
     if (err) {
-        ctx.body = new SuccessModule(err);
+        ctx.body = new ErrorModule(err.message);
         return;
     }
     // 直接将session的userId置0表示未登录
@@ -102,7 +102,7 @@ router.get('/user', isLogin, async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
     const [err, user] = await errorCapture(User, User.findById, id);
     if (err) {
-        ctx.body = new ErrorModule(err);
+        ctx.body = new ErrorModule(err.message);
         return;
     }
     ctx.body = new SuccessModule('获取成功', user);
@@ -116,7 +116,7 @@ router.get('/user/client', async (ctx: Context) => {
         try {
             user = await User.findById(id).select('-isAdmin');
         } catch (err) {
-            ctx.body = new ErrorModule(err);
+            ctx.body = new ErrorModule(err.message);
         }
     } else {
         user = {

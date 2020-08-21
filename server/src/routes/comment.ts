@@ -22,7 +22,7 @@ router.post('/comment', isLogin, async (ctx) => {
     });
     const [err] = await errorCapture(comment, comment.save);
     if (err) {
-        ctx.body = new ErrorModule(err);
+        ctx.body = new ErrorModule(err.message);
         return;
     }
     ctx.body = new SuccessModule('评论成功');
@@ -33,7 +33,7 @@ router.get('/comments/:articleId', async (ctx) => {
     const articleId = ctx.params.articleId;
     const [err, res] = await errorCapture(Comment, Comment.find, { from: articleId });
     if (err) {
-        ctx.body = new ErrorModule(err);
+        ctx.body = new ErrorModule(err.message);
         return;
     }
     ctx.body = new SuccessModule('获取评论信息成功', res);
@@ -47,7 +47,7 @@ router.put('/comment/like', async (ctx) => {
     try {
         res = await Comment.findById(id);
     } catch (err) {
-        ctx.body = new ErrorModule(err);
+        ctx.body = new ErrorModule(err.message);
         return;
     }
     if (res) {
@@ -58,7 +58,7 @@ router.put('/comment/like', async (ctx) => {
                 likes
             });
         } catch (err) {
-            ctx.body = new ErrorModule(err);
+            ctx.body = new ErrorModule(err.message);
             return;
         }
         ctx.body = doLike ? new SuccessModule('点赞成功') : new SuccessModule('取消成功');

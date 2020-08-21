@@ -44,6 +44,7 @@ export function getAllImage(path: string): string[] {
  * @param path
  */
 export function createFolder(path: string) {
+    console.log(path);
     let exist = false;
     // 可以传递三个参数 http://nodejs.cn/api/fs.html#fs_fs_access_path_mode_callback 第二个可选
     // 第三个为回调 若err不存在则代表文件存在
@@ -56,3 +57,8 @@ export function createFolder(path: string) {
         });
     }
 }
+
+// export function createFile(path: string) {
+//     const index = path.lastIndexOf('\\');
+//     createFolder(path.slice(0, index));
+// }
