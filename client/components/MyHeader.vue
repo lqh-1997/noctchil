@@ -16,7 +16,7 @@
         <div style="float: right; margin-right: 20px;" v-if="!isLogin">
             <nuxt-link to="/login">登录</nuxt-link>
         </div>
-        <div style="float: right; margin-right: 20px;" @click="handleSignup" v-if="!isLogin">
+        <div style="float: right; margin-right: 20px;" v-if="!isLogin">
             <nuxt-link to="/signup">注册</nuxt-link>
         </div>
     </header>

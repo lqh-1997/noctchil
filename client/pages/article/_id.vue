@@ -7,7 +7,7 @@
             </article>
             <comment></comment>
             <template v-for="item of commentsList">
-                <comments :key="item.id"></comments>
+                <reply :key="item.id" :reply="item"></reply>
             </template>
         </div>
         <side-flow class="article-side-flow"></side-flow>
@@ -16,7 +16,7 @@
 
 <script>
 import Comment from '../../components/Comment';
-import Comments from '../../components/Comments';
+import Reply from '../../components/Reply';
 import SideFlow from '../../components/SideFlow';
 import { getArticleById } from '../../api/article';
 export default {
@@ -24,7 +24,7 @@ export default {
     components: {
         SideFlow,
         Comment,
-        Comments
+        Reply
     },
     data() {
         return {

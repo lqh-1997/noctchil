@@ -44,6 +44,9 @@ export default {
     margin: 0;
 }
 @media screen and (max-width: 1260px) {
+    .home-main {
+        width: 100%;
+    }
     .main {
         width: 100%;
     }

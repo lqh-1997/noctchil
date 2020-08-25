@@ -33,7 +33,7 @@ export default {
 .side {
     flex-basis: 200px;
     height: 300px;
-    background-color: wheat;
+    background-color: rgba($color: $defaultColor, $alpha: 0.6);
     padding: 20px;
     position: sticky;
     margin-left: 20px;

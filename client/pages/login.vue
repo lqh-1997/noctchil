@@ -35,6 +35,7 @@
 <script>
 import { login } from '../api/user';
 import { mapMutations } from 'vuex';
+import md5 from 'js-md5';
 export default {
     data() {
         return {
@@ -50,11 +51,13 @@ export default {
         ...mapMutations(['SET_USERID']),
         // 点击登录
         handleLogin() {
-            if (!this.hasUsername(this.loginForm.username)) {
+            const username = this.loginForm.username;
+            const password = md5(this.loginForm.password);
+            if (!this.hasUsername(username)) {
                 return;
             }
             // 调用函数
-            login(this, this.loginForm).then((res) => {
+            login(this, { username, password }).then((res) => {
                 this.$message({
                     message: res.data.message,
                     type: 'success'

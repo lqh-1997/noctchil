@@ -1,15 +1,19 @@
 <template>
-    <div class="login">
+    <div class="signup">
         <div class="container">
             <div class="title">NOCTCHIL</div>
-            <el-form :model="loginForm" :rules="loginRules">
+            <el-form :model="loginForm">
                 <el-form-item prop="username">
                     <input
                         type="text"
                         v-model="loginForm.username"
                         class="input"
                         placeholder="username"
+                        @blur="hasUsername"
                     />
+                    <div v-show="tipsShow">
+                        用户名不得为空
+                    </div>
                 </el-form-item>
                 <el-form-item>
                     <input
@@ -30,6 +34,7 @@
 
 <script>
 import { signUp } from '../api/user';
+import md5 from 'js-md5';
 export default {
     data() {
         return {
@@ -37,19 +42,33 @@ export default {
                 username: '',
                 password: ''
             },
-            loginRules: {
-                username: [{ required: true, message: '请输入用户名', trigger: 'blur' }]
-            }
+            // 是否显示错误提示
+            tipsShow: false
         };
     },
     methods: {
         handleSignup() {
-            signUp(this, this.loginForm).then((res) => {
+            const username = this.loginForm.username;
+            const password = md5(this.loginForm.password);
+            if (!this.hasUsername(username)) {
+                return;
+            }
+            // 点击注册
+            signUp(this, { username, password }).then((res) => {
                 this.$message({
                     message: res.data.message,
                     type: 'success'
                 });
+                this.$router.push('/login');
             });
+        },
+        // 判断有没有username
+        hasUsername(e) {
+            // object为事件取value string直接使用
+            const value = typeof e === 'object' ? e.target.value : e;
+            const hasValue = value !== '';
+            this.tipsShow = !hasValue;
+            return hasValue;
         }
     },
     async asyncData() {}
@@ -58,7 +77,7 @@ export default {
 
 <style scoped lang="scss">
 @import '@/assets/scss/global.scss';
-.login {
+.signup {
     background-image: linear-gradient(0deg, #0093dd, #50d0d0);
     background: url('../assets/image/EX4icBFWoAEr5se.jpg');
     background-size: cover;
@@ -103,6 +122,14 @@ export default {
         &::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
+    }
+    .input + div {
+        color: red;
+        font-size: 12px;
+        position: absolute;
+        height: 22px;
+        line-height: 22px;
+        padding-left: 5px;
     }
     .button {
         width: 100%;

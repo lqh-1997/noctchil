@@ -34,3 +34,14 @@ export function getAllArticle(env, pageNumber, pageSize) {
         }
     });
 }
+
+export function likeArticle(env, articleId, like = true) {
+    return env.$axios({
+        method: 'put',
+        url: '/article/like',
+        params: {
+            id: articleId,
+            doLike: like
+        }
+    });
+}
