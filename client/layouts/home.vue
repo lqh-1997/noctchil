@@ -3,7 +3,7 @@
         <my-header />
         <description></description>
         <el-main class="home-main">
-            <nuxt />
+            <nuxt keep-alive />
         </el-main>
         <el-footer>
             <my-footer></my-footer>

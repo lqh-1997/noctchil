@@ -2,7 +2,11 @@
     <header>
         <ul>
             <li v-for="item of headList" :key="item.name">
-                <span>{{ item.name }}</span>
+                <nuxt-link :to="item.to">
+                    <span>
+                        {{ item.name }}
+                    </span>
+                </nuxt-link>
                 <dl>
                     <dd v-for="(subItem, subIndex) of item.children" :key="subIndex">
                         {{ subItem.name }}
@@ -32,33 +36,7 @@ export default {
             headList: [
                 {
                     name: '首页',
-                    children: [
-                        {
-                            name: '首页1'
-                        },
-                        {
-                            name: '首页2'
-                        },
-                        {
-                            name: '首页3'
-                        }
-                    ]
-                },
-                {
-                    name: '不是首页1',
-                    children: [
-                        {
-                            name: 'a'
-                        }
-                    ]
-                },
-                {
-                    name: '不是首页2',
-                    children: [
-                        {
-                            name: 'b'
-                        }
-                    ]
+                    to: '/home'
                 }
             ]
         };

@@ -2,8 +2,9 @@
     <div class="reply">
         <div class="reply-avatar"></div>
         <div class="reply-main">
-            <div class="reply-username">{{ reply.user }}</div>
-            <viewer></viewer>
+            <div class="reply-username">{{ reply.creator.nicename }}</div>
+            <div class="reply-time">{{ reply.createTime }}</div>
+            <viewer :initialValue="reply.content"></viewer>
         </div>
     </div>
 </template>
@@ -39,9 +40,14 @@ export default {
     .reply-main {
         flex: 1;
         margin-left: 10px;
+        margin-right: 20px;
+        margin-bottom: 20px;
         .reply-username {
             margin-top: 30px;
-            line-height: 50px;
+            line-height: 25px;
+        }
+        .reply-time {
+            line-height: 25px;
         }
     }
 }

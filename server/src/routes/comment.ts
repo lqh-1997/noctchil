@@ -31,12 +31,15 @@ router.post('/comment', isLogin, async (ctx) => {
 // 查找某篇文章的所有评论
 router.get('/comments/:articleId', async (ctx) => {
     const articleId = ctx.params.articleId;
-    const [err, res] = await errorCapture(Comment, Comment.find, { from: articleId });
-    if (err) {
-        ctx.body = new ErrorModule(err.message);
-        return;
-    }
-    ctx.body = new SuccessModule('获取评论信息成功', res);
+    await Comment.find({ from: articleId })
+        .populate({ path: 'creator', select: 'nicename' })
+        .exec()
+        .then((res) => {
+            ctx.body = new SuccessModule('获取评论信息成功', res);
+        })
+        .catch((err) => {
+            ctx.body = new ErrorModule(err.message);
+        });
 });
 
 // 给评论点赞/取消点赞

@@ -1,15 +1,23 @@
 <template>
-    <div v-if="loading" class="loading-page">
-        <p>Loading...</p>
+    <div v-show="loading" class="loading-page">
+        <span v-for="(item, index) of message" :key="index" :style="getCharaStyle(index)">
+            {{ item }}
+        </span>
     </div>
 </template>
 
 <script>
 export default {
-    data: () => ({
-        loading: false
-    }),
+    data() {
+        return {
+            loading: false,
+            message: 'Loading...'
+        };
+    },
     methods: {
+        getCharaStyle(index) {
+            return `animation-delay: ${index * 0.1}s; animation-duration: ${index * 0.1}`;
+        },
         start() {
             this.loading = true;
         },
@@ -23,15 +31,31 @@ export default {
 <style scoped lang="scss">
 .loading-page {
     position: fixed;
-    top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    padding-top: 200px;
-    font-size: 30px;
+    bottom: 0;
+    font-size: 28px;
     font-family: sans-serif;
     z-index: 9999;
+    color: white;
+    margin: 20px;
+    span {
+        padding-right: 2px;
+        position: relative;
+        display: inline-block;
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                bottom: 30px;
+            }
+
+            100% {
+                opacity: 1;
+                bottom: 0;
+            }
+        }
+        animation-name: fadeInDown;
+        animation-timing-function: ease;
+        animation-iteration-count: infinite;
+    }
 }
 </style>

@@ -1,6 +1,9 @@
 <template>
     <div class="comment">
-        <h1>发表评论</h1>
+        <h1>
+            <span>发表评论</span>
+            <hr />
+        </h1>
         <div class="comment-avatar"></div>
         <div class="comment-main">
             <editor
@@ -47,13 +50,18 @@ export default {
             const editor = this.$refs.editorInstance;
             const type = editor.invoke('isMarkdownMode') ? 'wysiwyg' : 'markdown';
             editor.invoke('changeMode', type, true);
+            editor.invoke(
+                'setPlaceholder',
+                `当前为${type === 'wysiwyg' ? '富文本' : 'markdown'}模式`
+            );
         },
         submitComment() {
+            // 直接获取html然后再数据库中存放的也为html
             const editor = this.$refs.editorInstance;
-            const markdown = editor.invoke('getMarkdown');
+            const html = editor.invoke('getHtml');
             createComment(this, {
                 from: this.$route.params.id,
-                content: markdown
+                content: html
             }).then((res) => {
                 editor.invoke('reset');
                 editor.invoke('setPlaceholder', '');
@@ -62,6 +70,7 @@ export default {
                     type: 'success'
                 });
             });
+            console.log(html);
         }
     },
     mounted() {},
@@ -76,6 +85,14 @@ export default {
     h1 {
         font-size: 30px;
         margin-bottom: 10px;
+        span {
+            display: inline-block;
+            height: 40px;
+            padding: 2px;
+            border-radius: 2px;
+            font-weight: bolder;
+            color: black;
+        }
     }
     .comment-avatar {
         width: 50px;
@@ -88,13 +105,12 @@ export default {
     .comment-editor /deep/.te-mode-switch-section {
         display: none !important;
     }
-    .comment-editor /deep/.te-editor-section {
-        background-color: white;
-    }
     .comment-editor /deep/.tui-editor-defaultUI {
+        min-height: 180px;
         border-radius: 8px 8px 0 0;
         border: 1px solid #eee;
         overflow: auto;
+        background-color: white;
     }
     .comment-tool {
         background-color: white;
