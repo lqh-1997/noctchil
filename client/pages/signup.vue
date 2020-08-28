@@ -1,7 +1,7 @@
 <template>
     <div class="signup">
-        <div class="container">
-            <div class="title">NOCTCHIL</div>
+        <div class="signup-container">
+            <div class="signup-title">NOCTCHIL</div>
             <el-form :model="loginForm">
                 <el-form-item prop="username">
                     <input
@@ -87,13 +87,13 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    .container {
+    .signup-container {
         width: 320px;
         display: flex;
         justify-content: center;
         justify-self: center;
         flex-direction: column;
-        .title {
+        .signup-title {
             font-size: 40px;
             color: white;
             text-align: center;
