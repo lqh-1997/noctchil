@@ -15,6 +15,7 @@ import * as comment from './routes/comment';
 
 import haveSession from './middlewares/haveSession';
 import log from './middlewares/log';
+import catchError from './middlewares/catchError';
 
 const app = new Koa();
 
@@ -24,6 +25,7 @@ app.use(
     })
 );
 
+app.use(catchError());
 app.use(log);
 
 app.keys = ['EagI_$%d42'];
