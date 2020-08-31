@@ -1,5 +1,6 @@
+import { logger } from '../config/logger';
 interface BaseModule {
-    message: string;
+    message: string | Error;
     data?: any;
     code: number;
 }
@@ -16,12 +17,13 @@ export class SuccessModule implements BaseModule {
 }
 
 export class ErrorModule implements BaseModule {
-    message: string;
+    message: string | Error;
     data?: any;
     code: number;
-    constructor(message: string, data?: any) {
-        this.message = message;
+    constructor(message: string | Error, data?: any) {
+        this.message = message instanceof Error ? message.message : message;
         this.data = data;
         this.code = -1;
+        logger.error(message);
     }
 }

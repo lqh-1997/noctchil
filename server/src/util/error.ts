@@ -1,3 +1,4 @@
+import { logger } from '../config/logger';
 /**
  * 代替async的try和catch
  * @param that 方法this指向
@@ -9,7 +10,6 @@ export async function errorCapture(that: any, asyncFunction: Function, ...args: 
         let res = await asyncFunction.apply(that, args);
         return [null, res];
     } catch (e) {
-        console.log(e);
         return [e, null];
     }
 }

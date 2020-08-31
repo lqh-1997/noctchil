@@ -4,7 +4,6 @@ import isLogin from '../middlewares/isLogin';
 import { DefaultState, Context } from 'koa';
 import { errorCapture } from '../util/error';
 import { SuccessModule, ErrorModule } from '../util/resModel';
-import { CommentDocument } from '../models/comment';
 import * as mongoose from 'mongoose';
 
 const { ObjectId } = mongoose.Types;
@@ -22,7 +21,7 @@ router.post('/comment', isLogin, async (ctx) => {
     });
     const [err] = await errorCapture(comment, comment.save);
     if (err) {
-        ctx.body = new ErrorModule(err.message);
+        ctx.body = new ErrorModule(err);
         return;
     }
     ctx.body = new SuccessModule('评论成功');
@@ -38,7 +37,7 @@ router.get('/comments/:articleId', async (ctx) => {
             ctx.body = new SuccessModule('获取评论信息成功', res);
         })
         .catch((err) => {
-            ctx.body = new ErrorModule(err.message);
+            ctx.body = new ErrorModule(err);
         });
 });
 
@@ -50,7 +49,7 @@ router.put('/comment/like', async (ctx) => {
     try {
         res = await Comment.findById(id);
     } catch (err) {
-        ctx.body = new ErrorModule(err.message);
+        ctx.body = new ErrorModule(err);
         return;
     }
     if (res) {
@@ -61,7 +60,7 @@ router.put('/comment/like', async (ctx) => {
                 likes
             });
         } catch (err) {
-            ctx.body = new ErrorModule(err.message);
+            ctx.body = new ErrorModule(err);
             return;
         }
         ctx.body = doLike ? new SuccessModule('点赞成功') : new SuccessModule('取消成功');

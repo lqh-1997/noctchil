@@ -42,7 +42,7 @@ router.post('/article', isAdmin, async (ctx) => {
         });
         await article.save();
     } catch (err) {
-        ctx.body = new ErrorModule(err.message);
+        ctx.body = new ErrorModule(err);
         return;
     }
     ctx.body = new SuccessModule('文章创建成功');
@@ -69,7 +69,7 @@ router.put('/article', isAdmin, async (ctx) => {
             updateTime: new Date()
         });
     } catch (err) {
-        ctx.body = new ErrorModule(err.message);
+        ctx.body = new ErrorModule(err);
     }
     // 判定是否修改
     res ? (ctx.body = new SuccessModule('修改成功')) : (ctx.body = new ErrorModule('修改失败'));
@@ -86,7 +86,7 @@ router.get('/article', async (ctx) => {
     try {
         res = await Article.findById(id);
     } catch (err) {
-        ctx.body = new ErrorModule(err.message);
+        ctx.body = new ErrorModule(err);
         return;
     }
     if (res) {
@@ -112,7 +112,7 @@ router.get('/articles', async (ctx) => {
     };
     let [err, res] = await errorCapture(Article, Article.find, {});
     if (err) {
-        ctx.body = new ErrorModule(err.message);
+        ctx.body = new ErrorModule(err);
         return;
     }
     result.total = res.length;
@@ -124,7 +124,7 @@ router.get('/articles', async (ctx) => {
         result.data = listRes;
         ctx.body = new SuccessModule('获取成功', result);
     } catch (err) {
-        ctx.body = new ErrorModule(err.message);
+        ctx.body = new ErrorModule(err);
     }
 });
 
@@ -136,7 +136,7 @@ router.put('/article/like', async (ctx) => {
     try {
         res = await Article.findById(id);
     } catch (err) {
-        ctx.body = new ErrorModule(err.message);
+        ctx.body = new ErrorModule(err);
         return;
     }
     if (res) {
@@ -147,7 +147,7 @@ router.put('/article/like', async (ctx) => {
                 meta: meta
             });
         } catch (err) {
-            ctx.body = new ErrorModule(err.message);
+            ctx.body = new ErrorModule(err);
             return;
         }
         ctx.body = doLike ? new SuccessModule('点赞成功') : new SuccessModule('取消成功');

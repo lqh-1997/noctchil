@@ -8,17 +8,13 @@ import { fileDir } from './config/global';
 import * as session from 'koa-session';
 import * as redisStore from 'koa-redis';
 import * as staticFile from 'koa-static';
-import * as logger from 'koa-logger';
-import * as morgan from 'koa-morgan';
 import * as user from './routes/user';
 import * as article from './routes/article';
 import * as file from './routes/file';
 import * as comment from './routes/comment';
-import path = require('path');
-import fs = require('fs');
 
 import haveSession from './middlewares/haveSession';
-import { createFolder } from './util/fileUtils';
+import log from './middlewares/log';
 
 const app = new Koa();
 
@@ -27,32 +23,8 @@ app.use(
         enableTypes: ['json', 'form', 'text']
     })
 );
-app.use(logger());
 
-// logger
-app.use(async (ctx, next) => {
-    const start = Date.now();
-    await next();
-    const ms = Date.now() - start;
-    console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
-});
-
-// 日志记录
-const ENV = process.env.NODE_ENV;
-if (ENV !== 'production') {
-    app.use(morgan('dev'));
-} else {
-    const logFileName = path.join(__dirname, 'logs', 'access.log');
-    createFolder(path.join(__dirname, 'logs'));
-    const writeStream = fs.createWriteStream(logFileName, {
-        flags: 'a'
-    });
-    app.use(
-        morgan('combined', {
-            stream: writeStream
-        })
-    );
-}
+app.use(log);
 
 app.keys = ['EagI_$%d42'];
 app.use(

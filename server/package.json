@@ -17,8 +17,6 @@
     "@typegoose/typegoose": "^7.3.0",
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.3.0",
-    "koa-logger": "^3.2.1",
-    "koa-morgan": "^1.0.1",
     "koa-onerror": "^4.1.0",
     "koa-redis": "^4.0.1",
     "koa-router": "^9.1.0",
@@ -26,7 +24,8 @@
     "koa-static": "^5.0.0",
     "mongoose": "^5.9.25",
     "multer": "^1.4.2",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/koa": "^2.11.3",
