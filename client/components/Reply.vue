@@ -24,10 +24,9 @@ export default {
 
 <style lang="scss" scoped>
 .reply {
-    margin-top: 20px;
-    min-height: 200px;
-    background-color: white;
+    min-height: 140px;
     display: flex;
+    border-bottom: #eee 1px solid;
     .reply-avatar {
         flex-basis: 50px;
         border-radius: 50% 50%;

@@ -13,7 +13,14 @@
     }
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["bodyparser", "interf", "nicename", "typegoose"],
+  "cSpell.words": [
+    "bodyparser",
+    "interf",
+    "maxsize",
+    "nicename",
+    "printf",
+    "typegoose"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },

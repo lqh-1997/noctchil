@@ -14,6 +14,18 @@
                 </dl>
             </li>
         </ul>
+
+        <el-dropdown>
+            <span class="el-dropdown-link">
+                首页<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="item of headList" :key="item.name">
+                    {{ item.name }}
+                </el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+
         <div style="float: right; margin-right: 20px;" @click="handleLogout" v-if="isLogin">
             注销
         </div>
@@ -78,11 +90,11 @@ header {
     width: 100%;
     top: 0;
 }
-header ul {
+header > ul {
     width: $defaultLayoutWidth;
     margin: 0 auto;
 }
-header ul li {
+header > ul li {
     list-style: none;
     float: left;
     min-width: 100px;
@@ -103,7 +115,7 @@ header ul li {
         }
     }
 }
-header ul li {
+header > ul li {
     dl {
         transition: opacity 0.3s ease;
         opacity: 0;
@@ -122,14 +134,31 @@ header ul li {
         }
     }
 }
+header .el-dropdown {
+    display: none;
+    width: 100px;
+    text-align: center;
+    font-size: 18px;
+    color: $defaultColor;
+    font-weight: bold;
+    font-family: '微软雅黑';
+}
+body /deep/ .el-dropdown-menu {
+    .popper__arrow {
+        display: none;
+    }
+}
 @media screen and (max-width: $defaultLayoutWidth) {
     header ul {
         width: 100%;
     }
 }
 @media screen and(max-width: $defaultMiddleWidth) {
-    header {
+    header > ul {
         display: none;
+    }
+    header .el-dropdown {
+        display: inline-block;
     }
 }
 </style>

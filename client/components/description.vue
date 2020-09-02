@@ -7,7 +7,11 @@
 
 <script>
 // 标题以及小标题栏
-export default {};
+export default {
+    mounted() {
+        console.log(1);
+    }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -23,10 +27,10 @@ export default {};
     flex-direction: column;
 }
 h1 {
-    font-size: 3rem;
+    font-size: 40px;
 }
 h2 {
-    font-size: 2rem;
+    font-size: 30px;
     white-space: nowrap;
 }
 </style>

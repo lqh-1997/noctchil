@@ -5,10 +5,10 @@
                 <h1>标题</h1>
                 <my-viewer :initialValue="viewer" class="viewer"></my-viewer>
             </article>
-            <comment></comment>
-            <template v-for="item of comment">
-                <reply :key="item.id" :reply="item"></reply>
-            </template>
+            <comment @commentSuccess="updateComment"></comment>
+            <div class="article-reply">
+                <reply v-for="item of comment" :key="item.id" :reply="item"></reply>
+            </div>
         </div>
         <side-flow class="article-side-flow"></side-flow>
     </div>
@@ -31,6 +31,12 @@ export default {
     },
     data() {
         return {};
+    },
+    methods: {
+        async updateComment() {
+            const commentRes = await getCommentsByArticleId(this, this.$route.params.id);
+            this.comment = commentRes.data.data;
+        }
     },
     async asyncData(Context) {
         const id = Context.params.id;
@@ -76,6 +82,11 @@ export default {
             .viewer {
                 min-height: 300px;
             }
+        }
+        .article-reply {
+            margin-top: 20px;
+            border-radius: 8px;
+            background-color: white;
         }
     }
 }

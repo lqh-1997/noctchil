@@ -13,3 +13,14 @@ body * {
     margin: 0;
     padding: 0;
 }
+
+body .el-dropdown-menu {
+    .popper__arrow {
+        display: none;
+    }
+    padding: 0;
+    .el-popper[x-placement^='bottom'] {
+        margin: 0;
+    }
+    transform: translateY(-12px);
+}

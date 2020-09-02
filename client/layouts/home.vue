@@ -43,7 +43,8 @@ export default {
     padding: 0;
     margin: 0;
 }
-@media screen and (max-width: 1260px) {
+// 这里加三十是为了防止滚动条占用空间导致横向滚动条的出现
+@media screen and (max-width: $defaultLayoutWidth + 30) {
     .home-main {
         width: 100%;
     }

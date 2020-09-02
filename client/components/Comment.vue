@@ -69,6 +69,7 @@ export default {
                     message: res.data.message,
                     type: 'success'
                 });
+                this.$emit('commentSuccess');
             });
             console.log(html);
         }
