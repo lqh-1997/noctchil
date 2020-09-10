@@ -38,6 +38,7 @@ export default {
     margin: 0 auto;
     padding: 0;
     overflow: visible;
+    min-height: 1000px;
 }
 .el-footer {
     padding: 0;

@@ -54,10 +54,10 @@ export default {
         };
     },
     methods: {
-        ...mapMutations(['SET_USERID']),
+        ...mapMutations(['setUserId']),
         // FIXME 清空cookie
         handleLogout() {
-            this.SET_USERID(0);
+            this.setUserId(0);
             logout(this).then((res) => {
                 this.$message({
                     message: res.data.message,

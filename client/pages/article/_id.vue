@@ -5,7 +5,7 @@
                 <h1>标题</h1>
                 <my-viewer :initialValue="viewer" class="viewer"></my-viewer>
             </article>
-            <comment @commentSuccess="updateComment"></comment>
+            <comment @commentSuccess="updateComment" v-if="isLogin"></comment>
             <div class="article-reply">
                 <reply v-for="item of comment" :key="item.id" :reply="item"></reply>
             </div>
@@ -18,9 +18,10 @@
 import MyViewer from '../../components/MyViewer';
 import Comment from '../../components/Comment';
 import Reply from '../../components/Reply';
-import SideFlow from '../../components/SideFlow';
+import SideFlow from '../../components/SideFlow/index';
 import { getArticleById } from '../../api/article';
 import { getCommentsByArticleId } from '../../api/comment';
+import { mapGetters } from 'vuex';
 export default {
     layout: 'home',
     components: {
@@ -30,13 +31,27 @@ export default {
         Reply
     },
     data() {
-        return {};
+        return {
+            isLogin: false
+        };
     },
     methods: {
         async updateComment() {
             const commentRes = await getCommentsByArticleId(this, this.$route.params.id);
             this.comment = commentRes.data.data;
         }
+    },
+    computed: {
+        ...mapGetters(['getUserId'])
+    },
+    watch: {
+        getUserId(data) {
+            console.log(data);
+            this.isLogin = !!data;
+        }
+    },
+    mounted() {
+        this.isLogin = !!this.$store.state.userId;
     },
     async asyncData(Context) {
         const id = Context.params.id;

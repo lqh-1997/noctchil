@@ -13,13 +13,13 @@ export const getters = {
 };
 
 export const mutations = {
-    SET_USERID(state, id) {
+    setUserId(state, id) {
         state.userId = id;
     },
-    SET_USERNAME(state, username) {
+    setUsername(state, username) {
         state.username = username;
     },
-    SET_NICENAME(state, nicename) {
+    setNicename(state, nicename) {
         state.nicename = nicename;
     }
 };
@@ -30,9 +30,9 @@ export const actions = {
             getUserInfo(app)
                 .then((res) => {
                     const { data } = res.data;
-                    commit('SET_USERID', data._id);
-                    commit('SET_USERNAME', data.username);
-                    commit('SET_NICENAME', data.nicename);
+                    commit('setUserId', data._id);
+                    commit('setUsername', data.username);
+                    commit('setNicename', data.nicename);
                     resolve();
                 })
                 .catch((err) => {

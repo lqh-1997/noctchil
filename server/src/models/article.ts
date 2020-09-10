@@ -19,7 +19,7 @@ const articleSchema = new Schema({
     type: { type: String, enum: ['message', 'article'], required: true, default: 'article' },
     state: { type: String, enum: ['publish', 'draft'], required: true, default: 'draft' },
     tags: { type: [String] },
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', require: true }],
+    // comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', require: true }],
     creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     invisible: { type: Boolean, default: false, required: true },
     meta: {
@@ -46,7 +46,7 @@ export interface ArticleDocument extends Document {
     // 文章标签
     tags: [string];
     // 文章评论
-    comments: [CommentDocument];
+    // comments: [CommentDocument];
     // 创建者
     creator: UserDocument;
     // 是否要登录后才可查看

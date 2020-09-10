@@ -1,7 +1,18 @@
 <template>
     <section>
-        <ul class="list">
-            <li class="article" v-if="!articleList || articleList.length === 0">
+        <transition-group
+            name="list"
+            tag="ul"
+            @before-enter="beforeEnter"
+            @enter="enter"
+            class="list"
+        >
+            <li
+                class="article"
+                v-if="!articleList || articleList.length === 0"
+                :key="0"
+                :dataset="0"
+            >
                 <div class="article-container">
                     <h1>
                         <nuxt-link to="#">暂无文章</nuxt-link>
@@ -11,15 +22,16 @@
                     </article>
                 </div>
                 <ul class="info">
-                    <li>2020-08-02</li>
-                    <li>0条评论</li>
-                    <li>0次阅读</li>
-                    <li>0人点赞</li>
-                    <li>阅读全文</li>
+                    <li class="hidden">来自未来</li>
+                    <li class="hidden">没人评论</li>
+                    <li>没人阅读</li>
+                    <li>没人点赞</li>
+                    <li>没有全文</li>
                 </ul>
             </li>
-            <template v-for="item of articleList">
-                <li class="message" :key="item._id" v-if="item.type === 'message'">
+
+            <template v-for="(item, index) of articleList">
+                <li class="message" :key="item._id" v-if="item.type === 'message'" :dataset="index">
                     <div class="user">
                         <div class="avatar"></div>
                         <div class="user-info">
@@ -29,11 +41,28 @@
                     </div>
                     <div class="message-content">{{ item.content }}</div>
                     <ul class="info">
-                        <li>点赞{{ item.meta.likes }}</li>
-                        <li>评论{{ item.meta.comments }}</li>
+                        <li>
+                            <favourite
+                                :count="item.meta.likes"
+                                :id="item._id"
+                                :likeList="likeList"
+                                @changeLikeList="changeFavourite"
+                            ></favourite>
+                        </li>
+                        <li>
+                            <span>
+                                <svg-icon :iconClass="'comment'" />
+                            </span>
+                            评论{{ item.meta.comments }}
+                        </li>
                     </ul>
                 </li>
-                <li class="article" :key="item._id" v-else-if="item.type === 'article'">
+                <li
+                    class="article"
+                    :key="item._id"
+                    v-else-if="item.type === 'article'"
+                    :dataset="index"
+                >
                     <div class="article-container">
                         <h1>
                             <nuxt-link :to="'/article/' + item._id">{{ item.title }}</nuxt-link>
@@ -43,32 +72,57 @@
                         </article>
                     </div>
                     <ul class="info">
-                        <li>{{ item.createTime | timeFormat }}</li>
-                        <li>{{ item.meta.comments }}条评论</li>
-                        <li>{{ item.meta.views }}次阅读</li>
-                        <li>{{ item.meta.likes }}人点赞</li>
-                        <li><nuxt-link :to="'/article/' + item._id">阅读全文</nuxt-link></li>
+                        <li class="hidden">{{ item.createTime | timeFormat }}</li>
+                        <li class="hidden">
+                            <span>
+                                <svg-icon :iconClass="'comment'" />
+                            </span>
+                            {{ item.meta.comments }}条评论
+                        </li>
+                        <li>
+                            <span>
+                                <svg-icon :iconClass="'read'" />
+                            </span>
+                            {{ item.meta.views }}次阅读
+                        </li>
+                        <li>
+                            <favourite
+                                :count="item.meta.likes"
+                                :id="item._id"
+                                :likeList="likeList"
+                                @changeLikeList="changeFavourite"
+                            ></favourite>
+                        </li>
+                        <li class="hidden">
+                            <nuxt-link :to="'/article/' + item._id">阅读全文</nuxt-link>
+                        </li>
                     </ul>
                 </li>
             </template>
-            <el-pagination
-                :total="total"
-                layout="prev, pager, next"
-                class="pagination"
-                @current-change="handleGetArticleList"
-            ></el-pagination>
-        </ul>
+        </transition-group>
+        <!-- FIXME 位置不对啊 -->
+        <el-pagination
+            :total="total"
+            layout="prev, pager, next"
+            class="pagination"
+            @current-change="handleGetArticleList"
+        ></el-pagination>
         <side-flow></side-flow>
     </section>
 </template>
 
 <script>
-import SideFlow from './SideFlow';
+import SideFlow from './SideFlow/index';
+import SvgIcon from './SvgIcon';
+import Favourite from './Favourite';
 import { timeFromDbToTime } from '../util/timeFormat';
+import { likeArticle } from '../api/article';
 export default {
     layout: 'home',
     components: {
-        SideFlow
+        SideFlow,
+        SvgIcon,
+        Favourite
     },
     props: {
         articleList: {
@@ -85,11 +139,39 @@ export default {
     filters: {
         timeFormat: timeFromDbToTime
     },
-    mounted() {},
+    data() {
+        return {
+            likeList: []
+        };
+    },
     methods: {
         handleGetArticleList(val) {
             this.$emit('handleGetArticleList', val);
-        }
+        },
+        changeFavourite(beLiked, id) {
+            // 已经被喜欢再点击就是不喜欢
+            likeArticle(this, id, !beLiked)
+                .then((res) => {
+                    if (beLiked) {
+                        this.likeList = this.likeList.filter((item) => {
+                            return item !== id;
+                        });
+                    } else {
+                        this.likeList.push(id);
+                    }
+                    localStorage.setItem('likeList', JSON.stringify(this.likeList));
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        beforeEnter(el) {
+            el.style.opacity = 0;
+        },
+        enter(el) {}
+    },
+    mounted() {
+        this.likeList = JSON.parse(localStorage.getItem('likeList')) || this.likeList;
     }
 };
 </script>
@@ -104,11 +186,12 @@ section {
     justify-content: space-between;
     margin-top: $articleGap;
     .pagination {
-        float: left;
-        margin-top: 20px;
+        position: absolute;
+        bottom: 0;
     }
 }
 .list {
+    position: relative;
     flex-basis: 700px;
     flex-grow: 1;
     .message,
@@ -163,8 +246,14 @@ section {
                 text-align: center;
                 box-sizing: border-box;
                 color: #7a7a7a;
+                cursor: default;
                 &:first-of-type {
                     border-right: 1px solid #ddd;
+                }
+                span {
+                    font-size: 20px;
+                    padding-right: 10px;
+                    vertical-align: bottom;
                 }
             }
         }
@@ -217,11 +306,17 @@ section {
             justify-content: space-around;
             font-size: 12px;
             text-align: center;
+            cursor: default;
             li {
                 color: #666;
                 flex: 1;
                 &:not(:last-of-type) {
                     border-right: #ddd 1px solid;
+                }
+                span {
+                    font-size: 20px;
+                    padding-right: 10px;
+                    vertical-align: bottom;
                 }
             }
         }
@@ -239,6 +334,9 @@ section {
             margin-right: 20px;
             margin-left: 20px;
         }
+    }
+    .hidden {
+        display: none;
     }
 }
 </style>

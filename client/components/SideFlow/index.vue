@@ -1,9 +1,15 @@
 <template>
-    <div ref="sideFlow" class="side">123456</div>
+    <div ref="sideFlow" class="side">
+        <user-info></user-info>
+    </div>
 </template>
 
 <script>
+import UserInfo from './UserInfo';
 export default {
+    components: {
+        UserInfo
+    },
     methods: {
         /**
          * 1、在window resize的时候 不会自动修改以下数据 会导致bug 所以该方法deprecated
@@ -31,10 +37,8 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/global.scss';
 .side {
-    flex-basis: 200px;
-    height: 300px;
-    background-color: rgba($color: $defaultColor, $alpha: 0.6);
-    padding: 20px;
+    flex-basis: 300px;
+    height: 100px;
     position: sticky;
     margin-left: 20px;
     top: 56px;

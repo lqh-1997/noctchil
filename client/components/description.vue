@@ -8,9 +8,7 @@
 <script>
 // 标题以及小标题栏
 export default {
-    mounted() {
-        console.log(1);
-    }
+    mounted() {}
 };
 </script>
 
@@ -25,6 +23,7 @@ export default {
     flex-wrap: wrap;
     justify-content: center;
     flex-direction: column;
+    overflow: hidden;
 }
 h1 {
     font-size: 40px;

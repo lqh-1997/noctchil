@@ -6,3 +6,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+@mixin fadeTransform($name) {
+    .#{$name}-leave-active,
+    .#{$name}-enter-active {
+        transition: all 0.3s;
+    }
+    .#{$name}-enter {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    .#{$name}-leave-to {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+}

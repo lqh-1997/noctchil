@@ -48,7 +48,7 @@ export default {
         };
     },
     methods: {
-        ...mapMutations(['SET_USERID']),
+        ...mapMutations(['setUserId']),
         // 点击登录
         handleLogin() {
             const username = this.loginForm.username;
@@ -63,7 +63,7 @@ export default {
                     type: 'success'
                 });
                 // 登录成功就设置userId，并且跳转到home页面
-                this.SET_USERID(res.data.data);
+                this.setUserId(res.data.data);
                 this.$router.push('/home');
             });
         },

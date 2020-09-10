@@ -3,7 +3,7 @@
         <div class="title">欢迎</div>
         <div class="icon">
             <nuxt-link to="/home">
-                <svg-icon :icon-class="'xiala'" />
+                <svg-icon :icon-class="'pullDown'" />
             </nuxt-link>
         </div>
         <bubbles

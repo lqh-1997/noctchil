@@ -38,7 +38,7 @@ export default {
         ],
         script: [
             {
-                src: 'http://at.alicdn.com/t/font_1925326_mzd0pujmlpe.js'
+                src: 'http://at.alicdn.com/t/font_1925326_6mybvdhclb8.js'
             }
         ]
     },

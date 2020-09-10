@@ -1,4 +1,5 @@
 import * as Router from 'koa-router';
+import Article from '../models/article';
 import Comment from '../models/comment';
 import isLogin from '../middlewares/isLogin';
 import { DefaultState, Context } from 'koa';
@@ -14,6 +15,10 @@ router.prefix('/api');
 // 新建评论
 router.post('/comment', isLogin, async (ctx) => {
     const { content, from } = ctx.request.body;
+    if (!ObjectId.isValid(from)) {
+        ctx.body = new ErrorModule('请输入合法id');
+        return;
+    }
     const comment = new Comment({
         creator: ctx.session && ctx.session.userId,
         content,
@@ -24,6 +29,23 @@ router.post('/comment', isLogin, async (ctx) => {
         ctx.body = new ErrorModule(err);
         return;
     }
+
+    // 文章评论meta comments+1
+    try {
+        const res = await Article.findById(from);
+        if (res === null) {
+            throw new Error('文章不存在');
+        }
+        const meta = res.meta;
+        meta.comments++;
+        await Article.findByIdAndUpdate(from, {
+            meta
+        });
+    } catch (err) {
+        ctx.body = new ErrorModule(err);
+        return;
+    }
+
     ctx.body = new SuccessModule('评论成功');
 });
 
