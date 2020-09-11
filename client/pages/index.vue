@@ -37,49 +37,49 @@ export default {
     background-size: cover;
     background-repeat: no-repeat;
     position: relative;
-}
-.title {
-    color: white;
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 50px;
-    font-weight: 300;
-}
-.icon {
-    width: 20px !important;
-    height: 20px !important;
-    color: white;
-    position: absolute;
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 20;
-    &:hover {
-        transition: shake 3s ease infinite;
-        color: rgba($color: #3ea2ff, $alpha: 1);
+    .title {
+        color: white;
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 50px;
+        font-weight: 300;
     }
-    @keyframes shake {
-        0% {
-            color: '#123456';
+    .icon {
+        width: 20px !important;
+        height: 20px !important;
+        color: white;
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+        &:hover {
+            transition: shake 3s ease infinite;
+            color: rgba($color: #3ea2ff, $alpha: 1);
         }
-        25% {
-            color: '#654321';
-        }
-        50% {
-            color: '#123456';
-        }
-        75% {
-            color: '#654321';
-        }
-        100% {
-            color: '#123456';
+        @keyframes shake {
+            0% {
+                color: '#123456';
+            }
+            25% {
+                color: '#654321';
+            }
+            50% {
+                color: '#123456';
+            }
+            75% {
+                color: '#654321';
+            }
+            100% {
+                color: '#123456';
+            }
         }
     }
-}
-.bubble {
-    position: absolute;
-    bottom: 0;
+    .bubble {
+        position: absolute;
+        bottom: 0;
+    }
 }
 </style>

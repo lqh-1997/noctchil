@@ -1,11 +1,19 @@
 <template>
     <section>
+        <el-pagination
+            :total="total"
+            layout="prev, pager, next"
+            class="pagination"
+            @current-change="handleGetArticleList"
+        ></el-pagination>
+
         <transition-group
             name="list"
             tag="ul"
             @before-enter="beforeEnter"
             @enter="enter"
             class="list"
+            :css="false"
         >
             <li
                 class="article"
@@ -31,7 +39,12 @@
             </li>
 
             <template v-for="(item, index) of articleList">
-                <li class="message" :key="item._id" v-if="item.type === 'message'" :dataset="index">
+                <li
+                    class="message"
+                    :key="item._id"
+                    v-if="item.type === 'message'"
+                    :data-index="index"
+                >
                     <div class="user">
                         <div class="avatar"></div>
                         <div class="user-info">
@@ -61,7 +74,7 @@
                     class="article"
                     :key="item._id"
                     v-else-if="item.type === 'article'"
-                    :dataset="index"
+                    :data-index="index"
                 >
                     <div class="article-container">
                         <h1>
@@ -100,13 +113,7 @@
                 </li>
             </template>
         </transition-group>
-        <!-- FIXME 位置不对啊 -->
-        <el-pagination
-            :total="total"
-            layout="prev, pager, next"
-            class="pagination"
-            @current-change="handleGetArticleList"
-        ></el-pagination>
+
         <side-flow></side-flow>
     </section>
 </template>
@@ -167,8 +174,17 @@ export default {
         },
         beforeEnter(el) {
             el.style.opacity = 0;
+            el.style.transform = 'translateY(40px)';
         },
-        enter(el) {}
+        enter(el, done) {
+            const delay = el.dataset.index * 100;
+            setTimeout(() => {
+                el.style.transition = 'all ease 0.4s';
+                el.style.transform = 'translateY(0)';
+                el.style.opacity = '1';
+                done();
+            }, delay);
+        }
     },
     mounted() {
         this.likeList = JSON.parse(localStorage.getItem('likeList')) || this.likeList;
@@ -185,6 +201,7 @@ section {
     flex-wrap: nowrap;
     justify-content: space-between;
     margin-top: $articleGap;
+    margin-bottom: 50px;
     .pagination {
         position: absolute;
         bottom: 0;
@@ -252,7 +269,7 @@ section {
                 }
                 span {
                     font-size: 20px;
-                    padding-right: 10px;
+                    padding-right: 5px;
                     vertical-align: bottom;
                 }
             }
@@ -315,7 +332,7 @@ section {
                 }
                 span {
                     font-size: 20px;
-                    padding-right: 10px;
+                    padding-right: 5px;
                     vertical-align: bottom;
                 }
             }

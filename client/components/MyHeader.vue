@@ -40,6 +40,7 @@
 
 <script>
 import { logout } from '../api/user';
+import { removeCookie } from '../util/cookie';
 import { mapGetters, mapMutations } from 'vuex';
 export default {
     data() {
@@ -55,15 +56,21 @@ export default {
     },
     methods: {
         ...mapMutations(['setUserId']),
-        // FIXME 清空cookie
+        // 请求失败就直接将cookie重置
         handleLogout() {
             this.setUserId(0);
-            logout(this).then((res) => {
-                this.$message({
-                    message: res.data.message,
-                    type: 'success'
+            logout(this)
+                .then((res) => {
+                    this.$message({
+                        message: res.data.message,
+                        type: 'success'
+                    });
+                })
+                .catch((err) => {
+                    removeCookie('noctchil_s.sig');
+                    removeCookie('noctchil_s');
+                    throw err;
                 });
-            });
         }
     },
     computed: {
@@ -89,6 +96,7 @@ header {
     position: fixed;
     width: 100%;
     top: 0;
+    z-index: 9999;
 }
 header > ul {
     width: $defaultLayoutWidth;

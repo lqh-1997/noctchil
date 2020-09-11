@@ -34,6 +34,8 @@ export default {
     background-size: cover;
 }
 .home-main {
+    padding-bottom: 50px;
+    position: relative;
     width: $defaultLayoutWidth;
     margin: 0 auto;
     padding: 0;
