@@ -2,7 +2,7 @@
     <div class="article-layout">
         <div class="article-main">
             <article>
-                <h1>标题</h1>
+                <h1>{{ article.title }}</h1>
                 <my-viewer :initialValue="viewer" class="viewer"></my-viewer>
             </article>
             <comment @commentSuccess="updateComment" v-if="isLogin"></comment>

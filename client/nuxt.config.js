@@ -24,6 +24,10 @@ export default {
                 content: 'width=device-width,initial-scale=1,maximum-scale=2,minimum-scale=1'
             },
             {
+                'http-equiv': 'X-UA-Compatible',
+                content: 'IE=edge,chrome=1'
+            },
+            {
                 hid: 'description',
                 name: 'description',
                 content: process.env.npm_package_description || ''

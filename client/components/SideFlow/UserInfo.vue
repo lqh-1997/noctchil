@@ -9,10 +9,11 @@
         </div>
     </div>
     <div v-else class="is-not-login">
-        <div class="side-main-up"></div>
-        <div class="side-main-down">点击头像进行登录</div>
-        <div class="side-avatar" @click="toLogin"></div>
-        <div class="side-main"></div>
+        <div class="side-main">
+            <div class="side-main-avatar" @click="toLogin"></div>
+            <div class="side-main-text">点击头像进行登录</div>
+        </div>
+        <div class="side-main2"></div>
     </div>
 </template>
 
@@ -81,25 +82,16 @@ export default {
 }
 
 .is-not-login {
-    .side-main-up {
-        height: 100px;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
+    .side-main {
+        height: 220px;
+        border-radius: 4px;
         background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
-    .side-main-down {
-        height: 120px;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
-        background-color: white;
-        line-height: 120px;
-        text-align: center;
-    }
-    .side-avatar {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        top: 50px;
+    .side-main-avatar {
+        margin-top: 40px;
         height: 80px;
         width: 80px;
         border-radius: 50%;
@@ -108,6 +100,13 @@ export default {
         background-size: cover;
         background-repeat: no-repeat;
         border: 1px solid #eee;
+        &:hover {
+            transform: rotate(666turn);
+            transition: all 59s cubic-bezier(0.34, 0, 0.84, 1) 1s;
+        }
+    }
+    .side-main-text {
+        margin-top: 20px;
     }
 }
 </style>

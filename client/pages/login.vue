@@ -53,6 +53,7 @@ export default {
         handleLogin() {
             const username = this.loginForm.username;
             const password = md5(this.loginForm.password);
+            // const password = this.loginForm.password;
             if (!this.hasUsername(username)) {
                 return;
             }
