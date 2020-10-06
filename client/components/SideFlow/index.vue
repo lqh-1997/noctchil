@@ -1,14 +1,17 @@
 <template>
     <div ref="sideFlow" class="side">
-        <user-info></user-info>
+        <user-info class="margin-bottom-20"></user-info>
+        <new-comment class="margin-bottom-20"></new-comment>
     </div>
 </template>
 
 <script>
 import UserInfo from './UserInfo';
+import NewComment from './NewComment';
 export default {
     components: {
-        UserInfo
+        UserInfo,
+        NewComment
     },
     methods: {
         /**
@@ -42,6 +45,9 @@ export default {
     position: sticky;
     margin-left: 20px;
     top: 56px;
+    .margin-bottom-20 {
+        margin-bottom: 20px;
+    }
 }
 @media screen and (max-width: $defaultMiddleWidth) {
     .side {

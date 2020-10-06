@@ -83,6 +83,9 @@ export default {
 @import '@/assets/scss/global.scss';
 .comment {
     margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
     h1 {
         font-size: 30px;
         margin-bottom: 10px;

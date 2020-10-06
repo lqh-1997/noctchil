@@ -26,13 +26,18 @@
             </el-dropdown-menu>
         </el-dropdown>
 
-        <div style="float: right; margin-right: 20px;" @click="handleLogout" v-if="isLogin">
+        <div
+            style="float: right; margin-right: 20px;"
+            @click="handleLogout"
+            v-if="isLogin"
+            class="account-button"
+        >
             注销
         </div>
-        <div style="float: right; margin-right: 20px;" v-if="!isLogin">
+        <div style="float: right; margin-right: 20px;" v-if="!isLogin" class="account-button">
             <nuxt-link to="/login">登录</nuxt-link>
         </div>
-        <div style="float: right; margin-right: 20px;" v-if="!isLogin">
+        <div style="float: right; margin-right: 20px;" v-if="!isLogin" class="account-button">
             <nuxt-link to="/signup">注册</nuxt-link>
         </div>
     </header>
@@ -96,7 +101,20 @@ header {
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 9999;
+    z-index: 1999;
+    .account-button {
+        color: #eee;
+        cursor: pointer;
+        &:hover {
+            color: $defaultColor;
+        }
+    }
+    .account-button a {
+        color: #eee;
+        &:hover {
+            color: $defaultColor;
+        }
+    }
 }
 header > ul {
     width: $defaultLayoutWidth;
@@ -113,6 +131,7 @@ header > ul li {
         width: 100%;
         margin: 0;
         transition: background-color 0.3s ease;
+        color: #eee;
         &:hover {
             background-color: rgba($color: #ffffff, $alpha: 0.2);
             cursor: pointer;

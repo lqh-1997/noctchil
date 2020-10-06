@@ -3,9 +3,10 @@
         <div class="article-main">
             <article>
                 <h1>{{ article.title }}</h1>
-                <my-viewer :initialValue="viewer" class="viewer"></my-viewer>
+                <viewer :initialValue="viewer" class="viewer"></viewer>
             </article>
             <comment @commentSuccess="updateComment" v-if="isLogin"></comment>
+            <div v-else class="login-tip">登陆后才可发言哦</div>
             <div class="article-reply">
                 <reply v-for="item of comment" :key="item.id" :reply="item"></reply>
             </div>
@@ -15,7 +16,6 @@
 </template>
 
 <script>
-import MyViewer from '../../components/MyViewer';
 import Comment from '../../components/Comment';
 import Reply from '../../components/Reply';
 import SideFlow from '../../components/SideFlow/index';
@@ -25,7 +25,6 @@ import { mapGetters } from 'vuex';
 export default {
     layout: 'home',
     components: {
-        MyViewer,
         SideFlow,
         Comment,
         Reply
@@ -76,6 +75,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/global.scss';
+@import '@/assets/scss/tui_viewer.scss';
 .article-layout {
     display: flex;
     flex-wrap: nowrap;
@@ -96,12 +96,17 @@ export default {
             }
             .viewer {
                 min-height: 300px;
+                @include changeViewerStyle();
             }
         }
         .article-reply {
             margin-top: 20px;
-            border-radius: 8px;
+            border-radius: 4px;
             background-color: white;
+        }
+        .login-tip {
+            padding-top: 20px;
+            text-align: center;
         }
     }
 }

@@ -51,7 +51,12 @@ app.use(
 
 app.use(haveSession);
 
-app.use(staticFile(fileDir));
+app.use(
+    staticFile(fileDir, {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        gzip: true
+    })
+);
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);

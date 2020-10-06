@@ -34,7 +34,6 @@
 
 <script>
 import { signUp } from '../api/user';
-import md5 from 'js-md5';
 export default {
     data() {
         return {
@@ -49,7 +48,7 @@ export default {
     methods: {
         handleSignup() {
             const username = this.loginForm.username;
-            const password = md5(this.loginForm.password);
+            const password = this.loginForm.password;
             if (!this.hasUsername(username)) {
                 return;
             }

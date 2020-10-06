@@ -4,7 +4,7 @@ const userSchema = new Schema({
     username: { type: String, trim: true, unique: true, index: true, required: true },
     password: { type: String, select: false },
     nicename: String,
-    salt: { type: String, select: false },
+    salt: { type: String, select: false, required: true },
     avatar: String,
     email: String,
     url: String,

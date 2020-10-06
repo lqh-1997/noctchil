@@ -1,15 +1,16 @@
 <template>
-    <div class="reply">
+    <div class="reply" :id="reply._id">
         <div class="reply-avatar"></div>
         <div class="reply-main">
             <div class="reply-username">{{ reply.creator.nicename }}</div>
-            <div class="reply-time">{{ reply.createTime }}</div>
+            <div class="reply-time">{{ reply.createTime | timeFormat }}</div>
             <viewer :initialValue="reply.content"></viewer>
         </div>
     </div>
 </template>
 
 <script>
+import { timeFromDbToTime } from '../util/timeFormat';
 export default {
     props: {
         reply: {
@@ -18,6 +19,9 @@ export default {
                 return {};
             }
         }
+    },
+    filters: {
+        timeFormat: timeFromDbToTime
     }
 };
 </script>
@@ -42,11 +46,13 @@ export default {
         margin-right: 20px;
         margin-bottom: 20px;
         .reply-username {
-            margin-top: 30px;
+            margin-top: 35px;
             line-height: 25px;
         }
         .reply-time {
-            line-height: 25px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 15px;
         }
     }
 }

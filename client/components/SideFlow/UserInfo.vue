@@ -46,6 +46,7 @@ export default {
 
 <style lang="scss" scoped>
 .is-login {
+    height: 200px;
     .side-avatar {
         margin-top: 10px;
         height: 80px;
@@ -82,6 +83,7 @@ export default {
 }
 
 .is-not-login {
+    height: 220px;
     .side-main {
         height: 220px;
         border-radius: 4px;

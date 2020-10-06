@@ -2,6 +2,7 @@ import * as Router from 'koa-router';
 import User from '../models/user';
 import isLogin from '../middlewares/isLogin';
 import notLogin from '../middlewares/notLogin';
+import { encryptPwd } from '../util/encryptPwd';
 import { DefaultState, Context } from 'koa';
 import { errorCapture } from '../util/error';
 import { SuccessModule, ErrorModule } from '../util/resModel';
@@ -9,6 +10,10 @@ import { SuccessModule, ErrorModule } from '../util/resModel';
 const router = new Router<DefaultState, Context>();
 
 router.prefix('/api');
+
+function getRandomSalt() {
+    return Math.random().toString().slice(2, 5);
+}
 
 // 注册
 router.post('/signUp', notLogin, async (ctx) => {
@@ -24,9 +29,12 @@ router.post('/signUp', notLogin, async (ctx) => {
         ctx.body = new ErrorModule('用户名已存在');
         return;
     }
+    const salt = getRandomSalt();
+    const password = encryptPwd(ctx.request.body.password, salt);
     user = new User({
         username: ctx.request.body.username,
-        password: ctx.request.body.password,
+        password,
+        salt,
         nicename: ctx.request.body.username,
         email: ctx.request.body.email,
         url: ctx.request.body.url
@@ -51,32 +59,34 @@ router.post('/login', notLogin, async (ctx: Context) => {
         ctx.body = new ErrorModule('密码不得为空');
         return;
     }
-    // TODO 寻找匹配的用户名密码 密码之后会修改成加盐加密
-    const [err, user] = await errorCapture(User, User.findOne, { username, password });
-    if (err) {
-        ctx.body = new ErrorModule(err);
-        return;
-    }
-    // 如果用户存在的话
-    if (user) {
-        // 用户名存在更新登录时间和登录状态
-        const [updateErr] = await errorCapture(User, User.findByIdAndUpdate, user._id, {
+    // 寻找匹配的用户名密码 密码经过加密处理 查找成功后更新登录时间和登陆状态
+    try {
+        // 寻找是否存在该用户 并获取其密码以及盐
+        const user = await User.findOne({ username }, 'salt password _id isAdmin').exec();
+        if (!user) {
+            ctx.body = new ErrorModule('该用户名暂未注册');
+            return;
+        }
+        // 将用户输入的数据进行加密
+        const pwd = encryptPwd(ctx.request.body.password, user.salt);
+        // 比对数据库和用户加密后的
+        if (user.password !== pwd) {
+            ctx.body = new ErrorModule('用户名或密码错误');
+            return;
+        }
+        // 更新登录时间和登录状态
+        await User.findByIdAndUpdate(user._id, {
             last_login_time: new Date(),
             status: true
         });
-        // 错误监控
-        if (updateErr) {
-            ctx.body = new ErrorModule(updateErr);
-            return;
-        }
         // 在session中存储用户的基础信息
         if (ctx.session) {
             ctx.session.userId = user._id;
             ctx.session.isAdmin = user.isAdmin;
         }
         ctx.body = new SuccessModule('登陆成功', user._id);
-    } else {
-        ctx.body = new ErrorModule('用户名或密码错误');
+    } catch (e) {
+        ctx.body = new ErrorModule(e);
     }
 });
 

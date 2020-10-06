@@ -3,8 +3,8 @@
  * @param timestamp
  * @returns {string}
  */
-export function timestampToTime(timestamp) {
-    const date = new Date(timestamp);
+export function timestampToTime(timestamp, fix = 0) {
+    const date = fix ? new Date(timestamp + Number(fix) * 1000 * 60 * 60) : new Date(timestamp);
     const Y = date.getFullYear() + '-';
     const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
     const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
@@ -60,7 +60,7 @@ export function getLastSecondOfDay(timestamp) {
  * @returns {*}
  */
 export function timeFromDbToTime(time) {
-    return time.replace('T', ' ').replace(/\.[0-9a-zA-Z]*$/, '');
+    return timestampToTime(new Date(time).getTime());
 }
 
 /**

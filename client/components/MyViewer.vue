@@ -1,13 +1,6 @@
 <template>
     <div>
         <div v-html="initialValue" class="my-viewer"></div>
-        <div class="my-viewer">
-            <h1>测试用记得删这个和外层div</h1>
-            <h2>测试用记得删这个和外层div</h2>
-            <h3>测试用记得删这个和外层div</h3>
-            <h4>测试用记得删这个和外层div</h4>
-            <h5>测试用记得删这个和外层div</h5>
-        </div>
     </div>
 </template>
 
