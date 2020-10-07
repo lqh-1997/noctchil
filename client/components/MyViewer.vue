@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-html="initialValue" class="my-viewer"></div>
+        <div v-html="htmlValue" class="my-viewer tui-editor-contents"></div>
     </div>
 </template>
 
@@ -9,160 +9,362 @@ export default {
     props: {
         initialValue: String
     },
-    computed: {}
+    computed: {
+        htmlValue() {
+            return this.initialValue;
+        }
+    }
 };
 </script>
 
 <style lang="scss" scoped>
+@charset "utf-8";
 .my-viewer /deep/ {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    .tui-editor-contents {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+        font-family: 'Arial', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
+    }
+
+    .tui-editor-contents *:not(table) {
+        line-height: 160%;
+        box-sizing: content-box;
+    }
+
+    .tui-editor-contents i,
+    .tui-editor-contents cite,
+    .tui-editor-contents em,
+    .tui-editor-contents var,
+    .tui-editor-contents address,
+    .tui-editor-contents dfn {
+        font-style: italic;
+    }
+
+    .tui-editor-contents strong {
         font-weight: bold;
     }
 
-    h1 {
-        color: #000000;
-        font-size: 28pt;
+    .tui-editor-contents p {
+        margin: 10px 0;
+        color: #222;
     }
 
-    h2 {
-        border-bottom: 1px solid #cccccc;
-        color: #000000;
+    .tui-editor-contents > h1:first-of-type,
+    .tui-editor-contents > div > div:first-of-type h1 {
+        margin-top: 14px;
+    }
+
+    .tui-editor-contents h1,
+    .tui-editor-contents h2,
+    .tui-editor-contents h3,
+    .tui-editor-contents h4,
+    .tui-editor-contents h5,
+    .tui-editor-contents h6 {
+        font-weight: bold;
+        color: #222;
+    }
+
+    .tui-editor-contents h1 {
         font-size: 24px;
+        line-height: 28px;
+        border-bottom: 3px double #999;
+        margin: 52px 0 15px 0;
+        padding-bottom: 7px;
     }
 
-    h3 {
+    .tui-editor-contents h2 {
+        font-size: 22px;
+        line-height: 23px;
+        border-bottom: 1px solid #dbdbdb;
+        margin: 20px 0 13px 0;
+        padding-bottom: 7px;
+    }
+
+    .tui-editor-contents h3 {
+        font-size: 20px;
+        margin: 18px 0 2px;
+    }
+
+    .tui-editor-contents h4 {
         font-size: 18px;
+        margin: 10px 0 2px;
     }
 
-    h4 {
+    .tui-editor-contents h3,
+    .tui-editor-contents h4 {
+        line-height: 18px;
+    }
+
+    .tui-editor-contents h5 {
         font-size: 16px;
     }
 
-    h5 {
+    .tui-editor-contents h6 {
         font-size: 14px;
     }
 
-    h6 {
-        color: #777777;
-        background-color: inherit;
-        font-size: 14px;
+    .tui-editor-contents h5,
+    .tui-editor-contents h6 {
+        line-height: 17px;
+        margin: 9px 0 -4px;
     }
 
-    hr {
-        height: 0.2em;
+    .tui-editor-contents del {
+        color: #999;
+    }
+
+    .tui-editor-contents blockquote {
+        margin: 14px 0;
+        border-left: 4px solid #e5e5e5;
+        padding: 0 16px;
+        color: #999;
+    }
+
+    .tui-editor-contents blockquote p,
+    .tui-editor-contents blockquote ul,
+    .tui-editor-contents blockquote ol {
+        color: #999;
+    }
+
+    .tui-editor-contents blockquote > :first-child {
+        margin-top: 0;
+    }
+
+    .tui-editor-contents blockquote > :last-child {
+        margin-bottom: 0;
+    }
+
+    .tui-editor-contents pre,
+    .tui-editor-contents code {
+        font-family: Consolas, Courier, 'Apple SD 산돌고딕 Neo', -apple-system, 'Lucida Grande',
+            'Apple SD Gothic Neo', '맑은 고딕', 'Malgun Gothic', 'Segoe UI', '돋움', dotum,
+            sans-serif;
         border: 0;
-        color: #cccccc;
-        background-color: #cccccc;
+        border-radius: 0;
     }
 
-    p,
-    blockquote,
-    ul,
-    ol,
-    dl,
-    li,
-    table,
-    pre {
-        margin: 15px 0;
+    .tui-editor-contents pre {
+        margin: 2px 0 8px;
+        padding: 18px;
+        background-color: #f5f7f8;
     }
 
-    li {
-        margin-left: 20px;
+    .tui-editor-contents code {
+        color: #c1798b;
+        background-color: #f9f2f4;
+        padding: 2px 3px;
+        letter-spacing: -0.3px;
+        border-radius: 2px;
     }
 
-    img {
+    .tui-editor-contents pre code {
+        padding: 0;
+        color: inherit;
+        white-space: pre-wrap;
+        background-color: transparent;
+    }
+
+    .tui-editor-contents pre.addon {
+        border: 1px solid #e8ebed;
+        background-color: #fff;
+    }
+
+    .tui-editor-contents img {
+        margin: 4px 0 10px;
+        box-sizing: border-box;
+        vertical-align: top;
         max-width: 100%;
     }
 
-    table {
+    .tui-editor-contents table {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        margin: 12px 0 14px;
+        color: #222;
+        width: auto;
         border-collapse: collapse;
-        width: 100%;
+        box-sizing: border-box;
     }
 
-    table,
-    th,
-    td {
-        border: 1px solid #eaeaea;
-
-        border-radius: 3px;
-        padding: 5px;
+    .tui-editor-contents table th,
+    .tui-editor-contents table td {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 5px 14px 5px 12px;
+        height: 32px;
     }
 
-    tr:nth-child(even) {
-        background-color: #f8f8f8;
+    .tui-editor-contents table th {
+        background-color: #555;
+        font-weight: 300;
+        color: #fff;
+        padding-top: 6px;
     }
 
-    a,
-    a:visited {
-        color: #4183c4;
-        background-color: inherit;
-        text-decoration: none;
-    }
-
-    #message {
-        border-radius: 6px;
-        border: 1px solid #ccc;
+    .tui-editor-contents ul,
+    .tui-editor-contents menu,
+    .tui-editor-contents ol,
+    .tui-editor-contents dir {
         display: block;
-        width: 100%;
-        height: 60px;
-        margin: 6px 0px;
+        list-style-type: none;
+        padding-left: 24px;
+        margin: 6px 0 10px;
+        color: #222;
     }
 
-    button,
-    #ws {
-        font-size: 10pt;
-        padding: 4px 6px;
-        border-radius: 5px;
-        border: 1px solid #bbb;
-        background-color: #eee;
+    .tui-editor-contents ol {
+        list-style-type: none;
+        counter-reset: li;
     }
 
-    code,
-    pre,
-    #ws,
-    #message {
-        font-family: Monaco, monospace;
-        font-size: 10pt;
-        border-radius: 3px;
-        background-color: #f8f8f8;
-        color: inherit;
+    .tui-editor-contents ol > li {
+        counter-increment: li;
     }
 
-    code {
-        border: 1px solid #eaeaea;
-        margin: 0 2px;
-        padding: 0 5px;
+    .tui-editor-contents ul > li::before,
+    .tui-editor-contents ol > li::before {
+        display: inline-block;
+        position: absolute;
     }
 
-    pre {
-        border: 1px solid #cccccc;
-        overflow: auto;
-        padding: 4px 8px;
+    .tui-editor-contents ul > li::before {
+        content: '';
+        margin-top: 6px;
+        margin-left: -17px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: #ccc;
     }
 
-    pre > code {
-        border: 0;
+    .tui-editor-contents ol > li::before {
+        content: '.' counter(li);
+        margin-left: -28px;
+        width: 24px;
+        text-align: right;
+        direction: rtl;
+        color: #aaa;
+    }
+
+    .tui-editor-contents ul ul,
+    .tui-editor-contents ul ol,
+    .tui-editor-contents ol ol,
+    .tui-editor-contents ol ul {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .tui-editor-contents ul li,
+    .tui-editor-contents ol li {
+        position: relative;
+    }
+
+    .tui-editor-contents ul p,
+    .tui-editor-contents ol p {
         margin: 0;
-        padding: 0;
     }
 
-    #ws {
-        background-color: #f8f8f8;
+    .tui-editor-contents ul li.task-list-item::before,
+    .tui-editor-contents ol li.task-list-item::before,
+    .tui-editor-contents pre ul li::before {
+        content: '';
     }
 
-    .send {
-        color: #77bb77;
+    .tui-editor-contents hr {
+        border-top: 1px solid #eee;
+        margin: 16px 0;
     }
-    .server {
-        color: #7799bb;
+
+    .tui-editor-contents a {
+        text-decoration: underline;
+        color: #4b96e6;
     }
-    .error {
-        color: #aa0000;
+
+    .tui-editor-contents a:hover {
+        color: #1f70de;
+    }
+
+    .tui-editor-contents .task-list-item {
+        border: 0;
+        list-style: none;
+        padding-left: 24px;
+        margin-left: -24px;
+    }
+
+    .tui-editor-contents .task-list-item::before {
+        background-repeat: no-repeat;
+        background-size: 18px 18px;
+        background-position: center;
+        content: '';
+        margin-left: 0;
+        margin-top: 0;
+        border-radius: 0;
+        height: 18px;
+        width: 18px;
+        position: absolute;
+        left: 0;
+        top: 1px;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAEqADAAQAAAABAAAAEgAAAACaqbJVAAAAQklEQVQ4EWM8c+bMfwYqABaQGcbGxhQZdfbsWQYmikxA0jxqEFJg4GCOhhGOgEESHg0jpMDAwRx8YQQuj0DlCaUAAEdBCPJ7TaEPAAAAAElFTkSuQmCC');
+    }
+
+    .tui-editor-contents .task-list-item.checked::before {
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAEqADAAQAAAABAAAAEgAAAACaqbJVAAAA1ElEQVQ4EWP0nvbsPwMVABMVzAAbMWoQIiT5OJgYvLS5EAJQFguGCB4BkCHt/kIM8kKsYFXbrn6DqyY6sJENefjuN8ORuz/ghoAYWA0COR2kEQbQDanc+I7h049/MGkwjVANFQYZkmXHD/YCyABiDAFpxQgjkJO9dbjA4QAKDxAAhQnIO9hcAlYAJDBcBHIySANII8gAYgwBGYZhEEgQZFjVJohhhFwCUg8CjPgyLT8nE8N/YJZGD1iIVlQSI4yQpT9+R40ZZDl0NlavoSsihj/4DAIAR+hZHUj727YAAAAASUVORK5CYII=');
+    }
+
+    .tui-editor-contents .task-list-item input[type='checkbox'],
+    .tui-editor-contents .task-list-item .task-list-item-checkbox {
+        margin-left: -17px;
+        margin-right: 3.8px;
+        margin-top: 3px;
+    }
+
+    .tui-editor-contents-placeholder::before {
+        content: attr(data-placeholder);
+        color: grey;
+        line-height: 160%;
+        position: absolute;
+    }
+
+    .te-preview .tui-editor-contents h1 {
+        min-height: 28px;
+    }
+
+    .te-preview .tui-editor-contents h2 {
+        min-height: 23px;
+    }
+
+    .te-preview .tui-editor-contents blockquote {
+        min-height: 20px;
+    }
+
+    .te-preview .tui-editor-contents li {
+        min-height: 22px;
+    }
+
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        /* IE10+11 */
+        .te-ww-container .tui-editor-contents li {
+            vertical-align: middle;
+        }
+
+        .te-ww-container .tui-editor-contents ul > li::before,
+        .te-ww-container .tui-editor-contents ol > li::before,
+        .te-ww-container .tui-editor-contents .task-list-item:before {
+            position: static;
+            vertical-align: middle;
+        }
+
+        .te-ww-container .tui-editor-contents ul > li::before {
+            margin-top: -3px;
+            margin-right: 12px;
+        }
+
+        .te-ww-container .tui-editor-contents ol > li::before {
+            margin-right: 6px;
+        }
+
+        .te-ww-container .tui-editor-contents .task-list-item {
+            padding-left: 2px;
+        }
     }
 }
 </style>

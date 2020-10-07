@@ -3,7 +3,8 @@
         <div class="article-main">
             <article>
                 <h1>{{ article.title }}</h1>
-                <viewer :initialValue="viewer" class="viewer"></viewer>
+                <!-- <viewer :initialValue="viewer" class="viewer"></viewer> -->
+                <my-viewer :initialValue="viewer" class="viewer"></my-viewer>
             </article>
             <comment @commentSuccess="updateComment" v-if="isLogin"></comment>
             <div v-else class="login-tip">登陆后才可发言哦</div>
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+import MyViewer from '../../components/MyViewer';
 import Comment from '../../components/Comment';
 import Reply from '../../components/Reply';
 import SideFlow from '../../components/SideFlow/index';
@@ -25,6 +27,7 @@ import { mapGetters } from 'vuex';
 export default {
     layout: 'home',
     components: {
+        MyViewer,
         SideFlow,
         Comment,
         Reply
@@ -75,7 +78,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/global.scss';
-@import '@/assets/scss/tui_viewer.scss';
+// @import '@/assets/scss/tui_viewer.scss';
 .article-layout {
     display: flex;
     flex-wrap: nowrap;
@@ -96,7 +99,7 @@ export default {
             }
             .viewer {
                 min-height: 300px;
-                @include changeViewerStyle();
+                // @include changeViewerStyle();
             }
         }
         .article-reply {

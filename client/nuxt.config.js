@@ -1,10 +1,5 @@
 export default {
     /*
-     ** Nuxt rendering mode
-     ** See https://nuxtjs.org/api/configuration-mode
-     */
-    mode: 'universal',
-    /*
      ** Nuxt target
      ** See https://nuxtjs.org/api/configuration-target
      */
@@ -42,7 +37,7 @@ export default {
         ],
         script: [
             {
-                src: 'http://at.alicdn.com/t/font_1925326_6mybvdhclb8.js'
+                src: 'http://at.alicdn.com/t/font_1925326_gnkn61atjn.js'
             }
         ]
     },

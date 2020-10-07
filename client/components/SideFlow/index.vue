@@ -1,16 +1,19 @@
 <template>
     <div ref="sideFlow" class="side">
-        <user-info class="margin-bottom-20"></user-info>
+        <!-- <user-info class="margin-bottom-20"></user-info> -->
+        <author-info class="margin-bottom-20"></author-info>
         <new-comment class="margin-bottom-20"></new-comment>
     </div>
 </template>
 
 <script>
-import UserInfo from './UserInfo';
+// import UserInfo from './UserInfo';
+import AuthorInfo from './AuthorInfo';
 import NewComment from './NewComment';
 export default {
     components: {
-        UserInfo,
+        // UserInfo,
+        AuthorInfo,
         NewComment
     },
     methods: {

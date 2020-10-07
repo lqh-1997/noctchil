@@ -2,10 +2,8 @@
     <div v-if="isLogin" class="is-login">
         <div class="side-avatar"></div>
         <div class="side-button">
-            <el-button>注销登录</el-button>
-            <el-button>个人中心</el-button>
-            <el-button>啊啊啊啊</el-button>
-            <el-button>啊啊啊啊</el-button>
+            <el-button type="text">注销登录</el-button>
+            <el-button type="text">个人中心</el-button>
         </div>
     </div>
     <div v-else class="is-not-login">
