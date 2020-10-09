@@ -148,4 +148,4 @@ router.get('/loginGet', isLogin, async (ctx) => {
     ctx.body = new SuccessModule('嗯嗯, 确实登录了呢');
 });
 
-export = router;
+export default router;

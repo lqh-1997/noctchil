@@ -6,12 +6,12 @@ import fs = require('fs');
  * @param pre 递归时使用 调用时并不需要传递或者传递默认值'/'
  * @returns {Array[string]} 不包含path的文件夹下所有文件数组
  */
-export function getAllFile(path: string, pre: string = '/'): string[] {
+export function getAllFile(path: string, pre = '/'): string[] {
     let files = fs.readdirSync(path);
     let res: string[] = [];
     files = files.filter((item) => {
         // 获取文件路径
-        let doc = path + '/' + item;
+        const doc = path + '/' + item;
         // 利用statSync判断是不是文件夹 递归循环的入口 如果是文件夹则从数组中去掉该行
         if (fs.statSync(doc).isDirectory()) {
             // 如果有多个文件夹则将返回值全部concat到res里面
@@ -35,7 +35,7 @@ export function getAllFile(path: string, pre: string = '/'): string[] {
  * @return {Array[string]} 不包含path的文件夹下所有图片数组
  */
 export function getAllImage(path: string): string[] {
-    let files = getAllFile(path);
+    const files = getAllFile(path);
     return files.filter((item) => /(.png|.jpg|.gif|.jpeg)$/.test(item));
 }
 
@@ -43,7 +43,7 @@ export function getAllImage(path: string): string[] {
  * 判断文件夹是否存在 若不存在则新建文件夹
  * @param path
  */
-export function createFolder(path: string) {
+export function createFolder(path: string): void {
     console.log(path);
     let exist = false;
     // 可以传递三个参数 http://nodejs.cn/api/fs.html#fs_fs_access_path_mode_callback 第二个可选

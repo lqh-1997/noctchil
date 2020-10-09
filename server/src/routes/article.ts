@@ -156,4 +156,4 @@ router.put('/article/like', async (ctx) => {
     }
 });
 
-export = router;
+export default router;

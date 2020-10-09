@@ -8,10 +8,10 @@ import { fileDir } from './config/global';
 import * as session from 'koa-session';
 import * as redisStore from 'koa-redis';
 import * as staticFile from 'koa-static';
-import * as user from './routes/user';
-import * as article from './routes/article';
-import * as file from './routes/file';
-import * as comment from './routes/comment';
+import user from './routes/user';
+import article from './routes/article';
+import file from './routes/file';
+import comment from './routes/comment';
 
 import haveSession from './middlewares/haveSession';
 import log from './middlewares/log';
@@ -81,4 +81,4 @@ app.use(file.allowedMethods());
 app.use(comment.routes());
 app.use(comment.allowedMethods());
 
-export = app;
+export default app;

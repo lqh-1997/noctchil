@@ -43,4 +43,4 @@ router.get('/photos', async (ctx) => {
     ctx.body = new SuccessModule('获取成功', readDir);
 });
 
-export = router;
+export default router;

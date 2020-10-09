@@ -91,4 +91,4 @@ router.put('/comment/like', async (ctx) => {
     }
 });
 
-export = router;
+export default router;
