@@ -1,14 +1,16 @@
 module.exports = {
-    root: true,
-    env: {
-        node: true
-    },
-    extends: ['plugin:vue/essential', 'eslint:recommended', '@vue/prettier'],
+    // https://eslint.bootcss.com/docs/user-guide/configuring#specifying-parser-options
     parserOptions: {
-        parser: 'babel-eslint'
+        // ECMAScript版本
+        ecmaVersion: 2020,
+        // ECMAScript模块
+        sourceType: 'module',
+        // 想使用的额外语言特性
+        ecmaFeatures: {
+            impliedStrict: true,
+            jsx: true
+        }
     },
-    rules: {
-        'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-        'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
-    }
+    // 配置解析器
+    parser: '@typescript-eslint/parser'
 };

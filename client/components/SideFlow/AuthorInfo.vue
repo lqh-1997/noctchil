@@ -11,7 +11,7 @@
                 </li>
             </ul>
             <ul class="icon">
-                <li v-for="item of iconList" :key="item.name">
+                <li v-for="item of iconList" :key="item.name" @click="jumpToLink(item.link)">
                     <svg-icon :icon-class="item.svg" class="svg"></svg-icon>
                 </li>
             </ul>
@@ -39,7 +39,7 @@ export default {
         return {
             authorInfo: {
                 name: 'Fantasy',
-                message: '唯一指定普罗丢人'
+                message: '以下链接没一个可用的XD'
             },
             messageList: [
                 {
@@ -58,36 +58,49 @@ export default {
             iconList: [
                 {
                     name: 'QQ',
-                    svg: 'QQ'
+                    svg: 'QQ',
+                    link: '#'
                 },
                 {
                     name: '微信',
-                    svg: 'weixin'
+                    svg: 'weixin',
+                    link: '#'
                 },
                 {
                     name: '微博',
-                    svg: 'weibo'
+                    svg: 'weibo',
+                    link: '#'
                 },
                 {
                     name: '知乎',
-                    svg: 'zhihu'
+                    svg: 'zhihu',
+                    link: '#'
                 },
                 {
                     name: '推特',
-                    svg: 'twitter'
+                    svg: 'twitter',
+                    link: '#'
                 },
                 {
                     name: 'steam',
-                    svg: 'steam'
+                    svg: 'steam',
+                    link: '#'
                 },
                 {
                     name: 'bilibili',
-                    svg: 'bilibili'
+                    svg: 'bilibili',
+                    link: '#'
                 }
             ]
         };
     },
-    method: {}
+    methods: {
+        jumpToLink(link) {
+            if (link !== '#' && link) {
+                window.open(link, '_blank');
+            }
+        }
+    }
 };
 </script>
 
