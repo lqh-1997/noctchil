@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "jsx": "preserve",
         "target": "esnext",
         "module": "esnext",
         "moduleResolution": "node",
@@ -7,7 +8,9 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": false,
         "lib": ["dom", "esnext"]
     },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "deprecated/index.tsx"],
     "exclude": ["node_modules", "dist"]
 }

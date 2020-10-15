@@ -9,8 +9,8 @@ const router = createRouter({
         },
         {
             path: '/dashboard',
-            name: 'login',
-            component: () => import('/@/views/Login/index.vue')
+            name: 'layout',
+            component: () => import('/@/layout/index.vue')
         }
     ],
     // https://next.router.vuejs.org/guide/advanced/scroll-behavior.html#scroll-behavior
