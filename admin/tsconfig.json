@@ -11,6 +11,6 @@
         "forceConsistentCasingInFileNames": false,
         "lib": ["dom", "esnext"]
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "deprecated/index.tsx"],
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
     "exclude": ["node_modules", "dist"]
 }

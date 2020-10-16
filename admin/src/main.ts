@@ -5,4 +5,8 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import '/@/assets/scss/reset.scss';
 
-createApp(App).use(router).use(Antd).mount('#app');
+const app = createApp(App).use(router).use(Antd);
+
+app.mount('#app');
+
+export default app;

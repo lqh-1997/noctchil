@@ -15,7 +15,9 @@
     "typescript.tsdk": "node_modules/typescript/lib",
     "cSpell.words": [
         "Antd",
-        "esnext"
+        "esnext",
+        "sider",
+        "unref"
     ],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true

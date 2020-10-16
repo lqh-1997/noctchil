@@ -1,9 +1,9 @@
 <template>
-    <a-layout id="components-layout-demo-custom-trigger">
-        <SideBar :collapsed="collapsed" :selectedKeys="selectedKeys"></SideBar>
+    <a-layout>
+        <LeftSide v-model:collapsed="collapsed" :selectedKeys="selectedKeys"></LeftSide>
         <a-layout>
             <a-layout-header style="background: #fff; padding: 0">
-                <div class="trigger" @click="() => (collapsed = !collapsed)" />
+                <div class="trigger" @click="toggleCollapse" />
             </a-layout-header>
             <a-layout-content
                 :style="{
@@ -21,17 +21,21 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import SideBar from './SideBar.vue';
+import LeftSide from './LeftSide/index.vue';
 export default defineComponent({
     components: {
-        SideBar
+        LeftSide
     },
     setup() {
         const collapsed = ref(false);
         const selectedKeys = ref(['1']);
+        const toggleCollapse = function () {
+            collapsed.value = !collapsed.value;
+        };
         return {
             collapsed,
-            selectedKeys
+            selectedKeys,
+            toggleCollapse
         };
     }
 });
