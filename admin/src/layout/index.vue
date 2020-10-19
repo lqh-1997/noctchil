@@ -1,6 +1,6 @@
 <template>
     <a-layout>
-        <LeftSide v-model:collapsed="collapsed" :selectedKeys="selectedKeys"></LeftSide>
+        <LeftSide v-model:collapsed="collapsed"></LeftSide>
         <a-layout>
             <a-layout-header style="background: #fff; padding: 0">
                 <div class="trigger" @click="toggleCollapse" />
@@ -13,7 +13,11 @@
                     minHeight: '280px'
                 }"
             >
-                Content
+                <!-- <router-view v-slot="{ Component }">
+                    <transition name="fade">
+                        <component :is="Component" />
+                    </transition>
+                </router-view> -->
             </a-layout-content>
         </a-layout>
     </a-layout>
@@ -28,13 +32,11 @@ export default defineComponent({
     },
     setup() {
         const collapsed = ref(false);
-        const selectedKeys = ref(['1']);
         const toggleCollapse = function () {
             collapsed.value = !collapsed.value;
         };
         return {
             collapsed,
-            selectedKeys,
             toggleCollapse
         };
     }
