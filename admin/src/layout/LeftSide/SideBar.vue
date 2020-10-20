@@ -27,6 +27,33 @@
             <a-menu-item key="11">option11</a-menu-item>
             <a-menu-item key="12">option12</a-menu-item>
         </a-sub-menu>
+        <a-sub-menu key="sub4">
+            <template v-slot:title>
+                <span>nav 4</span>
+            </template>
+            <a-menu-item key="Q">option9</a-menu-item>
+            <a-menu-item key="W">option10</a-menu-item>
+            <a-menu-item key="E">option11</a-menu-item>
+            <a-menu-item key="R">option12</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="sub5">
+            <template v-slot:title>
+                <span>nav 5</span>
+            </template>
+            <a-menu-item key="9">optionA</a-menu-item>
+            <a-menu-item key="10">optionS</a-menu-item>
+            <a-menu-item key="11">optionD</a-menu-item>
+            <a-menu-item key="12">optionF</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="sub6">
+            <template v-slot:title>
+                <span>nav 6</span>
+            </template>
+            <a-menu-item key="9">optionZ</a-menu-item>
+            <a-menu-item key="10">optionX</a-menu-item>
+            <a-menu-item key="11">optionC</a-menu-item>
+            <a-menu-item key="12">optionV</a-menu-item>
+        </a-sub-menu>
     </a-menu>
 </template>
 

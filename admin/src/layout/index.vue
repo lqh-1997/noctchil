@@ -46,6 +46,7 @@ export default defineComponent({
 <style lang="scss" scope>
 .ant-layout {
     height: 100%;
+    overflow: hidden;
 }
 .trigger {
     height: 30px;

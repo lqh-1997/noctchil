@@ -16,9 +16,12 @@
     "cSpell.words": [
         "Antd",
         "esnext",
+        "onmousedown",
         "onmousemove",
+        "onmouseup",
         "sider",
-        "unref"
+        "unref",
+        "rgba"
     ],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true

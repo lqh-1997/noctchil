@@ -3,18 +3,22 @@
         v-model:collapsed="collapse"
         :trigger="null"
         collapsible
-        @collapse="collapseCb"
         ref="siderRef"
-        @click="showRef"
+        breakpoint="md"
     >
-        <div class="dragBar" v-show="!collapsed"></div>
-        <Logo v-model:collapsed="collapsed"></Logo>
+        <div
+            class="dragBar"
+            v-show="!collapsed"
+            ref="dragBarRef"
+            @mousedown="handleMouseDown"
+        ></div>
+        <Logo :collapsed="collapsed"></Logo>
         <SideBar></SideBar>
     </a-layout-sider>
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, ref, unref } from 'vue';
+import { defineComponent, watchEffect, ref, unref, nextTick } from 'vue';
 import Logo from './Logo.vue';
 import SideBar from './SideBar.vue';
 
@@ -31,51 +35,73 @@ export default defineComponent({
         }
     },
     emits: ['update:collapsed'],
-    setup(props, ctx) {
-        const dragBarRef = ref<any>(null);
+    setup(props) {
+        // 拉动条的ref 为div html
+        const dragBarRef = ref<HTMLDivElement | null>(null);
+        // 左侧菜单的ref 为一个组件
         const siderRef = ref<any>(null);
+
         let collapse = ref(false);
 
+        // 监听父组件传来的collapsed
         watchEffect(() => {
             collapse.value = props.collapsed;
+            if (!unref(siderRef)) {
+                return;
+            }
+            const siderEl = unref(siderRef).$el;
+            const dragBarEl = unref(dragBarRef);
+            if (!dragBarEl || !dragBarEl.style.left || collapse.value) {
+                return;
+            }
+            setMenuWidth(siderEl, dragBarEl);
         });
 
-        const collapseCb = function (collapsed: boolean) {
-            ctx.emit('update:collapsed', collapsed);
+        const setMenuWidth = function (siderEl: HTMLDivElement, dragBarEl: HTMLDivElement) {
+            const width = parseInt(dragBarEl.style.left) + 'px';
+            nextTick(() => {
+                siderEl.style.cssText = `min-width: ${width}; min-height: ${width}; width: ${width};flex-basis: ${width};`;
+            });
         };
 
-        const showRef = function () {
-            console.log(unref(siderRef));
-        };
-
-        function handleMouseMove(el, wrap, clientX) {
-            document.onmousemove = function () {};
+        function handleMouseDown(e: MouseEvent) {
+            const siderEl = unref(siderRef).$el;
+            const dragBarEl = unref(dragBarRef);
+            const startPosition = e.clientX;
+            if (!dragBarEl) {
+                return;
+            }
+            const startX = window.getComputedStyle(dragBarEl, null).left;
+            // TODO 防抖
+            handleMouseMove(dragBarEl, startPosition, startX);
+            handleMouseUp(siderEl, dragBarEl);
         }
 
-        function removeMouseUp(el) {}
+        function handleMouseMove(dragBarEl: HTMLDivElement, startPosition: number, startX: string) {
+            document.onmousemove = function (e: MouseEvent) {
+                let move = parseInt(startX) + (e.clientX - startPosition);
+                const maxMove = 600;
+                const minMove = 150;
+                move > maxMove && (move = maxMove);
+                move < minMove && (move = minMove);
+                dragBarEl.style.left = move + 'px';
+                return false;
+            };
+        }
 
-        function changeSiderWidth() {
-            const el = unref(dragBarRef) as any;
-            const sider = unref(siderRef);
-
-            const wrap = (sider || {}).$el;
-
-            el &&
-                (el.onmousedown = (e: any) => {
-                    const clientX = e.clientX;
-                    el.left = el.offsetLeft;
-                    handleMouseMove(el, wrap, clientX);
-                    removeMouseUp(el);
-                    el.setCapture && el.setCapture();
-                    return false;
-                });
+        function handleMouseUp(siderEl: any, dragBarEl: any) {
+            document.onmouseup = function () {
+                document.onmousemove = null;
+                document.onmouseup = null;
+                setMenuWidth(siderEl, dragBarEl);
+            };
         }
 
         return {
+            dragBarRef,
+            siderRef,
             collapse,
-            collapseCb,
-            showRef,
-            siderRef
+            handleMouseDown
         };
     }
 });
