@@ -13,14 +13,18 @@
             @mousedown="handleMouseDown"
         ></div>
         <Logo :collapsed="collapsed"></Logo>
-        <SideBar></SideBar>
+        <SideBar @menuToggle="refreshScroll"></SideBar>
     </a-layout-sider>
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, ref, unref, nextTick } from 'vue';
+import { defineComponent, watchEffect, ref, unref, nextTick, onMounted } from 'vue';
 import Logo from './Logo.vue';
 import SideBar from './SideBar.vue';
+import BScrollConstructor from '@better-scroll/core';
+import BScroll from '@better-scroll/core';
+import ScrollBar from '@better-scroll/scroll-bar';
+import MouseWheel from '@better-scroll/mouse-wheel';
 
 export default defineComponent({
     name: 'leftSide',
@@ -42,6 +46,8 @@ export default defineComponent({
         const siderRef = ref<any>(null);
 
         let collapse = ref(false);
+        let scroll = ref<any>(null);
+        let bs: null | BScrollConstructor;
 
         // 监听父组件传来的collapsed
         watchEffect(() => {
@@ -57,6 +63,34 @@ export default defineComponent({
             setMenuWidth(siderEl, dragBarEl);
         });
 
+        // dom创建完毕之后 创建一个better-scroll滚动条
+        onMounted(() => {
+            nextTick(() => {
+                const side: any = unref(siderRef).$el.firstElementChild;
+                BScroll.use(ScrollBar);
+                BScroll.use(MouseWheel);
+                bs = new BScroll(side, {
+                    scrollbar: true,
+                    mouseWheel: {
+                        speed: 20,
+                        easeTime: 300
+                    },
+                    specifiedIndexAsContent: 2
+                });
+                bs.on('refresh', () => {
+                    console.log('refresh');
+                });
+            });
+        });
+
+        // FIXME 改变subMenu打开关闭状态的时候刷新滚动条状态 / 但是不知道为什么似乎慢一拍
+        const refreshScroll = function () {
+            setTimeout(() => {
+                bs && bs.refresh();
+            }, 60);
+        };
+
+        // 设置菜单的宽度
         const setMenuWidth = function (siderEl: HTMLDivElement, dragBarEl: HTMLDivElement) {
             const width = parseInt(dragBarEl.style.left) + 'px';
             nextTick(() => {
@@ -64,6 +98,8 @@ export default defineComponent({
             });
         };
 
+        // 监听鼠标点击拖动栏
+        // FIXME 缩小再放大再点击 会重新渲染menu的宽高...
         function handleMouseDown(e: MouseEvent) {
             const siderEl = unref(siderRef).$el;
             const dragBarEl = unref(dragBarRef);
@@ -77,6 +113,7 @@ export default defineComponent({
             handleMouseUp(siderEl, dragBarEl);
         }
 
+        // 配合监听拖动栏 监听鼠标移动
         function handleMouseMove(dragBarEl: HTMLDivElement, startPosition: number, startX: string) {
             document.onmousemove = function (e: MouseEvent) {
                 let move = parseInt(startX) + (e.clientX - startPosition);
@@ -89,6 +126,7 @@ export default defineComponent({
             };
         }
 
+        // 配合监听拖动栏 监听鼠标抬起
         function handleMouseUp(siderEl: any, dragBarEl: any) {
             document.onmouseup = function () {
                 document.onmousemove = null;
@@ -101,7 +139,9 @@ export default defineComponent({
             dragBarRef,
             siderRef,
             collapse,
-            handleMouseDown
+            handleMouseDown,
+            scroll,
+            refreshScroll
         };
     }
 });
@@ -111,6 +151,7 @@ export default defineComponent({
 $dragWidth: 5px;
 .dragBar {
     position: absolute;
+    z-index: 2000;
     top: 0;
     right: -$dragWidth;
     height: 100%;
@@ -120,5 +161,8 @@ $dragWidth: 5px;
         cursor: col-resize;
         background-color: rgba(0, 170, 200, 0.6);
     }
+}
+.ant-layout-sider-children {
+    overflow: hidden;
 }
 </style>

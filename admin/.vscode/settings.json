@@ -19,9 +19,10 @@
         "onmousedown",
         "onmousemove",
         "onmouseup",
+        "rgba",
+        "scrollbar",
         "sider",
-        "unref",
-        "rgba"
+        "unref"
     ],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true

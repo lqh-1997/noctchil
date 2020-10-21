@@ -76,6 +76,32 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@better-scroll/core@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.npm.taobao.org/@better-scroll/core/download/@better-scroll/core-2.0.5.tgz?cache=0&sync_timestamp=1603173408051&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40better-scroll%2Fcore%2Fdownload%2F%40better-scroll%2Fcore-2.0.5.tgz#59d4f3c7b739c177ab61b07d0e0e7408c137edf2"
+  integrity sha1-WdTzx7c5wXerYbB9Dg50CME37fI=
+  dependencies:
+    "@better-scroll/shared-utils" "^2.0.5"
+
+"@better-scroll/mouse-wheel@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.npm.taobao.org/@better-scroll/mouse-wheel/download/@better-scroll/mouse-wheel-2.0.5.tgz?cache=0&sync_timestamp=1603173914467&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40better-scroll%2Fmouse-wheel%2Fdownload%2F%40better-scroll%2Fmouse-wheel-2.0.5.tgz#2fbfff82c51aa522521fb756e38f99e880eed531"
+  integrity sha1-L7//gsUapSJSH7dW44+Z6IDu1TE=
+  dependencies:
+    "@better-scroll/core" "^2.0.5"
+
+"@better-scroll/scroll-bar@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.npm.taobao.org/@better-scroll/scroll-bar/download/@better-scroll/scroll-bar-2.0.5.tgz?cache=0&sync_timestamp=1603173914588&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40better-scroll%2Fscroll-bar%2Fdownload%2F%40better-scroll%2Fscroll-bar-2.0.5.tgz#36e2bce9b5a5627c7156d8f2966d36233bf44f52"
+  integrity sha1-NuK86bWlYnxxVtjylm02Izv0T1I=
+  dependencies:
+    "@better-scroll/core" "^2.0.5"
+
+"@better-scroll/shared-utils@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.npm.taobao.org/@better-scroll/shared-utils/download/@better-scroll/shared-utils-2.0.5.tgz#50919ee66471e53e60b64e20a19c3069825fa8f9"
+  integrity sha1-UJGe5mRx5T5gtk4goZwwaYJfqPk=
+
 "@eslint/eslintrc@^0.1.3":
   version "0.1.3"
   resolved "https://registry.npm.taobao.org/@eslint/eslintrc/download/@eslint/eslintrc-0.1.3.tgz?cache=0&sync_timestamp=1598984683755&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40eslint%2Feslintrc%2Fdownload%2F%40eslint%2Feslintrc-0.1.3.tgz#7d1a2b2358552cc04834c0979bd4275362e37085"

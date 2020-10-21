@@ -1,5 +1,11 @@
 <template>
-    <a-menu theme="dark" mode="inline" v-model:selectedKeys="selectKeys" :forceSubMenuRender="true">
+    <a-menu
+        theme="dark"
+        mode="inline"
+        v-model:selectedKeys="selectKeys"
+        :forceSubMenuRender="true"
+        @openChange="handleMenuToggle"
+    >
         <a-sub-menu key="sub1">
             <template v-slot:title>
                 <span>nav 1</span>
@@ -40,35 +46,41 @@
             <template v-slot:title>
                 <span>nav 5</span>
             </template>
-            <a-menu-item key="9">optionA</a-menu-item>
-            <a-menu-item key="10">optionS</a-menu-item>
-            <a-menu-item key="11">optionD</a-menu-item>
-            <a-menu-item key="12">optionF</a-menu-item>
+            <a-menu-item key="a">optionA</a-menu-item>
+            <a-menu-item key="s">optionS</a-menu-item>
+            <a-menu-item key="d">optionD</a-menu-item>
+            <a-menu-item key="f">optionF</a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="sub6">
             <template v-slot:title>
                 <span>nav 6</span>
             </template>
-            <a-menu-item key="9">optionZ</a-menu-item>
-            <a-menu-item key="10">optionX</a-menu-item>
-            <a-menu-item key="11">optionC</a-menu-item>
-            <a-menu-item key="12">optionV</a-menu-item>
+            <a-menu-item key="z">optionZ</a-menu-item>
+            <a-menu-item key="x">optionX</a-menu-item>
+            <a-menu-item key="c">optionC</a-menu-item>
+            <a-menu-item key="v">optionV</a-menu-item>
         </a-sub-menu>
     </a-menu>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-
 export default defineComponent({
     name: 'SideBar',
     props: {},
-    setup() {
+    setup(_, { emit }) {
         const selectKeys = ref(['1']);
 
+        const handleMenuToggle = function () {
+            emit('menuToggle');
+        };
+
         return {
-            selectKeys
+            selectKeys,
+            handleMenuToggle
         };
     }
 });
 </script>
+
+<style lang="scss" scoped></style>
