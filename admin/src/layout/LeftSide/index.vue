@@ -6,31 +6,31 @@
         ref="siderRef"
         breakpoint="md"
     >
-        <div
-            class="dragBar"
-            v-show="!collapsed"
-            ref="dragBarRef"
-            @mousedown="handleMouseDown"
-        ></div>
-        <Logo :collapsed="collapsed"></Logo>
-        <SideBar @menuToggle="refreshScroll"></SideBar>
+        <BetterScroll :specifiedIndexAsContent="2" class="scroll" ref="scroll">
+            <div
+                class="dragBar"
+                v-show="!collapsed"
+                ref="dragBarRef"
+                @mousedown="handleMouseDown"
+            ></div>
+            <Logo :collapsed="collapsed"></Logo>
+            <SideBar @menuToggle="refreshScroll"></SideBar>
+        </BetterScroll>
     </a-layout-sider>
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, ref, unref, nextTick, onMounted } from 'vue';
+import { defineComponent, watchEffect, ref, unref, nextTick } from 'vue';
 import Logo from './Logo.vue';
 import SideBar from './SideBar.vue';
-import BScrollConstructor from '@better-scroll/core';
-import BScroll from '@better-scroll/core';
-import ScrollBar from '@better-scroll/scroll-bar';
-import MouseWheel from '@better-scroll/mouse-wheel';
+import BetterScroll from '/@/components/Better-Scroll/index.vue';
 
 export default defineComponent({
     name: 'leftSide',
     components: {
         Logo,
-        SideBar
+        SideBar,
+        BetterScroll
     },
     props: {
         collapsed: {
@@ -44,10 +44,10 @@ export default defineComponent({
         const dragBarRef = ref<HTMLDivElement | null>(null);
         // 左侧菜单的ref 为一个组件
         const siderRef = ref<any>(null);
+        // 滚动条
+        const scroll = ref<any>(null);
 
         let collapse = ref(false);
-        let scroll = ref<any>(null);
-        let bs: null | BScrollConstructor;
 
         // 监听父组件传来的collapsed
         watchEffect(() => {
@@ -63,31 +63,11 @@ export default defineComponent({
             setMenuWidth(siderEl, dragBarEl);
         });
 
-        // dom创建完毕之后 创建一个better-scroll滚动条
-        onMounted(() => {
-            nextTick(() => {
-                const side: any = unref(siderRef).$el.firstElementChild;
-                BScroll.use(ScrollBar);
-                BScroll.use(MouseWheel);
-                bs = new BScroll(side, {
-                    scrollbar: true,
-                    mouseWheel: {
-                        speed: 20,
-                        easeTime: 300
-                    },
-                    specifiedIndexAsContent: 2
-                });
-                bs.on('refresh', () => {
-                    console.log('refresh');
-                });
-            });
-        });
-
         // FIXME 改变subMenu打开关闭状态的时候刷新滚动条状态 / 但是不知道为什么似乎慢一拍
         const refreshScroll = function () {
-            setTimeout(() => {
-                bs && bs.refresh();
-            }, 60);
+            nextTick(() => {
+                scroll && unref(scroll).refresh();
+            });
         };
 
         // 设置菜单的宽度
@@ -162,7 +142,8 @@ $dragWidth: 5px;
         background-color: rgba(0, 170, 200, 0.6);
     }
 }
-.ant-layout-sider-children {
+.scroll {
     overflow: hidden;
+    height: 100%;
 }
 </style>

@@ -18,47 +18,40 @@
                         <component :is="Component" />
                     </transition>
                 </router-view> -->
-                <div ref="test" style="overflow: hidden; height: 100%">
+                <BetterScroll style="overflow: hidden; height: 100%" ref="test" @click="refresh">
                     <div style="height: 2000px">122</div>
-                </div>
+                </BetterScroll>
             </a-layout-content>
         </a-layout>
     </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, unref } from 'vue';
+import { defineComponent, ref, unref } from 'vue';
+import BetterScroll from '/@/components/Better-Scroll/index.vue';
 import LeftSide from './LeftSide/index.vue';
-import BScroll from '@better-scroll/core';
-import ScrollBar from '@better-scroll/scroll-bar';
-import MouseWheel from '@better-scroll/mouse-wheel';
 export default defineComponent({
     components: {
-        LeftSide
+        LeftSide,
+        BetterScroll
     },
     setup() {
         const collapsed = ref(false);
         const test = ref<any>(null);
 
-        onMounted(() => {
-            BScroll.use(ScrollBar);
-            BScroll.use(MouseWheel);
-            new BScroll(unref(test), {
-                scrollbar: true,
-                mouseWheel: {
-                    speed: 20,
-                    easeTime: 300
-                }
-            });
-        });
-
         const toggleCollapse = function () {
             collapsed.value = !collapsed.value;
         };
+
+        function refresh() {
+            test && unref(test).refresh();
+        }
+
         return {
             collapsed,
             toggleCollapse,
-            test
+            test,
+            refresh
         };
     }
 });
