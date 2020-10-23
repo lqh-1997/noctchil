@@ -9,6 +9,7 @@
         <template v-for="item of menuList" :key="item.path">
             <a-sub-menu v-if="item.children" :key="item.path">
                 <template v-slot:title>
+                    <component :is="item.meta && item.meta.icon"></component>
                     <span>{{ (item.meta && item.meta.title) || item.path }}</span>
                 </template>
                 <template v-if="item.children">
@@ -18,7 +19,8 @@
                 </template>
             </a-sub-menu>
             <a-menu-item v-else :key="item.path">
-                {{ (item.meta && item.meta.title) || item.path }}
+                <component :is="item.meta && item.meta.icon"></component>
+                <span>{{ (item.meta && item.meta.title) || item.path }}</span>
             </a-menu-item>
         </template>
     </a-menu>

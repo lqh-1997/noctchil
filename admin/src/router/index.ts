@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { dashboardRouter } from './modules/dashboard';
 import { testRouter } from './modules/test';
+import { AlignCenterOutlined } from '@ant-design/icons-vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -21,7 +22,8 @@ const router = createRouter({
                     name: 'singlePage',
                     component: () => import('/@/views/singlePage.vue'),
                     meta: {
-                        title: '单身页面'
+                        title: '单身页面',
+                        icon: AlignCenterOutlined
                     }
                 }
             ]

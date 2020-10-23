@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
+import { AlignCenterOutlined } from '@ant-design/icons-vue';
 
 export const testRouter: RouteRecordRaw = {
     path: 'test',
@@ -6,7 +7,8 @@ export const testRouter: RouteRecordRaw = {
     // TODO 这个能不能删掉啊
     component: () => import('/@/views/blank.vue'),
     meta: {
-        title: '测试'
+        title: '测试',
+        icon: AlignCenterOutlined
     },
     children: [
         {
