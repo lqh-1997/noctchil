@@ -5,71 +5,53 @@
         v-model:selectedKeys="selectKeys"
         :forceSubMenuRender="true"
         @openChange="handleMenuToggle"
+        @click="redirect"
     >
-        <a-sub-menu key="sub1">
-            <template v-slot:title>
-                <span>nav 1</span>
-            </template>
-            <a-menu-item key="1">option1</a-menu-item>
-            <a-menu-item key="2">option2</a-menu-item>
-            <a-menu-item key="3">option3</a-menu-item>
-            <a-menu-item key="4">option4</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub2">
-            <template v-slot:title>
-                <span>nav 2</span>
-            </template>
-            <a-menu-item key="5">option5</a-menu-item>
-            <a-menu-item key="6">option6</a-menu-item>
-            <a-menu-item key="7">option7</a-menu-item>
-            <a-menu-item key="8">option8</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub3">
-            <template v-slot:title>
-                <span>nav 3</span>
-            </template>
-            <a-menu-item key="9">option9</a-menu-item>
-            <a-menu-item key="10">option10</a-menu-item>
-            <a-menu-item key="11">option11</a-menu-item>
-            <a-menu-item key="12">option12</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub4">
-            <template v-slot:title>
-                <span>nav 4</span>
-            </template>
-            <a-menu-item key="Q">option9</a-menu-item>
-            <a-menu-item key="W">option10</a-menu-item>
-            <a-menu-item key="E">option11</a-menu-item>
-            <a-menu-item key="R">option12</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub5">
-            <template v-slot:title>
-                <span>nav 5</span>
-            </template>
-            <a-menu-item key="a">optionA</a-menu-item>
-            <a-menu-item key="s">optionS</a-menu-item>
-            <a-menu-item key="d">optionD</a-menu-item>
-            <a-menu-item key="f">optionF</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub6">
-            <template v-slot:title>
-                <span>nav 6</span>
-            </template>
-            <a-menu-item key="z">optionZ</a-menu-item>
-            <a-menu-item key="x">optionX</a-menu-item>
-            <a-menu-item key="c">optionC</a-menu-item>
-            <a-menu-item key="v">optionV</a-menu-item>
-        </a-sub-menu>
+        <template v-for="item of menuList" :key="item.path">
+            <a-sub-menu v-if="item.children" :key="item.path">
+                <template v-slot:title>
+                    <span>{{ (item.meta && item.meta.title) || item.path }}</span>
+                </template>
+                <template v-if="item.children">
+                    <a-menu-item v-for="subItem of item.children" :key="subItem.path">{{
+                        subItem.meta.title
+                    }}</a-menu-item>
+                </template>
+            </a-sub-menu>
+            <a-menu-item v-else :key="item.path">
+                {{ (item.meta && item.meta.title) || item.path }}
+            </a-menu-item>
+        </template>
     </a-menu>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { HomeOutlined, EditOutlined } from '@ant-design/icons-vue';
+import { useRouter } from 'vue-router';
 export default defineComponent({
     name: 'SideBar',
     props: {},
+    components: {
+        HomeOutlined,
+        EditOutlined
+    },
     setup(_, { emit }) {
+        const router = useRouter();
         const selectKeys = ref(['1']);
+
+        // 获取dashboard的children 用来动态生成菜单结构
+        const routerList = router.getRoutes();
+        const dashboard = routerList.filter((item) => {
+            return item.path === '/dashboard';
+        });
+        const menuList = dashboard[0].children;
+
+        // 重定向
+        const redirect = function (menu: any) {
+            let path = '/dashboard/' + menu.keyPath.reverse().join('/');
+            router.push({ path });
+        };
 
         const handleMenuToggle = function () {
             emit('menuToggle');
@@ -77,7 +59,9 @@ export default defineComponent({
 
         return {
             selectKeys,
-            handleMenuToggle
+            handleMenuToggle,
+            redirect,
+            menuList
         };
     }
 });

@@ -3,7 +3,8 @@
         <LeftSide v-model:collapsed="collapsed"></LeftSide>
         <a-layout>
             <a-layout-header style="background: #fff; padding: 0">
-                <div class="trigger" @click="toggleCollapse" />
+                <menu-unfold-outlined v-if="collapsed" class="trigger" @click="toggleCollapse" />
+                <menu-fold-outlined v-else class="trigger" @click="toggleCollapse" />
             </a-layout-header>
             <a-layout-content
                 :style="{
@@ -13,27 +14,27 @@
                     minHeight: '280px'
                 }"
             >
-                <!-- <router-view v-slot="{ Component }">
-                    <transition name="fade">
+                <router-view v-slot="{ Component }">
+                    <BetterScroll style="overflow: hidden; height: 100%" ref="test">
                         <component :is="Component" />
-                    </transition>
-                </router-view> -->
-                <BetterScroll style="overflow: hidden; height: 100%" ref="test" @click="refresh">
-                    <div style="height: 2000px">122</div>
-                </BetterScroll>
+                    </BetterScroll>
+                </router-view>
             </a-layout-content>
         </a-layout>
     </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, unref } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import BetterScroll from '/@/components/Better-Scroll/index.vue';
 import LeftSide from './LeftSide/index.vue';
 export default defineComponent({
     components: {
         LeftSide,
-        BetterScroll
+        BetterScroll,
+        MenuUnfoldOutlined,
+        MenuFoldOutlined
     },
     setup() {
         const collapsed = ref(false);
@@ -43,15 +44,10 @@ export default defineComponent({
             collapsed.value = !collapsed.value;
         };
 
-        function refresh() {
-            test && unref(test).refresh();
-        }
-
         return {
             collapsed,
             toggleCollapse,
-            test,
-            refresh
+            test
         };
     }
 });
@@ -63,8 +59,13 @@ export default defineComponent({
     overflow: hidden;
 }
 .trigger {
-    height: 30px;
-    width: 30px;
-    background-color: #333;
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+    &:hover {
+        color: #1890ff;
+    }
 }
 </style>

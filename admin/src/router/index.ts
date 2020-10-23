@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { dashboardRouter } from './modules/dashboard';
+import { testRouter } from './modules/test';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -12,18 +14,17 @@ const router = createRouter({
             redirect: '/dashboard/test',
             component: () => import('/@/layout/index.vue'),
             children: [
+                dashboardRouter,
+                testRouter,
                 {
-                    path: 'test',
-                    name: 'test',
-                    component: () => import('/@/views/Test/index')
-                },
-                {
-                    path: 'a',
-                    name: 'a',
-                    component: () => import('/@/views/Test/a.vue')
+                    path: 'singlePage',
+                    name: 'singlePage',
+                    component: () => import('/@/views/singlePage.vue'),
+                    meta: {
+                        title: '单身页面'
+                    }
                 }
             ]
-            // component: () => import('/@/views/index.vue')
         },
         {
             path: '/login',

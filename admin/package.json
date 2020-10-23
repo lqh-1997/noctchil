@@ -6,6 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^5.1.5",
     "@better-scroll/core": "^2.0.5",
     "@better-scroll/mouse-wheel": "^2.0.5",
     "@better-scroll/scroll-bar": "^2.0.5",
