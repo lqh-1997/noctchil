@@ -11,6 +11,7 @@ import { EaseItem } from '@better-scroll/shared-utils';
 import BScroll from '@better-scroll/core';
 import ScrollBar from '@better-scroll/scroll-bar';
 import MouseWheel from '@better-scroll/mouse-wheel';
+import ObserveDOM from '@better-scroll/observe-dom';
 import { defineComponent, onMounted, ref, unref } from 'vue';
 import { betterScrollProps } from './props';
 
@@ -24,8 +25,10 @@ export default defineComponent({
         const initScroll = function () {
             BScroll.use(ScrollBar);
             BScroll.use(MouseWheel);
+            BScroll.use(ObserveDOM);
             scroll = new BScroll(unref(wrapper), {
                 scrollbar: true,
+                observeDOM: true,
                 startX: props.startX,
                 startY: props.startY,
                 scrollX: props.scrollX,

@@ -4,7 +4,6 @@
         mode="inline"
         v-model:selectedKeys="selectKeys"
         :forceSubMenuRender="true"
-        @openChange="handleMenuToggle"
         @click="redirect"
     >
         <template v-for="item of menuList" :key="item.path">
@@ -36,7 +35,7 @@ export default defineComponent({
         HomeOutlined,
         EditOutlined
     },
-    setup(_, { emit }) {
+    setup() {
         const router = useRouter();
         const selectKeys = ref(['1']);
 
@@ -53,13 +52,8 @@ export default defineComponent({
             router.push({ path });
         };
 
-        const handleMenuToggle = function () {
-            emit('menuToggle');
-        };
-
         return {
             selectKeys,
-            handleMenuToggle,
             redirect,
             menuList
         };

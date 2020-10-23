@@ -2,24 +2,14 @@
     <a-layout>
         <LeftSide v-model:collapsed="collapsed"></LeftSide>
         <a-layout>
-            <a-layout-header style="background: #fff; padding: 0">
-                <menu-unfold-outlined v-if="collapsed" class="trigger" @click="toggleCollapse" />
-                <menu-fold-outlined v-else class="trigger" @click="toggleCollapse" />
-            </a-layout-header>
-            <a-layout-content
-                :style="{
-                    margin: '24px 16px',
-                    padding: '24px',
-                    background: '#fff',
-                    minHeight: '280px'
-                }"
-            >
+            <TopSide :collapsed="collapsed" @collapseHandler="toggleCollapse"></TopSide>
+            <BetterScroll tag="main" style="overflow: hidden" ref="test">
                 <router-view v-slot="{ Component }">
-                    <BetterScroll style="overflow: hidden; height: 100%" ref="test">
+                    <transition name="component-fade" mode="out-in">
                         <component :is="Component" />
-                    </BetterScroll>
+                    </transition>
                 </router-view>
-            </a-layout-content>
+            </BetterScroll>
         </a-layout>
     </a-layout>
 </template>
@@ -29,8 +19,10 @@ import { defineComponent, ref } from 'vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import BetterScroll from '/@/components/Better-Scroll/index.vue';
 import LeftSide from './LeftSide/index.vue';
+import TopSide from './TopSide/index.vue';
 export default defineComponent({
     components: {
+        TopSide,
         LeftSide,
         BetterScroll,
         MenuUnfoldOutlined,
@@ -67,5 +59,14 @@ export default defineComponent({
     &:hover {
         color: #1890ff;
     }
+}
+.component-fade-enter-active,
+.component-fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.component-fade-enter-from,
+.component-fade-leave-to {
+    opacity: 0;
 }
 </style>

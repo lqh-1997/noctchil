@@ -14,7 +14,7 @@
                 @mousedown="handleMouseDown"
             ></div>
             <Logo :collapsed="collapsed"></Logo>
-            <SideBar @menuToggle="refreshScroll"></SideBar>
+            <SideBar></SideBar>
         </BetterScroll>
     </a-layout-sider>
 </template>
@@ -62,13 +62,6 @@ export default defineComponent({
             }
             setMenuWidth(siderEl, dragBarEl);
         });
-
-        // FIXME 改变subMenu打开关闭状态的时候刷新滚动条状态 / 但是不知道为什么似乎慢一拍
-        const refreshScroll = function () {
-            nextTick(() => {
-                scroll && unref(scroll).refresh();
-            });
-        };
 
         // 设置菜单的宽度
         const setMenuWidth = function (siderEl: HTMLDivElement, dragBarEl: HTMLDivElement) {
@@ -120,8 +113,7 @@ export default defineComponent({
             siderRef,
             collapse,
             handleMouseDown,
-            scroll,
-            refreshScroll
+            scroll
         };
     }
 });

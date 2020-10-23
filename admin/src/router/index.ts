@@ -11,7 +11,7 @@ const router = createRouter({
         },
         {
             path: '/dashboard',
-            redirect: '/dashboard/test',
+            redirect: '/dashboard/singlePage',
             component: () => import('/@/layout/index.vue'),
             children: [
                 dashboardRouter,

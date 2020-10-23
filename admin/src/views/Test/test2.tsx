@@ -12,11 +12,11 @@ export default defineComponent({
 
         return () => {
             return (
-                <>
+                <div>
                     <div onClick={() => count.value++}>{unref(count)}</div>
                     <div onClick={() => count2.value++}>{unref(count2)}</div>
                     <div>{unref(addComputed)}</div>
-                </>
+                </div>
             );
         };
     }

@@ -11,6 +11,7 @@
         "noUnusedParameters": true,
         "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": false,
+        "allowSyntheticDefaultImports": true,
         "lib": ["dom", "esnext"],
         "paths": {
             "/@/*": ["src/*"]
