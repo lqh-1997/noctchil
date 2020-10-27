@@ -15,6 +15,7 @@
     "typescript.tsdk": "node_modules/typescript/lib",
     "cSpell.words": [
         "Antd",
+        "bilibili",
         "echarts",
         "esnext",
         "onmousedown",

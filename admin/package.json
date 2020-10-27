@@ -11,6 +11,7 @@
     "@better-scroll/mouse-wheel": "^2.0.5",
     "@better-scroll/observe-dom": "^2.0.5",
     "@better-scroll/scroll-bar": "^2.0.5",
+    "@toast-ui/editor": "^2.5.0",
     "ant-design-vue": "^2.0.0-beta.10",
     "axios": "^0.20.0",
     "echarts": "^4.9.0",

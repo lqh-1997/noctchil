@@ -8,7 +8,7 @@
     >
         <BetterScroll :specifiedIndexAsContent="2" class="scroll" ref="scroll">
             <div
-                class="dragBar"
+                class="drag-bar"
                 v-show="!collapsed"
                 ref="dragBarRef"
                 @mousedown="handleMouseDown"
@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, watchEffect, ref, unref, nextTick } from 'vue';
+import { Layout } from 'ant-design-vue';
 import Logo from './Logo.vue';
 import SideBar from './SideBar.vue';
 import BetterScroll from '/@/components/Better-Scroll/index.vue';
@@ -30,7 +31,8 @@ export default defineComponent({
     components: {
         Logo,
         SideBar,
-        BetterScroll
+        BetterScroll,
+        ALayoutSider: Layout.Sider
     },
     props: {
         collapsed: {
@@ -121,7 +123,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 $dragWidth: 5px;
-.dragBar {
+.drag-bar {
     position: absolute;
     z-index: 2000;
     top: 0;

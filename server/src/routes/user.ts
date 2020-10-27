@@ -140,6 +140,7 @@ router.get('/user/client', async (ctx: Context) => {
 
 // 测试
 router.get('/', async (ctx) => {
+    ctx.response.status = 404
     ctx.body = new SuccessModule('普通测试');
 });
 

@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { dashboardRouter } from './modules/dashboard';
+import { homeRouter } from './modules/home';
+import { settingRouter } from './modules/setting';
+import { articleRouter } from './modules/article';
 import { testRouter } from './modules/test';
 import { AlignCenterOutlined } from '@ant-design/icons-vue';
 
@@ -15,7 +17,9 @@ const router = createRouter({
             redirect: '/dashboard/singlePage',
             component: () => import('/@/layout/index.vue'),
             children: [
-                dashboardRouter,
+                homeRouter,
+                settingRouter,
+                articleRouter,
                 testRouter,
                 {
                     path: 'singlePage',

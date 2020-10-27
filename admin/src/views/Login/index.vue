@@ -24,8 +24,13 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, unref } from 'vue';
-import { notification } from 'ant-design-vue';
+import { notification, Form, Button } from 'ant-design-vue';
 export default defineComponent({
+    components: {
+        AButton: Button,
+        AFormItem: Form.Item,
+        AForm: Form
+    },
     setup() {
         // 表单的ref
         const formRef = ref<any>(null);

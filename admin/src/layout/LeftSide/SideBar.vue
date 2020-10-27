@@ -30,12 +30,16 @@
 import { defineComponent, ref } from 'vue';
 import { HomeOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
+import { Menu } from 'ant-design-vue';
 export default defineComponent({
     name: 'SideBar',
     props: {},
     components: {
         HomeOutlined,
-        EditOutlined
+        EditOutlined,
+        AMenu: Menu,
+        ASubMenu: Menu.SubMenu,
+        AMenuItem: Menu.Item
     },
     setup() {
         const router = useRouter();

@@ -28,12 +28,18 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
+import { Layout, Dropdown, Avatar, Menu } from 'ant-design-vue';
 import type { PropType } from 'vue';
 export default defineComponent({
     name: 'topSide',
     components: {
         MenuUnfoldOutlined,
-        MenuFoldOutlined
+        MenuFoldOutlined,
+        AMenu: Menu,
+        AMenuItem: Menu.Item,
+        ALayoutHeader: Layout.Header,
+        ADropdown: Dropdown,
+        AAvatar: Avatar
     },
     props: {
         collapsed: {
