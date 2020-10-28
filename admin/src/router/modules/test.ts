@@ -5,7 +5,7 @@ export const testRouter: RouteRecordRaw = {
     path: 'test',
     name: 'test',
     // TODO 这个能不能删掉啊
-    component: () => import('/@/views/blank.vue'),
+    component: () => import('/@/views/Blank.vue'),
     meta: {
         title: '测试',
         icon: AlignCenterOutlined

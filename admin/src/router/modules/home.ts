@@ -5,7 +5,7 @@ export const homeRouter: RouteRecordRaw = {
     path: 'home',
     name: 'home',
     // TODO 这个能不能删掉啊
-    component: () => import('/@/views/blank.vue'),
+    component: () => import('/@/views/Blank.vue'),
     meta: {
         title: '主页',
         icon: HomeOutlined
@@ -14,7 +14,7 @@ export const homeRouter: RouteRecordRaw = {
         {
             path: 'workbench',
             name: ' workbench',
-            component: () => import('/@/views/Home/workbench.vue'),
+            component: () => import('/@/views/Home/Workbench.vue'),
             meta: {
                 title: '工作台'
             }

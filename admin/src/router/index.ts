@@ -24,7 +24,7 @@ const router = createRouter({
                 {
                     path: 'singlePage',
                     name: 'singlePage',
-                    component: () => import('/@/views/singlePage.vue'),
+                    component: () => import('/@/views/SinglePage.vue'),
                     meta: {
                         title: '单身页面',
                         icon: AlignCenterOutlined

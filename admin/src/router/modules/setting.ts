@@ -5,7 +5,7 @@ export const settingRouter: RouteRecordRaw = {
     path: 'setting',
     name: 'setting',
     // TODO 这个能不能删掉啊
-    component: () => import('/@/views/blank.vue'),
+    component: () => import('/@/views/Blank.vue'),
     meta: {
         title: '设置',
         icon: SettingOutlined
@@ -14,7 +14,7 @@ export const settingRouter: RouteRecordRaw = {
         {
             path: 'global',
             name: ' global',
-            component: () => import('/@/views/Setting/global.vue'),
+            component: () => import('/@/views/Setting/Global.vue'),
             meta: {
                 title: '全局设置'
             }
