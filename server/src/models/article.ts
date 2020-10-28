@@ -1,16 +1,8 @@
 import { Schema, model, Document } from 'mongoose';
 import { UserDocument } from './user';
-import { CommentDocument } from './comment';
 
-enum ArticleType {
-    paragraph = 'paragraph',
-    article = 'article'
-}
-
-enum ArticleState {
-    publish = 'publish',
-    draft = 'draft'
-}
+export type ArticleType = 'message' | 'article';
+export type ArticleState = 'publish' | 'draft';
 
 const articleSchema = new Schema({
     title: { type: String, required: true, unique: true, validate: /\S+/ },

@@ -1,9 +1,11 @@
+import type { DefaultState, Context } from 'koa';
+
 import * as Router from 'koa-router';
+
 import User from '../models/user';
 import isLogin from '../middlewares/isLogin';
 import notLogin from '../middlewares/notLogin';
 import { encryptPwd } from '../util/encryptPwd';
-import { DefaultState, Context } from 'koa';
 import { errorCapture } from '../util/error';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 
@@ -140,7 +142,7 @@ router.get('/user/client', async (ctx: Context) => {
 
 // 测试
 router.get('/', async (ctx) => {
-    ctx.response.status = 404
+    ctx.response.status = 404;
     ctx.body = new SuccessModule('普通测试');
 });
 

@@ -1,19 +1,16 @@
+import type { DefaultState, Context } from 'koa';
+import type { ArticleDocument } from '../models/article';
+
 import * as Router from 'koa-router';
+import * as mongoose from 'mongoose';
+
 import Article from '../models/article';
 import isAdmin from '../middlewares/isAdmin';
-import { DefaultState, Context } from 'koa';
 import { SuccessModule, ErrorModule } from '../util/resModel';
-import { ArticleDocument } from '../models/article';
-import * as mongoose from 'mongoose';
-import { errorCapture } from '../util/error';
+import { getPagination } from 'src/util/dbHelper';
 
 const { ObjectId } = mongoose.Types;
 const router = new Router<DefaultState, Context>();
-
-interface ArticlePage {
-    total: number | 0;
-    data: Array<ArticleDocument | null>;
-}
 
 router.prefix('/api');
 
@@ -103,26 +100,41 @@ router.get('/article', async (ctx) => {
     }
 });
 
-// 分页查找所有文章信息
+// 分页查找所有文章信息 前台使用 不能查找草稿类型的以及隐藏类型的
 router.get('/articles', async (ctx) => {
-    const { pageSize, pageNumber } = ctx.request.query;
-    let result: ArticlePage = {
-        total: 0,
-        data: []
+    // 先将筛选条件设置为发布类和非隐藏类
+    const option: any = {
+        state: 'publish',
+        invisible: false
     };
-    let [err, res] = await errorCapture(Article, Article.find, {});
-    if (err) {
-        ctx.body = new ErrorModule(err);
-        return;
-    }
-    result.total = res.length;
     try {
-        // 原理 跳过pageNumber -1 * pageSize条 然后取pageSize条数据 数据量大应该会有性能瓶颈
-        const listRes = await Article.find({})
-            .skip((pageNumber - 1) * parseInt(pageSize))
-            .limit(parseInt(pageSize));
-        result.data = listRes;
-        ctx.body = new SuccessModule('获取成功', result);
+        // 用户传入pageSize pageNumber 和type
+        const pageSize = parseInt(ctx.request.query.pageSize);
+        const pageNumber = parseInt(ctx.request.query.pageNumber);
+        const { type } = ctx.request.query;
+        type && (option.type = type);
+
+        const res = await getPagination(Article, pageSize, pageNumber, option);
+        ctx.body = res;
+    } catch (err) {
+        ctx.body = new ErrorModule(err);
+    }
+});
+
+// 分页查找所有文章信息 后台使用 管理员权限
+router.get('/articles/admin', isAdmin, async (ctx) => {
+    const option: any = {};
+    try {
+        // 用户传入pageSize pageNumber 和type
+        const pageSize = parseInt(ctx.request.query.pageSize);
+        const pageNumber = parseInt(ctx.request.query.pageNumber);
+        const { type, state, invisible } = ctx.request.query;
+        type && (option.type = type);
+        state && (option.state = state);
+        invisible && (option.invisible = invisible);
+
+        const res = await getPagination(Article, pageSize, pageNumber, option);
+        ctx.body = res;
     } catch (err) {
         ctx.body = new ErrorModule(err);
     }
