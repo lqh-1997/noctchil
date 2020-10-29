@@ -5,10 +5,10 @@
  * @param args 方法的多余参数
  */
 export async function errorCapture(that: any, asyncFunction: Function, ...args: any) {
-    try {
-        const res = await asyncFunction.apply(that, args);
-        return [null, res];
-    } catch (e) {
-        return [e, null];
-    }
+	try {
+		const res = await asyncFunction.apply(that, args);
+		return [null, res];
+	} catch (e) {
+		return [e, null];
+	}
 }
