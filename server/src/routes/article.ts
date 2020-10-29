@@ -123,7 +123,7 @@ router.get('/articles', async (ctx) => {
 		type && (option.type = type);
 
 		const res = await getPagination(Article, pageSize, pageNumber, option);
-		ctx.body = res;
+		ctx.body = new SuccessModule('查询成功', res);
 	} catch (err) {
 		ctx.body = new ErrorModule(err);
 	}
@@ -142,7 +142,7 @@ router.get('/articles/admin', isAdmin, async (ctx) => {
 		invisible && (option.invisible = invisible);
 
 		const res = await getPagination(Article, pageSize, pageNumber, option);
-		ctx.body = res;
+		ctx.body = new SuccessModule('查询成功', res);
 	} catch (err) {
 		ctx.body = new ErrorModule(err);
 	}

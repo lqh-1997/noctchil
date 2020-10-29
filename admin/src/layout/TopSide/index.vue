@@ -3,7 +3,7 @@
         <div class="left">
             <menu-unfold-outlined v-if="collapsed" class="trigger" @click="toggleCollapse" />
             <menu-fold-outlined v-else class="trigger" @click="toggleCollapse" />
-            <span>4564897987</span>
+            <span>{{ myRoute }}</span>
         </div>
         <div class="right">
             <a-dropdown>
@@ -26,10 +26,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import { Layout, Dropdown, Avatar, Menu } from 'ant-design-vue';
 import type { PropType } from 'vue';
+import { useRouter } from 'vue-router';
 export default defineComponent({
     name: 'topSide',
     components: {
@@ -47,6 +48,15 @@ export default defineComponent({
         }
     },
     setup(_, { emit }) {
+        const router = useRouter();
+        const currentRoute: any = router.currentRoute;
+        const myRoute = computed(() => {
+            return (
+                (currentRoute.value.meta && currentRoute.value.meta.title) ||
+                currentRoute.value.name
+            );
+        });
+
         const toggleCollapse = function () {
             emit('collapseHandler');
         };
@@ -55,7 +65,7 @@ export default defineComponent({
             console.log(e);
         };
 
-        return { toggleCollapse, clickHead };
+        return { toggleCollapse, clickHead, myRoute };
     }
 });
 </script>

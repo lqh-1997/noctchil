@@ -1,5 +1,8 @@
 <template>
-    <div>{{ count }} -- {{ obj.time }}</div>
+    <div>
+        <div @click="removeInterval">{{ count }} -- {{ obj.time }}</div>
+        <div>{{ arr }}</div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -11,11 +14,16 @@ export default defineComponent({
         const obj = reactive({
             time: new Date()
         });
+        let arr = reactive<any>([]);
 
-        setInterval(() => {
+        const timer = setInterval(() => {
             // count.value++;
             obj.time = new Date();
         }, 1000);
+
+        setTimeout(() => {
+            arr = [4, 5, 6];
+        }, 100);
 
         window.onload = () => {
             console.log('onload');
@@ -35,9 +43,15 @@ export default defineComponent({
             console.log('onUpdate');
         });
 
+        function removeInterval() {
+            clearInterval(timer);
+        }
+
         return {
             count,
-            obj
+            obj,
+            arr,
+            removeInterval
         };
     }
 });
