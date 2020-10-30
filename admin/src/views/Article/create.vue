@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="left-container">
-            <div>
+            <div v-if="obj.type === 'article'">
                 <a-input
                     id="title"
                     v-model:value="obj.title"
@@ -9,7 +9,7 @@
                     size="large"
                 />
             </div>
-            <div>
+            <div v-if="obj.type === 'article'">
                 <a-text-area
                     v-model:value="obj.desc"
                     placeholder="请输入文章描述"
@@ -32,10 +32,10 @@
                         <br />
                     </div>
                     <div class="radio">
-                        <Svg :iconClass="obj.visible ? 'visible' : 'invisible'"></Svg>
+                        <Svg :iconClass="obj.invisible ? 'invisible' : 'visible'"></Svg>
                         <a-radio-group
                             :options="visibleList"
-                            v-model:value="obj.visible"
+                            v-model:value="obj.invisible"
                             @change="showStatus"
                         />
                         <br />
@@ -56,7 +56,7 @@
                 <a-empty />
             </MyCollapse>
             <a-button style="margin-top: 30px" @click="initTable">重置</a-button>
-            <a-button style="margin-top: 30px; margin-left: 20px">发布</a-button>
+            <a-button style="margin-top: 30px; margin-left: 20px" @click="publish">发布</a-button>
         </div>
     </div>
 </template>
@@ -64,15 +64,17 @@
 <script lang="ts">
 import Collapse from '/@/components/Collapse/index.vue';
 import { bilibiliPlugin } from '/@/utils/tuiEditorPlugin';
-import { defineComponent, onMounted, reactive, ref, unref } from 'vue';
-import { Button, Input, Radio, Empty } from 'ant-design-vue';
+import { createVNode, defineComponent, onMounted, reactive, ref, unref } from 'vue';
+import { Button, Input, Radio, Empty, Modal } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import Editor from '@toast-ui/editor';
 import Svg from '/@/components/Icon/index.vue';
 // Editor's Dependency Style
 import 'codemirror/lib/codemirror.css';
 // Editor's Style
 import '@toast-ui/editor/dist/toastui-editor.css';
-import { ArticleState, ArticleType } from '/@/types/instance';
+import type { Article } from '/@/types/instance';
+import { createArticle } from '/@/api/article';
 
 export default defineComponent({
     name: 'articleCreate',
@@ -88,17 +90,11 @@ export default defineComponent({
     setup() {
         const editorRef = ref<HTMLElement | null>(null);
         let editor: null | Editor = null;
-        let obj = reactive<{
-            title: string;
-            desc: String;
-            visible: boolean;
-            type: ArticleType;
-            state: ArticleState;
-        }>({
+        let obj = reactive<Article>({
             title: '',
             desc: '',
             state: 'draft',
-            visible: true,
+            invisible: false,
             type: 'article'
         });
 
@@ -116,11 +112,11 @@ export default defineComponent({
         const visibleList = [
             {
                 label: '可见',
-                value: true
+                value: false
             },
             {
                 label: '隐藏',
-                value: false
+                value: true
             }
         ];
 
@@ -140,13 +136,32 @@ export default defineComponent({
         };
 
         // 重置当前页面所有的输入
-        const initTable = function () {
-            obj.title = '';
-            obj.desc = '';
-            obj.state = 'draft';
-            obj.visible = true;
-            obj.type = 'article';
-            editor && editor.reset();
+        const initTable = function (hint = true) {
+            if (hint) {
+                Modal.confirm({
+                    title: '确定要重置当前页面的输入信息吗？',
+                    icon: createVNode(ExclamationCircleOutlined),
+                    content: createVNode(
+                        'div',
+                        { style: 'color:red;' },
+                        '重置后当前输入信息将无法挽回'
+                    ),
+                    onOk() {
+                        init();
+                    },
+                    onCancel() {}
+                });
+                return;
+            }
+            init();
+            function init() {
+                obj.title = '';
+                obj.desc = '';
+                obj.state = 'draft';
+                obj.invisible = true;
+                obj.type = 'article';
+                editor && editor.reset();
+            }
         };
 
         // 如果用户在desc位置点击键盘的tab就focus当前editor
@@ -155,6 +170,17 @@ export default defineComponent({
                 e.preventDefault();
                 editor && editor.focus();
             }
+        };
+
+        // 发布文章
+        const publish = function () {
+            // 将文章基本信息和editor的内容结合
+            createArticle(Object.assign(obj, { content: editor && editor.getHtml() })).then(
+                (res) => {
+                    initTable(false);
+                    console.log(res);
+                }
+            );
         };
 
         onMounted(() => {
@@ -175,7 +201,8 @@ export default defineComponent({
             visibleList,
             typeList,
             initTable,
-            clickTab
+            clickTab,
+            publish
         };
     }
 });

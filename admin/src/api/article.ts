@@ -1,5 +1,5 @@
 import service from '../utils/request';
-import type { ArticleType, ArticleState } from '/@/types/instance.d.ts';
+import type { ArticleType, ArticleState, Article } from '/@/types/instance.d.ts';
 
 export function getArticle(
     pageNumber: number,
@@ -18,5 +18,13 @@ export function getArticle(
             state,
             invisible
         }
+    });
+}
+
+export function createArticle(article: Article) {
+    return service({
+        url: '/article',
+        method: 'post',
+        data: article
     });
 }
