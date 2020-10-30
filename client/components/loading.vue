@@ -131,6 +131,7 @@ $duration: 10s;
     height: 100%;
     position: fixed;
     z-index: 9999;
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 // Set the rotation to '-135deg' to get a heart shaped loading indicator. 😘

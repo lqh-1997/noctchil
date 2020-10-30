@@ -33,6 +33,11 @@ export default {
                 rel: 'icon',
                 type: 'image/x-icon',
                 href: '/favicon.ico'
+            },
+            {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: 'http://cdn.repository.webfont.com/webfonts/nomal/141631/19673/5f9b7ebff629d842f4358334.css'
             }
         ],
         script: [

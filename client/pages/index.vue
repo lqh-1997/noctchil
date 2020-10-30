@@ -1,11 +1,12 @@
 <template>
     <div class="content">
-        <div class="title">欢迎</div>
-        <div class="icon">
-            <nuxt-link to="/home">
-                <svg-icon :icon-class="'pullDown'" />
-            </nuxt-link>
-        </div>
+        <div class="title">Noctchil</div>
+        <ul class="icon-list">
+            <!-- <svg-icon :icon-class="'pullDown'" /> -->
+            <li v-for="item of menuList" :key="item.name" @click="jumpToLink(item.url, item.type)">
+                {{ item.name }}
+            </li>
+        </ul>
         <bubbles
             class="bubble"
             :height="'1000px'"
@@ -19,16 +20,45 @@
 
 <script>
 import Bubbles from '@/components/Bubbles.vue';
-import SvgIcon from '@/components/SvgIcon.vue';
+// import SvgIcon from '@/components/SvgIcon.vue';
 export default {
     components: {
-        Bubbles,
-        SvgIcon
+        Bubbles
+        // SvgIcon
+    },
+    data() {
+        return {
+            menuList: [
+                {
+                    name: '主页',
+                    url: '/home',
+                    type: 'self'
+                },
+                {
+                    name: '项目Github',
+                    url: '',
+                    type: '_blank'
+                }
+            ]
+        };
+    },
+    methods: {
+        jumpToLink(url, type) {
+            if (!url) {
+                return;
+            }
+            if (type === '_blank') {
+                window.open(url, '_blank');
+            } else {
+                this.$router.push(url);
+            }
+        }
     }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scope>
+@import '@/assets/scss/global.scss';
 .content {
     height: 100vh;
     width: 100%;
@@ -43,38 +73,22 @@ export default {
         top: 40%;
         left: 50%;
         transform: translateX(-50%);
-        font-size: 50px;
-        font-weight: 300;
+        font-size: 72px;
+        letter-spacing: 6px;
+        font-weight: 200;
     }
-    .icon {
-        width: 20px !important;
-        height: 20px !important;
-        color: white;
+    .icon-list {
         position: absolute;
-        bottom: 10%;
-        left: 50%;
-        transform: translateX(-50%);
+        bottom: 30px;
+        left: 30px;
         z-index: 20;
-        &:hover {
-            transition: shake 3s ease infinite;
-            color: rgba($color: #3ea2ff, $alpha: 1);
-        }
-        @keyframes shake {
-            0% {
-                color: '#123456';
-            }
-            25% {
-                color: '#654321';
-            }
-            50% {
-                color: '#123456';
-            }
-            75% {
-                color: '#654321';
-            }
-            100% {
-                color: '#123456';
-            }
+        list-style: none;
+        font-size: 20px;
+        font-family: 'jdzhonyuanjian241c9062f22293f';
+        color: rgb(255, 255, 255);
+        & li:hover {
+            cursor: pointer;
+            color: $defaultColor;
         }
     }
     .bubble {

@@ -27,17 +27,17 @@
         </el-dropdown>
 
         <div
-            style="float: right; margin-right: 20px;"
+            style="float: right; margin-right: 20px"
             @click="handleLogout"
             v-if="isLogin"
             class="account-button"
         >
             注销
         </div>
-        <div style="float: right; margin-right: 20px;" v-if="!isLogin" class="account-button">
+        <div style="float: right; margin-right: 20px" v-if="!isLogin" class="account-button">
             <nuxt-link to="/login">登录</nuxt-link>
         </div>
-        <div style="float: right; margin-right: 20px;" v-if="!isLogin" class="account-button">
+        <div style="float: right; margin-right: 20px" v-if="!isLogin" class="account-button">
             <nuxt-link to="/signup">注册</nuxt-link>
         </div>
     </header>
@@ -54,6 +54,10 @@ export default {
             headList: [
                 {
                     name: '首页',
+                    to: '/home'
+                },
+                {
+                    name: '留坑',
                     to: '/home'
                 }
             ]
