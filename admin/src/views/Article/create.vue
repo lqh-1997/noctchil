@@ -65,7 +65,7 @@
 import Collapse from '/@/components/Collapse/index.vue';
 import { bilibiliPlugin } from '/@/utils/tuiEditorPlugin';
 import { createVNode, defineComponent, onMounted, reactive, ref, unref } from 'vue';
-import { Button, Input, Radio, Empty, Modal } from 'ant-design-vue';
+import { Button, Input, Radio, Empty, Modal, message } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import Editor from '@toast-ui/editor';
 import Svg from '/@/components/Icon/index.vue';
@@ -158,7 +158,7 @@ export default defineComponent({
                 obj.title = '';
                 obj.desc = '';
                 obj.state = 'draft';
-                obj.invisible = true;
+                obj.invisible = false;
                 obj.type = 'article';
                 editor && editor.reset();
             }
@@ -174,13 +174,20 @@ export default defineComponent({
 
         // 发布文章
         const publish = function () {
-            // 将文章基本信息和editor的内容结合
-            createArticle(Object.assign(obj, { content: editor && editor.getHtml() })).then(
-                (res) => {
-                    initTable(false);
-                    console.log(res);
-                }
-            );
+            Modal.confirm({
+                title: '确定发布文章？',
+                icon: createVNode(ExclamationCircleOutlined),
+                onOk() {
+                    // 将文章基本信息和editor的内容结合
+                    createArticle(Object.assign(obj, { content: editor && editor.getHtml() })).then(
+                        (res) => {
+                            initTable(false);
+                            message.success(res.data.message);
+                        }
+                    );
+                },
+                onCancel() {}
+            });
         };
 
         onMounted(() => {

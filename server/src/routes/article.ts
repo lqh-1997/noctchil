@@ -53,6 +53,9 @@ router.post('/article', isAdmin, async (ctx) => {
 
 /**
  * @api {put} /article 更新文章
+ * @apiName UpdateArticle
+ * @apiGroup Article
+ * 
  */
 router.put('/article', isAdmin, async (ctx) => {
 	const { id, title, desc, content, type, state, tag, invisible } = ctx.request.body;

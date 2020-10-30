@@ -4,9 +4,9 @@ import type { ArticleType, ArticleState, Article } from '/@/types/instance.d.ts'
 export function getArticle(
     pageNumber: number,
     pageSize: number,
-    type: ArticleType,
-    state: ArticleState,
-    invisible: boolean
+    type: ArticleType | null,
+    state: ArticleState | null,
+    invisible: boolean | null
 ) {
     return service({
         url: '/articles/admin',
