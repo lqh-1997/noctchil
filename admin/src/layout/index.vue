@@ -3,7 +3,7 @@
         <LeftSide v-model:collapsed="collapsed"></LeftSide>
         <a-layout>
             <TopSide :collapsed="collapsed" @collapseHandler="toggleCollapse"></TopSide>
-            <main style="overflow-y: auto; height: 100%">
+            <main style="overflow-y: auto; height: 100%; position: relative">
                 <!-- <BetterScroll tag="main" style="overflow: hidden; height: 100%" ref="test"> -->
                 <router-view v-slot="{ Component }">
                     <transition name="fade-transform" mode="out-in">
