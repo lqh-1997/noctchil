@@ -10,7 +10,7 @@ export function getArticle(
 ) {
     return service({
         url: '/articles/admin',
-        method: 'get',
+        method: 'GET',
         params: {
             pageNumber,
             pageSize,
@@ -24,7 +24,15 @@ export function getArticle(
 export function createArticle(article: Article) {
     return service({
         url: '/article',
-        method: 'post',
+        method: 'POST',
+        data: article
+    });
+}
+
+export function updateArticle(article: Article) {
+    return service({
+        url: '/article',
+        method: 'PUT',
         data: article
     });
 }

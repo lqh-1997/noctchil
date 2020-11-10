@@ -27,7 +27,7 @@ export function getArticleById(env, articleId) {
 export function getAllArticle(env, pageNumber, pageSize) {
     return env.$axios({
         method: 'get',
-        url: '/articles',
+        url: '/articles/client',
         params: {
             pageNumber,
             pageSize

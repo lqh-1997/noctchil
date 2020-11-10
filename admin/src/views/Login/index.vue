@@ -24,12 +24,14 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, unref } from 'vue';
-import { notification, Form, Button } from 'ant-design-vue';
+import { notification, Form, Button, Input } from 'ant-design-vue';
+import { login } from '/@/api/user';
 export default defineComponent({
     components: {
         AButton: Button,
         AFormItem: Form.Item,
-        AForm: Form
+        AForm: Form,
+        AInput: Input
     },
     setup() {
         // 表单的ref
@@ -50,15 +52,15 @@ export default defineComponent({
         });
 
         async function handleLogin() {
-            console.log('formRef', formRef);
             // 返回 ref 内部值或者文件本身
             const form = unref(formRef);
-            console.log('form', form);
             try {
+                // 获取到表单中填入的对象
                 const data = await form.validate();
-                console.log('data', data);
-                notification.success({
-                    message: '登陆成功'
+                login({ username: data.account, password: data.password }).then(() => {
+                    notification.success({
+                        message: '登陆成功'
+                    });
                 });
             } catch (err) {}
         }
@@ -74,4 +76,14 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.ant-form {
+    flex-basis: 300px;
+}
+</style>

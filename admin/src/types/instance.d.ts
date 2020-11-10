@@ -9,3 +9,8 @@ export type Article = {
     tag?: Array<string>;
     invisible: boolean;
 };
+
+export type User = {
+    username: String;
+    password: String;
+};

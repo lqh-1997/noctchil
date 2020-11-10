@@ -11,9 +11,7 @@
                         placeholder="username"
                         @blur="hasUsername"
                     />
-                    <div v-show="tipsShow">
-                        用户名不得为空
-                    </div>
+                    <div v-show="tipsShow">用户名不得为空</div>
                 </el-form-item>
                 <el-form-item>
                     <input
@@ -83,7 +81,7 @@ export default {
 @import '@/assets/scss/global.scss';
 .login {
     background-image: linear-gradient(0deg, #0093dd, #50d0d0);
-    background: url('../assets/image/EX4icBFWoAEr5se.jpg');
+    // background: url('../assets/image/EX4icBFWoAEr5se.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     height: 100%;
