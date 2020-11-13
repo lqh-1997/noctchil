@@ -5,7 +5,8 @@
             <menu-fold-outlined v-else class="trigger" @click="toggleCollapse" />
             <span>{{ myRoute }}</span>
         </div>
-        <div class="right">
+        <!-- TODO 权限较少的人移上去会报错 -->
+        <!-- <div class="right">
             <a-dropdown>
                 <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
                     <a-avatar
@@ -15,13 +16,13 @@
                 </a>
                 <template v-slot:overlay>
                     <a-menu @click="clickHead">
-                        <a-menu-item key="1"> 1st menu item </a-menu-item>
+                        <a-menu-item key="1" @click="signOut">注销</a-menu-item>
                         <a-menu-item key="2"> 2nd menu item </a-menu-item>
                         <a-menu-item key="3"> 3rd menu item </a-menu-item>
                     </a-menu>
                 </template>
             </a-dropdown>
-        </div>
+        </div> -->
     </a-layout-header>
 </template>
 
@@ -29,6 +30,7 @@
 import { computed, defineComponent } from 'vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import { Layout, Dropdown, Avatar, Menu } from 'ant-design-vue';
+import { removeAuthorize } from '/@/utils/authorize';
 import type { PropType } from 'vue';
 import { useRouter } from 'vue-router';
 export default defineComponent({
@@ -65,7 +67,12 @@ export default defineComponent({
             console.log(e);
         };
 
-        return { toggleCollapse, clickHead, myRoute };
+        const signOut = async function () {
+            await removeAuthorize();
+            router.push('/login');
+        };
+
+        return { toggleCollapse, clickHead, myRoute, signOut };
     }
 });
 </script>

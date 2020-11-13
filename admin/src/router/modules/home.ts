@@ -4,7 +4,6 @@ import { HomeOutlined } from '@ant-design/icons-vue';
 export const homeRouter: RouteRecordRaw = {
     path: 'home',
     name: 'home',
-    // TODO 这个能不能删掉啊
     component: () => import('/@/views/Blank.vue'),
     meta: {
         title: '主页',

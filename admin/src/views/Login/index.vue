@@ -13,7 +13,7 @@
                     size="large"
                     class="rounded-sm"
                     block
-                    @click="login"
+                    @click.prevent="login"
                     :loading="formState.loading"
                     >登录</a-button
                 >
@@ -24,8 +24,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, unref } from 'vue';
-import { notification, Form, Button, Input } from 'ant-design-vue';
+import { message, Form, Button, Input } from 'ant-design-vue';
 import { login } from '/@/api/user';
+import { useRouter } from 'vue-router';
+import { setAuthorize } from '/@/utils/authorize';
 export default defineComponent({
     components: {
         AButton: Button,
@@ -34,6 +36,7 @@ export default defineComponent({
         AInput: Input
     },
     setup() {
+        const router = useRouter();
         // 表单的ref
         const formRef = ref<any>(null);
 
@@ -58,8 +61,9 @@ export default defineComponent({
                 // 获取到表单中填入的对象
                 const data = await form.validate();
                 login({ username: data.account, password: data.password }).then(() => {
-                    notification.success({
-                        message: '登陆成功'
+                    setAuthorize().then(() => {
+                        message.success('登陆成功');
+                        router.push('/menu');
                     });
                 });
             } catch (err) {}

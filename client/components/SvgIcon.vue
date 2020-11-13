@@ -8,7 +8,6 @@
 export default {
     name: 'SvgIcon',
     props: {
-        // eslint-disable-next-line vue/require-default-prop
         iconClass: {
             type: String,
             require: true

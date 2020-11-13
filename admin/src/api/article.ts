@@ -9,7 +9,7 @@ export function getArticle(
     invisible: boolean | null
 ) {
     return service({
-        url: '/articles/admin',
+        url: '/articles',
         method: 'GET',
         params: {
             pageNumber,

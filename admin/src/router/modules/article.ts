@@ -4,11 +4,11 @@ import { FileOutlined } from '@ant-design/icons-vue';
 export const articleRouter: RouteRecordRaw = {
     path: 'article',
     name: 'article',
-    // TODO 这个能不能删掉啊
     component: () => import('/@/views/Blank.vue'),
     meta: {
         title: '文章',
-        icon: FileOutlined
+        icon: FileOutlined,
+        isAdmin: true
     },
     children: [
         {

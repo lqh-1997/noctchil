@@ -4,7 +4,6 @@ import { AlignCenterOutlined } from '@ant-design/icons-vue';
 export const testRouter: RouteRecordRaw = {
     path: 'test',
     name: 'test',
-    // TODO 这个能不能删掉啊
     component: () => import('/@/views/Blank.vue'),
     meta: {
         title: '测试',
@@ -18,14 +17,14 @@ export const testRouter: RouteRecordRaw = {
             meta: {
                 title: '测试1'
             }
-        },
-        {
-            path: 'test2',
-            name: 'test2',
-            component: () => import('/@/views/Test/test2'),
-            meta: {
-                title: '第二个测试页, 啊哈~'
-            }
         }
+        // {
+        //     path: 'test2',
+        //     name: 'test2',
+        //     component: () => import('/@/views/Test/test2'),
+        //     meta: {
+        //         title: '第二个测试页, 啊哈~'
+        //     }
+        // }
     ]
 };

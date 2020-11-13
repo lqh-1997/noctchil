@@ -31,6 +31,7 @@ import { defineComponent, ref } from 'vue';
 import { HomeOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { Menu } from 'ant-design-vue';
+import { menuPrefix } from '/@/router/index';
 export default defineComponent({
     name: 'SideBar',
     props: {},
@@ -46,15 +47,17 @@ export default defineComponent({
         const selectKeys = ref(['1']);
 
         // 获取dashboard的children 用来动态生成菜单结构
+        // (这个动态菜单并不能通过在内部修改权限来改变结构，如果要这样做的话要将routes放到store里面作为响应式对象)
+        // TODO 监听store中routes的变化
         const routerList = router.getRoutes();
         const dashboard = routerList.filter((item) => {
-            return item.path === '/dashboard';
+            return item.path === `/${menuPrefix}`;
         });
         const menuList = dashboard[0].children;
 
         // 重定向
         const redirect = function (menu: any) {
-            let path = '/dashboard/' + menu.keyPath.reverse().join('/');
+            let path = `/${menuPrefix}/` + menu.keyPath.reverse().join('/');
             router.push({ path });
         };
 
