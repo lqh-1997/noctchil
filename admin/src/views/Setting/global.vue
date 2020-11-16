@@ -1,3 +1,3 @@
 <template>
-    <div>setting</div>
+    <div>全局设置</div>
 </template>

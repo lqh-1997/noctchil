@@ -5,24 +5,29 @@
             <menu-fold-outlined v-else class="trigger" @click="toggleCollapse" />
             <span>{{ myRoute }}</span>
         </div>
-        <!-- TODO 权限较少的人移上去会报错 -->
-        <!-- <div class="right">
+        <div class="right">
             <a-dropdown>
-                <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
+                <a class="avatar-link" @click="(e) => e.preventDefault()">
                     <a-avatar
                         class="avatar"
                         src="https://mirror-gold-cdn.xitu.io/17273f8a79d2684278a?imageView2/1/w/180/h/180/q/85/format/webp/interlace/1"
                     />
+                    <span class="avatar-username">{{ username }}</span>
                 </a>
+                <!-- FIXME 使用menu的时候权限较少的人移上去会报错 -->
                 <template v-slot:overlay>
-                    <a-menu @click="clickHead">
-                        <a-menu-item key="1" @click="signOut">注销</a-menu-item>
-                        <a-menu-item key="2"> 2nd menu item </a-menu-item>
-                        <a-menu-item key="3"> 3rd menu item </a-menu-item>
-                    </a-menu>
+                    <!-- <a-menu @click="clickHead">
+                        <a-menu-item @click="signOut">注销</a-menu-item>
+                        <a-menu-item> 2nd menu item </a-menu-item>
+                        <a-menu-item> 3rd menu item </a-menu-item>
+                    </a-menu> -->
+                    <ul class="menu-overlay">
+                        <li>个人中心</li>
+                        <li @click="signOut">注销</li>
+                    </ul>
                 </template>
             </a-dropdown>
-        </div> -->
+        </div>
     </a-layout-header>
 </template>
 
@@ -33,6 +38,7 @@ import { Layout, Dropdown, Avatar, Menu } from 'ant-design-vue';
 import { removeAuthorize } from '/@/utils/authorize';
 import type { PropType } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 export default defineComponent({
     name: 'topSide',
     components: {
@@ -51,6 +57,7 @@ export default defineComponent({
     },
     setup(_, { emit }) {
         const router = useRouter();
+        const store = useStore();
         const currentRoute: any = router.currentRoute;
         const myRoute = computed(() => {
             return (
@@ -58,6 +65,8 @@ export default defineComponent({
                 currentRoute.value.name
             );
         });
+
+        const username = computed(() => store.state.user.nicename);
 
         const toggleCollapse = function () {
             emit('collapseHandler');
@@ -72,7 +81,7 @@ export default defineComponent({
             router.push('/login');
         };
 
-        return { toggleCollapse, clickHead, myRoute, signOut };
+        return { toggleCollapse, clickHead, myRoute, signOut, username };
     }
 });
 </script>
@@ -84,21 +93,46 @@ export default defineComponent({
     padding: 0;
     flex-wrap: nowrap;
     justify-content: space-between;
-    .trigger {
-        font-size: 18px;
-        line-height: 64px;
-        padding: 0 24px;
-        cursor: pointer;
-        transition: color 0.3s;
-        &:hover {
-            color: #1890ff;
+    .left {
+        .trigger {
+            font-size: 18px;
+            line-height: 64px;
+            padding: 0 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+            &:hover {
+                color: #1890ff;
+            }
         }
     }
-    .ant-avatar {
+    .right {
+        display: flex;
         margin-right: 24px;
-        width: 40px;
-        height: 40px;
+        height: 64px;
+        .avatar-username {
+            margin-left: 8px;
+            color: #333;
+        }
+        .ant-avatar {
+            flex-basis: 40px;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}
+.menu-overlay {
+    width: 96px;
+    background-color: white;
+    list-style: none;
+    li {
+        width: 100%;
+        height: 32px;
+        line-height: 32px;
+        border-bottom: 1px solid rgb(247, 247, 247);
+        padding-left: 10px;
         &:hover {
+            background-color: #eee;
             cursor: pointer;
         }
     }

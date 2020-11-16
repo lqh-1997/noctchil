@@ -15,8 +15,15 @@ export const settingRouter: RouteRecordRaw = {
             name: ' global',
             component: () => import('/@/views/Setting/Global.vue'),
             meta: {
-                title: '全局设置',
-                isAdmin: true
+                title: '全局设置'
+            }
+        },
+        {
+            path: 'user',
+            name: 'user',
+            component: () => import('/@/views/Setting/User.vue'),
+            meta: {
+                title: '账号设置'
             }
         }
     ]

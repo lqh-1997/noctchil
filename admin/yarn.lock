@@ -2935,7 +2935,7 @@ vue-router@^4.0.0-beta.13:
   resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-4.0.0-beta.13.tgz#4611d09a9e44f231cc401ecc294a7f2dcb30e6a6"
   integrity sha1-RhHQmp5E8jHMQB7MKUp/Lcsw5qY=
 
-vue@^3.0.0-rc.1, vue@^3.0.2:
+vue@^3.0.2:
   version "3.0.2"
   resolved "https://registry.npm.taobao.org/vue/download/vue-3.0.2.tgz#9d5b7b2983f35e64a34d13c7c9d6831239feca3c"
   integrity sha1-nVt7KYPzXmSjTRPHydaDEjn+yjw=
