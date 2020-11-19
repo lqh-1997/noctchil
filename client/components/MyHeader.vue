@@ -1,23 +1,31 @@
 <template>
     <header>
         <ul>
-            <li v-for="item of headList" :key="item.name">
-                <nuxt-link :to="item.to">
-                    <span>
-                        {{ item.name }}
-                    </span>
+            <!-- 最多仅支持二级菜单 item: [{name, target, _id, url, children}] -->
+            <li v-for="item of headList" :key="item._id">
+                <a v-if="item.target === '_blank'" :href="item.url" target="_blank">
+                    <span>{{ item.name }}</span>
+                </a>
+                <nuxt-link v-else :to="item.url">
+                    <span>{{ item.name }}</span>
                 </nuxt-link>
-                <dl>
-                    <dd v-for="(subItem, subIndex) of item.children" :key="subIndex">
-                        {{ subItem.name }}
+                <dl :ref="item._id">
+                    <dd v-for="subItem of item.children" :key="subItem._id">
+                        <a v-if="subItem.target === '_blank'" :href="subItem.url" target="_blank">
+                            <span>{{ subItem.name }}</span>
+                        </a>
+                        <nuxt-link v-else :to="subItem.url">
+                            <span>{{ subItem.name }}</span>
+                        </nuxt-link>
                     </dd>
                 </dl>
             </li>
         </ul>
 
+        <!-- 这里还不支持二级菜单 -->
         <el-dropdown>
             <span class="el-dropdown-link">
-                首页<i class="el-icon-arrow-down el-icon--right"></i>
+                <span>主页</span><i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item v-for="item of headList" :key="item.name">
@@ -26,18 +34,19 @@
             </el-dropdown-menu>
         </el-dropdown>
 
-        <div
-            style="float: right; margin-right: 20px"
-            @click="handleLogout"
-            v-if="isLogin"
-            class="account-button"
-        >
-            注销
+        <!-- TODO 支持二级菜单 -->
+        <!-- <div class="dropdown" @click="showDropdownMenu">
+            <span>主页</span>
+            <svg-icon :iconClass="'dropdown-nocolor'"></svg-icon>
         </div>
-        <div style="float: right; margin-right: 20px" v-if="!isLogin" class="account-button">
+
+        <dropdown class="dropdown-panel" v-show="dropdownShow"></dropdown> -->
+
+        <div @click="handleLogout" v-if="isLogin" class="account-button">注销</div>
+        <div v-if="!isLogin" class="account-button">
             <nuxt-link to="/login">登录</nuxt-link>
         </div>
-        <div style="float: right; margin-right: 20px" v-if="!isLogin" class="account-button">
+        <div v-if="!isLogin" class="account-button">
             <nuxt-link to="/signup">注册</nuxt-link>
         </div>
     </header>
@@ -47,18 +56,19 @@
 import { logout } from '../api/user';
 import { removeCookie } from '../util/cookie';
 import { mapGetters, mapMutations } from 'vuex';
+import { getHeaderMenu } from '../api/platform';
+// import SvgIcon from './SvgIcon.vue';
+// import Dropdown from './Dropdown.vue';
 export default {
+    // components: { SvgIcon, Dropdown },
     data() {
         return {
+            dropdownShow: false,
             isLogin: false,
             headList: [
                 {
                     name: '首页',
-                    to: '/home'
-                },
-                {
-                    name: '留坑',
-                    to: '/home'
+                    url: '/home'
                 }
             ]
         };
@@ -81,6 +91,9 @@ export default {
                     throw err;
                 });
         }
+        // showDropdownMenu() {
+        //     this.dropdownShow = !this.dropdownShow;
+        // }
     },
     computed: {
         ...mapGetters(['getUserId'])
@@ -90,14 +103,17 @@ export default {
             this.isLogin = !!data;
         }
     },
-    mounted() {
+    async mounted() {
         this.isLogin = !!this.$store.state.userId;
+        const res = await getHeaderMenu(this);
+        this.headList = res.data.data;
     }
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/global.scss';
+$headerFontColor: #eee;
 header {
     height: 46px;
     background-color: rgba($color: #4e4e4e, $alpha: 0.8);
@@ -107,14 +123,16 @@ header {
     top: 0;
     z-index: 1999;
     .account-button {
-        color: #eee;
+        float: right;
+        margin-right: 20px;
+        color: $headerFontColor;
         cursor: pointer;
         &:hover {
             color: $defaultColor;
         }
     }
     .account-button a {
-        color: #eee;
+        color: $headerFontColor;
         &:hover {
             color: $defaultColor;
         }
@@ -135,14 +153,16 @@ header > ul li {
         width: 100%;
         margin: 0;
         transition: background-color 0.3s ease;
-        color: #eee;
+        color: $headerFontColor;
         &:hover {
             background-color: rgba($color: #ffffff, $alpha: 0.2);
             cursor: pointer;
-            & + dl {
-                opacity: 1;
-                visibility: visible;
-            }
+        }
+    }
+    &:hover {
+        & dl {
+            opacity: 1;
+            display: block;
         }
     }
 }
@@ -150,21 +170,36 @@ header > ul li {
     dl {
         transition: opacity 0.3s ease;
         opacity: 0;
-        visibility: hidden;
+        display: none;
         background-color: rgba($color: #4e4e4e, $alpha: 0.8);
-        &:hover {
-            opacity: 1;
-            visibility: visible;
-        }
     }
     dd {
         transition: background-color 0.3s ease;
+        color: $headerFontColor;
         &:hover {
             background-color: rgba($color: #fff, $alpha: 0.2);
             cursor: pointer;
         }
     }
 }
+// header .dropdown {
+//     display: none;
+//     width: 100px;
+//     text-align: center;
+//     font-size: 18px;
+//     color: white;
+//     font-weight: bold;
+//     font-family: 'jdzhonyuanjian241c9062f22293f';
+//     cursor: pointer;
+//     &:hover {
+//         color: $defaultColor;
+//     }
+// }
+// header .dropdown-panel {
+//     top: 46px;
+//     left: 30px;
+//     display: none;
+// }
 header .el-dropdown {
     display: none;
     width: 100px;
@@ -172,7 +207,12 @@ header .el-dropdown {
     font-size: 18px;
     color: $defaultColor;
     font-weight: bold;
-    font-family: '微软雅黑';
+    span {
+        font-family: 'jdzhonyuanjian241c9062f22293f';
+        &:focus {
+            outline: none;
+        }
+    }
 }
 body /deep/ .el-dropdown-menu {
     .popper__arrow {
@@ -191,5 +231,11 @@ body /deep/ .el-dropdown-menu {
     header .el-dropdown {
         display: inline-block;
     }
+    // header .dropdown {
+    //     display: inline-block;
+    // }
+    // header .dropdown-panel {
+    //     display: block;
+    // }
 }
 </style>

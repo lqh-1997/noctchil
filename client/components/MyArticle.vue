@@ -55,12 +55,12 @@
                     <div class="message-content">{{ item.content }}</div>
                     <ul class="info">
                         <li>
-                            <favourite
+                            <favorite
                                 :count="item.meta.likes"
                                 :id="item._id"
                                 :likeList="likeList"
-                                @changeLikeList="changeFavourite"
-                            ></favourite>
+                                @changeLikeList="changeFavorite"
+                            ></favorite>
                         </li>
                         <li>
                             <span>
@@ -99,12 +99,12 @@
                             {{ item.meta.views }}次阅读
                         </li>
                         <li>
-                            <favourite
+                            <favorite
                                 :count="item.meta.likes"
                                 :id="item._id"
                                 :likeList="likeList"
-                                @changeLikeList="changeFavourite"
-                            ></favourite>
+                                @changeLikeList="changeFavorite"
+                            ></favorite>
                         </li>
                         <li class="hidden">
                             <nuxt-link :to="'/article/' + item._id">阅读全文</nuxt-link>
@@ -121,7 +121,7 @@
 <script>
 import SideFlow from './SideFlow/index';
 import SvgIcon from './SvgIcon';
-import Favourite from './Favourite';
+import Favorite from './Favorite';
 import { timeFromDbToTime } from '../util/timeFormat';
 import { likeArticle } from '../api/article';
 export default {
@@ -129,7 +129,7 @@ export default {
     components: {
         SideFlow,
         SvgIcon,
-        Favourite
+        Favorite
     },
     props: {
         articleList: {
@@ -155,7 +155,7 @@ export default {
         handleGetArticleList(val) {
             this.$emit('handleGetArticleList', val);
         },
-        changeFavourite(beLiked, id) {
+        changeFavorite(beLiked, id) {
             // 已经被喜欢再点击就是不喜欢
             likeArticle(this, id, !beLiked)
                 .then((res) => {

@@ -23,15 +23,21 @@
 //     };
 // }
 
-export function deepClone<T>(obj: T): T {
+export function deepClone<T extends {}>(obj: T): T {
     if (typeof obj !== 'object') {
         return obj;
     }
+
     const newObj: any = Array.isArray(obj) ? [] : {};
 
     for (let key in obj) {
-        if ((obj as Object).hasOwnProperty(key)) {
-            newObj[key] = typeof obj[key] === 'object' ? deepClone(obj[key]) : obj[key];
+        if (obj.hasOwnProperty(key)) {
+            newObj[key] =
+                typeof obj[key] === 'object'
+                    ? obj[key] === null
+                        ? null
+                        : deepClone(obj[key])
+                    : obj[key];
         }
     }
     return newObj;

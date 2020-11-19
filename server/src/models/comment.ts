@@ -1,6 +1,4 @@
 import { Schema, model, Document } from 'mongoose';
-import { UserDocument } from './user';
-import { ArticleDocument } from './article';
 
 const commentSchema = new Schema({
     content: { type: String, required: true },
