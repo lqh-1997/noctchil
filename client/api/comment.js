@@ -9,7 +9,7 @@ export function createComment(env, commentInfo) {
 export function getCommentsByArticleId(env, articleId) {
     return env.$axios({
         method: 'get',
-        url: `/comments/${articleId}`
+        url: `/comments/article/${articleId}`
     });
 }
 

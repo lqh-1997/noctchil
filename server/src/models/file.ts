@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 import { UserDocument } from './user';
 
 const fileSchema = new Schema({
-    createTime: { type: Date, default: new Date(), required: true, index: true },
+    createTime: { type: Date, default: Date.now, required: true, index: true },
     title: { type: String, required: true },
     path: { type: String, required: true, unique: true },
     type: { type: String, required: true },

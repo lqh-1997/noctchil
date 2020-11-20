@@ -19,8 +19,8 @@ const articleSchema = new Schema({
         views: { type: Number, default: 0, required: true },
         comments: { type: Number, default: 0, required: true }
     },
-    createTime: { type: Date, default: new Date(), required: true, index: true },
-    updateTime: { type: Date, default: new Date(), required: true }
+    createTime: { type: Date, default: Date.now, required: true, index: true },
+    updateTime: { type: Date, default: Date.now, required: true }
 });
 
 export interface ArticleDocument extends Document {

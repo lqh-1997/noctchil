@@ -10,7 +10,7 @@ const userSchema = new Schema({
     url: String,
     status: { type: Boolean, default: false, required: true },
     isAdmin: { type: Boolean, default: false },
-    last_login_time: { type: Date, default: new Date() },
+    last_login_time: { type: Date, default: Date.now },
     valid: { type: Boolean, default: true, required: true, select: false }
 });
 

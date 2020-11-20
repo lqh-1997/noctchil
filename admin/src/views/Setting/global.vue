@@ -46,7 +46,7 @@ export default defineComponent({
         AButton: Button
     },
     setup() {
-        // FIXME 删除未做 改成策略模式?
+        // TODO 删除未做 改成策略模式?
         const state = reactive<{
             headerMenu: HeaderMenu;
         }>({

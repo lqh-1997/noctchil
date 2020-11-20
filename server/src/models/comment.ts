@@ -3,7 +3,7 @@ import { Schema, model, Document } from 'mongoose';
 const commentSchema = new Schema({
     content: { type: String, required: true },
     creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    createTime: { type: Date, default: new Date(), required: true },
+    createTime: { type: Date, default: Date.now, required: true },
     likes: { type: Number, default: 0, required: true },
     from: { type: Schema.Types.ObjectId, ref: 'Article', required: true }
 });
