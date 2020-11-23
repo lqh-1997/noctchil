@@ -17,7 +17,16 @@ function getRandomSalt() {
     return Math.random().toString().slice(2, 5);
 }
 
-// 注册
+/**
+ * @api {post} /signUp 注册
+ * @apiName signUp
+ * @apiGroup User
+ * @apiParam {Object} user 通过body传递过来文章对象
+ * @apiParam {String} username 用户名
+ * @apiParam {String} password 密码
+ * @apiParam {String} [email] 邮箱地址
+ * @apiParam {String} [url] 首页地址
+ */
 router.post('/signUp', notLogin, async (ctx) => {
     // 查看用户名是否重复
     let [err, user] = await errorCapture(User, User.findOne, {
@@ -50,7 +59,14 @@ router.post('/signUp', notLogin, async (ctx) => {
     ctx.body = new SuccessModule('注册成功, 请重新登录');
 });
 
-// 登录
+/**
+ * @api {post} /login 登录
+ * @apiName login
+ * @apiGroup User
+ * @apiParam {Object} user 通过body传递过来文章对象
+ * @apiParam {String} username 用户名
+ * @apiParam {String} password 密码
+ */
 router.post('/login', notLogin, async (ctx: Context) => {
     const { username, password } = ctx.request.body;
     if (!username) {
@@ -92,7 +108,11 @@ router.post('/login', notLogin, async (ctx: Context) => {
     }
 });
 
-// 登出
+/**
+ * @api {post} /logout 登出
+ * @apiName logout
+ * @apiGroup User
+ */
 router.post('/logout', isLogin, async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
     // 修改登录时间和登录状态
@@ -109,7 +129,12 @@ router.post('/logout', isLogin, async (ctx: Context) => {
     ctx.body = new SuccessModule('登出成功');
 });
 
-// 服务端获取当前用户的信息
+/**
+ * @api {get} /user 获取用户信息
+ * @apiName getUserInfoByAdmin
+ * @apiGroup User
+ * @apiDescription 服务端使用 服务端使用的会带上isAdmin字段
+ */
 router.get('/user', async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
     let user = null;
@@ -135,7 +160,12 @@ router.get('/user', async (ctx: Context) => {
     ctx.body = new SuccessModule('获取成功', user);
 });
 
-// 客户端获取当前用户的信息
+/**
+ * @api {get} /user/client 获取用户信息
+ * @apiName getUserInfoByClient
+ * @apiGroup User
+ * @apiDescription 客户端使用
+ */
 router.get('/user/client', async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
     let user = null;

@@ -1,6 +1,6 @@
 export function createArticle(env, articleInfo) {
     return env.$axios({
-        method: 'post',
+        method: 'POST',
         url: '/article',
         data: articleInfo
     });
@@ -8,7 +8,7 @@ export function createArticle(env, articleInfo) {
 
 export function updateArticle(env, articleInfo) {
     return env.$axios({
-        method: 'put',
+        method: 'PUT',
         url: '/article',
         data: articleInfo
     });
@@ -16,7 +16,7 @@ export function updateArticle(env, articleInfo) {
 
 export function getArticleById(env, articleId) {
     return env.$axios({
-        method: 'get',
+        method: 'GET',
         url: '/article',
         params: {
             id: articleId
@@ -26,7 +26,7 @@ export function getArticleById(env, articleId) {
 
 export function getAllArticle(env, pageNumber, pageSize) {
     return env.$axios({
-        method: 'get',
+        method: 'GET',
         url: '/articles/client',
         params: {
             pageNumber,
@@ -37,7 +37,7 @@ export function getAllArticle(env, pageNumber, pageSize) {
 
 export function likeArticle(env, articleId, like = true) {
     return env.$axios({
-        method: 'put',
+        method: 'PUT',
         url: '/article/like',
         params: {
             id: articleId,

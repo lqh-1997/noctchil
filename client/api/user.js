@@ -1,6 +1,6 @@
 export function signUp(env, userInfo) {
     return env.$axios({
-        method: 'post',
+        method: 'POST',
         url: '/signUp',
         data: userInfo
     });
@@ -8,7 +8,7 @@ export function signUp(env, userInfo) {
 
 export function login(env, userInfo) {
     return env.$axios({
-        method: 'post',
+        method: 'POST',
         url: '/login',
         data: userInfo
     });
@@ -16,28 +16,28 @@ export function login(env, userInfo) {
 
 export function logout(env) {
     return env.$axios({
-        method: 'post',
+        method: 'POST',
         url: '/logout'
     });
 }
 
 export function getUserInfo(env) {
     return env.$axios({
-        method: 'get',
+        method: 'GET',
         url: '/user/client'
     });
 }
 
 export function test(env) {
     return env.$axios({
-        method: 'get',
+        method: 'GET',
         url: '/'
     });
 }
 
 export function loginTest(env) {
     return env.$axios({
-        method: 'get',
+        method: 'GET',
         url: '/loginGet'
     });
 }

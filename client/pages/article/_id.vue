@@ -98,7 +98,7 @@ export default {
                 font-weight: bold;
             }
             .viewer {
-                min-height: 300px;
+                min-height: 800px;
                 // @include changeViewerStyle();
             }
         }

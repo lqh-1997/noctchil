@@ -128,13 +128,13 @@ header {
         color: $headerFontColor;
         cursor: pointer;
         &:hover {
-            color: $defaultColor;
+            color: $hoverColor;
         }
     }
     .account-button a {
         color: $headerFontColor;
         &:hover {
-            color: $defaultColor;
+            color: $hoverColor;
         }
     }
 }

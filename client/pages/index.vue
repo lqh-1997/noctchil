@@ -88,7 +88,7 @@ export default {
         color: rgb(255, 255, 255);
         & li:hover {
             cursor: pointer;
-            color: $defaultColor;
+            color: $hoverColor;
         }
     }
     .bubble {

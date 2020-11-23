@@ -1,4 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
+import { UserDocument } from './user';
+import { ArticleDocument } from './article';
 
 const commentSchema = new Schema({
     content: { type: String, required: true },
@@ -13,13 +15,13 @@ export interface CommentDocument extends Document {
     // 内容
     content: string;
     // 创建者
-    creator: Schema.Types.ObjectId;
+    creator: UserDocument;
     // 创建时间
     createTime: Date;
     // 点赞数
     likes: number;
     // 被评论的文章id
-    from: Schema.Types.ObjectId;
+    from: ArticleDocument;
 }
 
 export default model<CommentDocument>('Comment', commentSchema);

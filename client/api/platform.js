@@ -1,6 +1,6 @@
 export function getHeaderMenu(env) {
     return env.$axios({
-        method: 'get',
+        method: 'GET',
         url: '/platform/headerMenu'
     });
 }

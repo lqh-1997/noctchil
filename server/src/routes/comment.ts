@@ -15,7 +15,14 @@ const router = new Router<DefaultState, Context>();
 
 router.prefix('/api');
 
-// 新建评论
+/**
+ * @api {post} /comment 新建评论
+ * @apiName createComments
+ * @apiGroup Comment
+ * @apiParam {Object} comment 通过body传递过来评论对象
+ * @apiParam {String} comment[content] 评论内容
+ * @apiParam {String} comment[from] 评论所属文章id
+ */
 router.post('/comment', isLogin, async (ctx) => {
     const { content, from } = ctx.request.body;
     if (!ObjectId.isValid(from)) {
@@ -52,7 +59,12 @@ router.post('/comment', isLogin, async (ctx) => {
     ctx.body = new SuccessModule('评论成功');
 });
 
-// 查找某篇文章的所有评论
+/**
+ * @api {get} /comments/article/:articleId 查找某篇文章的所有评论
+ * @apiName GetArticleComments
+ * @apiGroup Comment
+ * @apiParam {String} articleId 文章的id
+ */
 router.get('/comments/article/:articleId', async (ctx) => {
     const articleId = ctx.params.articleId;
     await Comment.find({ from: articleId })
@@ -66,7 +78,13 @@ router.get('/comments/article/:articleId', async (ctx) => {
         });
 });
 
-// 给评论点赞/取消点赞
+/**
+ * @api {put} /comment/like 给评论点赞/取消点赞
+ * @apiName LikeComments
+ * @apiGroup Comment
+ * @apiParam {String} id 评论的id
+ * @apiParam {Boolean} doLike 喜欢还是不喜欢 true当然是喜欢
+ */
 router.put('/comment/like', async (ctx) => {
     let { id, doLike = true } = ctx.request.query;
     doLike = JSON.parse(doLike);
@@ -94,15 +112,32 @@ router.put('/comment/like', async (ctx) => {
     }
 });
 
-// 查找最新的评论(默认十条，可以通过number自定义)
+/**
+ * @api {get} /comments/latest 查找最新的评论
+ * @apiName GetLatestComments
+ * @apiGroup Comment
+ * @apiParam {Number} [number=10] 最多查找的评论条数
+ * @apiParam {Number} [contentLength=28] 若文章长度超过或等于多少, 则将后面部分改为省略号
+ * @apiParam {Number} [titleLength=10] 若标题长度超过或等于多少, 则将后面部分改为省略号
+ */
 router.get('/comments/latest', async (ctx) => {
-    // 不是数字就默认是10
     const num = isNaN(parseInt(ctx.request.query.number)) ? 10 : parseInt(ctx.request.query.number);
+    const contentLength = isNaN(parseInt(ctx.request.query.contentLength))
+        ? 28
+        : parseInt(ctx.request.query.contentLength);
+    const titleLength = isNaN(parseInt(ctx.request.query.titleLength))
+        ? 10
+        : parseInt(ctx.request.query.titleLength);
 
     try {
-        let res = await Comment.find({}, {}).sort({ createTime: 'desc' }).limit(num);
+        let res = await Comment.find({}, {})
+            .sort({ createTime: 'desc' })
+            .limit(num)
+            .populate('creator', '_id nicename')
+            .populate('from', '_id title meta');
         res.forEach((res) => {
-            res.content = htmlToBriefContent(res.content);
+            res.content = htmlToBriefContent(res.content, contentLength);
+            res.from.title = htmlToBriefContent(res.from.title, titleLength);
         });
         ctx.body = new SuccessModule('获取成功', res);
     } catch (err) {
