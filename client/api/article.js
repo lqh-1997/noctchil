@@ -17,7 +17,7 @@ export function updateArticle(env, articleInfo) {
 export function getArticleById(env, articleId) {
     return env.$axios({
         method: 'GET',
-        url: '/article',
+        url: '/article/client',
         params: {
             id: articleId
         }

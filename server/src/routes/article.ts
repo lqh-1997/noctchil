@@ -89,15 +89,18 @@ router.put('/article', isAdmin, async (ctx) => {
     res ? (ctx.body = new SuccessModule('修改成功')) : (ctx.body = new ErrorModule('修改失败'));
 });
 
-// TODO 不能查找草稿以及隐藏类型的
 /**
- * @api {get} /article 获取单个文章
+ * @api {get} /article/client 获取单个文章
  * @apiName GetArticleByClient
  * @apiGroup Article
  * @apiDescription 决定由前端来控制获取到的文章类型。获取单个文章，同时使文章查看数目+1
  */
-router.get('/article', async (ctx) => {
+router.get('/article/client', async (ctx) => {
     const { id } = ctx.request.query;
+    const option: any = {
+        state: 'publish',
+        invisible: false
+    };
     if (!ObjectId.isValid(id)) {
         ctx.body = new ErrorModule('请输入合法id');
         return;
@@ -110,6 +113,11 @@ router.get('/article', async (ctx) => {
         return;
     }
     if (res) {
+        // 不能查找草稿以及隐藏类型的
+        if (res.state !== option.state || res.invisible !== option.invisible) {
+            ctx.body = new ErrorModule('文章不存在');
+            return;
+        }
         const { meta } = res;
         meta.views++;
         try {
