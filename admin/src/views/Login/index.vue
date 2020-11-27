@@ -5,7 +5,7 @@
                 <a-input v-model:value="formData.account" />
             </a-form-item>
             <a-form-item name="password" required>
-                <a-input v-model:value="formData.password" />
+                <a-input-password v-model:value="formData.password" />
             </a-form-item>
             <a-form-item>
                 <a-button
@@ -33,7 +33,8 @@ export default defineComponent({
         AButton: Button,
         AFormItem: Form.Item,
         AForm: Form,
-        AInput: Input
+        AInput: Input,
+        AInputPassword: Input.Password
     },
     setup() {
         const router = useRouter();

@@ -31,7 +31,8 @@ router.put('/platform/headerMenu', isAdmin, async (ctx) => {
             {
                 upsert: true,
                 omitUndefined: true,
-                setDefaultsOnInsert: true
+                setDefaultsOnInsert: true,
+                runValidators: true
             }
         );
         ctx.body = new SuccessModule('修改成功');

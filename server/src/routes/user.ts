@@ -130,6 +130,32 @@ router.post('/logout', isLogin, async (ctx: Context) => {
 });
 
 /**
+ * @api {put} /user 修改用户信息
+ * @apiName UpdateUserInfo
+ * @apiGroup User
+ */
+router.put('/user', isLogin, async (ctx: Context) => {
+    const id = ctx.session && ctx.session.userId;
+    const { nicename, email, url } = ctx.request.body;
+    try {
+        const res = await User.findOneAndUpdate(
+            { _id: id },
+            {
+                nicename,
+                email,
+                url
+            },
+            {
+                omitUndefined: true
+            }
+        );
+        ctx.body = res ? new SuccessModule('修改成功') : new ErrorModule('修改失败');
+    } catch (err) {
+        ctx.body = new ErrorModule(err);
+    }
+});
+
+/**
  * @api {get} /user 获取用户信息
  * @apiName getUserInfoByAdmin
  * @apiGroup User

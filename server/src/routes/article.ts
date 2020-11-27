@@ -25,7 +25,7 @@ router.prefix('/api');
  * @apiParam {String} article[type] 文章类型'message | article'
  * @apiParam {String} article[state] 文章状态'draft | publish'
  * @apiParam {Array} article[tag] 文章标签
- * @apiParam {Boolean} article[visible] 文章是否
+ * @apiParam {Boolean} article[invisible] 文章是否不允许查看
  */
 router.post('/article', isAdmin, async (ctx) => {
     const { title, desc, content, type, state, tag, invisible } = ctx.request.body;
@@ -50,18 +50,17 @@ router.post('/article', isAdmin, async (ctx) => {
             creator: ctx.session && ctx.session.userId
         });
         await article.save();
+        ctx.body = new SuccessModule('文章创建成功');
     } catch (err) {
         ctx.body = new ErrorModule(err);
-        return;
     }
-    ctx.body = new SuccessModule('文章创建成功');
 });
 
 /**
  * @api {put} /article 更新文章
  * @apiName UpdateArticle
  * @apiGroup Article
- * @apiDescription 和创建文章差不多、但是只改一项的话要记得将其他项也完好无损的传过来哦
+ * @apiDescription 和创建文章差不多、不改的东西可以不传
  */
 router.put('/article', isAdmin, async (ctx) => {
     const { id, title, desc, content, type, state, tag, invisible } = ctx.request.body;
@@ -72,21 +71,27 @@ router.put('/article', isAdmin, async (ctx) => {
     let res: null | ArticleDocument = null;
     // 防止id输入错误
     try {
-        res = await Article.findByIdAndUpdate(id, {
-            title,
-            desc,
-            content,
-            type,
-            state,
-            tag,
-            invisible,
-            updateTime: new Date()
-        });
+        res = await Article.findOneAndUpdate(
+            { _id: id },
+            {
+                title,
+                desc,
+                content,
+                type,
+                state,
+                tag,
+                invisible,
+                updateTime: new Date()
+            },
+            {
+                omitUndefined: true,
+                runValidators: true
+            }
+        );
+        res ? (ctx.body = new SuccessModule('修改成功')) : (ctx.body = new ErrorModule('修改失败'));
     } catch (err) {
         ctx.body = new ErrorModule(err);
     }
-    // 判定是否修改
-    res ? (ctx.body = new SuccessModule('修改成功')) : (ctx.body = new ErrorModule('修改失败'));
 });
 
 /**
@@ -105,29 +110,25 @@ router.get('/article/client', async (ctx) => {
         ctx.body = new ErrorModule('请输入合法id');
         return;
     }
-    let res = null;
     try {
-        res = await Article.findById(id);
-    } catch (err) {
-        ctx.body = new ErrorModule(err);
-        return;
-    }
-    if (res) {
-        // 不能查找草稿以及隐藏类型的
-        if (res.state !== option.state || res.invisible !== option.invisible) {
-            ctx.body = new ErrorModule('文章不存在');
-            return;
-        }
-        const { meta } = res;
-        meta.views++;
-        try {
+        const res = await Article.findById(id);
+        if (res) {
+            // 不能查找草稿以及隐藏类型的
+            if (res.state !== option.state || res.invisible !== option.invisible) {
+                ctx.body = new ErrorModule('文章不存在');
+                return;
+            }
+            const { meta } = res;
+            meta.views++;
             await Article.findByIdAndUpdate(id, {
                 meta: meta
             });
-        } catch {}
-        ctx.body = new SuccessModule('查询成功', res);
-    } else {
-        ctx.body = new ErrorModule('文章不存在');
+            ctx.body = new SuccessModule('查询成功', res);
+        } else {
+            ctx.body = new ErrorModule('文章不存在');
+        }
+    } catch (err) {
+        ctx.body = new ErrorModule(err);
     }
 });
 
@@ -137,7 +138,23 @@ router.get('/article/client', async (ctx) => {
  * @apiGroup Article
  * @apiDescription 管理员查看文章，不会使文章查看数目+1
  */
-router.get('/article/admin', isAdmin, async (ctx) => {});
+router.get('/article/admin', isAdmin, async (ctx) => {
+    const { id } = ctx.request.query;
+    if (!ObjectId.isValid(id)) {
+        ctx.body = new ErrorModule('请输入合法id');
+        return;
+    }
+    try {
+        const res = await Article.findById(id);
+        if (res) {
+            ctx.body = new SuccessModule('查询成功', res);
+        } else {
+            ctx.body = new ErrorModule('文章不存在');
+        }
+    } catch (err) {
+        ctx.body = new ErrorModule(err);
+    }
+});
 
 /**
  * @api {get} /articles/client 分页查找所有文章信息
@@ -203,27 +220,20 @@ router.get('/articles/admin', isAdmin, async (ctx) => {
 router.put('/article/like', async (ctx) => {
     let { id, doLike = true } = ctx.request.query;
     doLike = JSON.parse(doLike);
-    let res = null;
     try {
-        res = await Article.findById(id);
-    } catch (err) {
-        ctx.body = new ErrorModule(err);
-        return;
-    }
-    if (res) {
-        const { meta } = res;
-        doLike ? meta.likes++ : meta.likes--;
-        try {
+        const res = await Article.findById(id);
+        if (res) {
+            const { meta } = res;
+            doLike ? meta.likes++ : meta.likes--;
             await Article.findByIdAndUpdate(id, {
                 meta: meta
             });
-        } catch (err) {
-            ctx.body = new ErrorModule(err);
-            return;
+            ctx.body = doLike ? new SuccessModule('点赞成功') : new SuccessModule('取消成功');
+        } else {
+            ctx.body = new ErrorModule('文章不存在');
         }
-        ctx.body = doLike ? new SuccessModule('点赞成功') : new SuccessModule('取消成功');
-    } else {
-        ctx.body = new ErrorModule('文章不存在');
+    } catch (err) {
+        ctx.body = new ErrorModule(err);
     }
 });
 

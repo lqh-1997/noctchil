@@ -59,12 +59,16 @@ app.use(
     })
 );
 
+// 禁用缓存 如果启用缓存而你没连上 ，Mongoose 不会抛错。
+// https://mongoosejs.com/docs/connections.html#buffering
+// mongoose.set('bufferCommands', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose
     .connect(MONGO_CONF.getDbs(), {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        keepAlive: true
     })
     .then((res) => {
         console.log('数据库连接成功');
