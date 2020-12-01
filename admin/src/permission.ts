@@ -32,7 +32,7 @@ router.beforeEach(async (to, _from, next) => {
             next(`/${menuPrefix}`);
         } else {
             // 判断是否是重定向进来的 否就重定向(解决添加路由过后，却依旧无法访问到页面的问题)
-            // FIXME 重定向的时候会报一个warning[No match found for location with path] 虽然似乎不影响
+            // FIXME 重定向的时候会报一个warning[No match found for location with path] 而且没办法catch到 虽然似乎不影响
             if (!redirect) {
                 next({ ...to, replace: true });
                 redirect = true;

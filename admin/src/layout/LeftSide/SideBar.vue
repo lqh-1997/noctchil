@@ -3,6 +3,7 @@
     <a-menu
         theme="dark"
         mode="inline"
+        v-model:openKeys="openKeys"
         v-model:selectedKeys="selectKeys"
         :forceSubMenuRender="true"
         @click="redirect"
@@ -44,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, watchEffect } from 'vue';
 import { HomeOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -63,10 +64,24 @@ export default defineComponent({
     setup() {
         const router = useRouter();
         const store = useStore();
-        const selectKeys = ref(['1']);
+        const selectKeys = ref(['']);
+        const openKeys = ref(['']);
 
         const storeComputed = computed(() => {
             return store.state.apply.routes;
+        });
+
+        const route = computed(() => {
+            return store.state.apply.routes[0].children[0];
+        });
+
+        watchEffect(() => {
+            // 判断它是单级路由还是二级路由 selectKey代表当前选择的菜单栏
+            selectKeys.value = route.value.children
+                ? [route.value.children[0].path]
+                : [route.value.path];
+            // openKeys代表当前打开的菜单列表
+            openKeys.value = [route.value.path];
         });
 
         // 重定向
@@ -76,6 +91,7 @@ export default defineComponent({
         };
 
         return {
+            openKeys,
             selectKeys,
             redirect,
             storeComputed
