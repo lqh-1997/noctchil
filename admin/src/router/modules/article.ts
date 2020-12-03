@@ -26,6 +26,14 @@ export const articleRouter: RouteRecordRaw = {
             meta: {
                 title: '创建文章'
             }
+        },
+        {
+            path: 'tag',
+            name: 'articleTag',
+            component: () => import('/@/views/Article/Tag.vue'),
+            meta: {
+                title: '标签管理'
+            }
         }
     ]
 };

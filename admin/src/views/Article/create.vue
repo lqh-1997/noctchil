@@ -19,9 +19,8 @@
             <div ref="editorRef" id="editor"></div>
         </div>
         <div class="right-container">
-            <MyCollapse height="110px">
-                <template v-slot:title> 选项 </template>
-                <template v-slot:default>
+            <a-collapse expand-icon-position="right" v-model:activeKey="optionKey">
+                <a-collapse-panel key="1" header="选项">
                     <div class="radio">
                         <Svg :iconClass="obj.state"></Svg>
                         <a-radio-group
@@ -49,12 +48,23 @@
                         />
                         <br />
                     </div>
-                </template>
-            </MyCollapse>
-            <MyCollapse style="margin-top: 30px">
-                <template v-slot:title> 标签 </template>
-                <a-empty />
-            </MyCollapse>
+                </a-collapse-panel>
+            </a-collapse>
+            <a-collapse expand-icon-position="right" v-model:activeKey="tagKey">
+                <a-collapse-panel key="1" header="标签">
+                    <!-- <a-tag v-for="item of data.tagList" :key="item._id" :color="item.color">
+                        {{ item.name }}
+                    </a-tag> -->
+                    <template v-for="tag of data.tagList" :key="tag._id">
+                        <a-checkable-tag
+                            :checked="selectedTags.indexOf(tag) > -1"
+                            @change="(checked) => handleTagChange(tag, checked)"
+                        >
+                            {{ tag.name }}
+                        </a-checkable-tag>
+                    </template>
+                </a-collapse-panel>
+            </a-collapse>
             <a-button style="margin-top: 30px" @click="initTable">重置</a-button>
             <a-button style="margin-top: 30px; margin-left: 20px" @click="publish">发布</a-button>
         </div>
@@ -62,10 +72,9 @@
 </template>
 
 <script lang="ts">
-import Collapse from '/@/components/Collapse/index.vue';
 import { bilibiliPlugin } from '/@/utils/tuiEditorPlugin';
-import { createVNode, defineComponent, onMounted, reactive, ref, unref } from 'vue';
-import { Button, Input, Radio, Empty, Modal, message } from 'ant-design-vue';
+import { createVNode, defineComponent, onMounted, reactive, ref, unref, watchEffect } from 'vue';
+import { Button, Input, Radio, Modal, message, Collapse, Tag as ATag } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import Editor from '@toast-ui/editor';
 import Svg from '/@/components/Icon/index.vue';
@@ -73,8 +82,9 @@ import Svg from '/@/components/Icon/index.vue';
 import 'codemirror/lib/codemirror.css';
 // Editor's Style
 import '@toast-ui/editor/dist/toastui-editor.css';
-import type { Article } from '/@/types/instance';
+import type { Article, Tag } from '/@/types/instance';
 import { createArticle } from '/@/api/article';
+import { getTag } from '/@/api/tag';
 
 export default defineComponent({
     name: 'articleCreate',
@@ -82,22 +92,55 @@ export default defineComponent({
         AButton: Button,
         AInput: Input,
         ATextArea: Input.TextArea,
-        MyCollapse: Collapse,
+        ACollapse: Collapse,
+        ACollapsePanel: Collapse.Panel,
         Svg,
         ARadioGroup: Radio.Group,
-        AEmpty: Empty
+        ACheckableTag: ATag.CheckableTag
     },
     setup() {
+        // 用来初始化editor
         const editorRef = ref<HTMLElement | null>(null);
         let editor: null | Editor = null;
-        let obj = reactive<Article>({
+        const obj = reactive<Article>({
             title: '',
             desc: '',
             state: 'draft',
             invisible: false,
-            type: 'article'
+            type: 'article',
+            tags: []
         });
 
+        // 这部分用来处理tag
+        // 这个tagList存放的是从数据库获得的tag列表 用来进行渲染
+        const data = reactive<{
+            tagList: Array<Tag>;
+        }>({
+            tagList: []
+        });
+        // 这个selectTags与页面的已选择tag挂钩
+        const selectedTags = ref<Array<Tag>>([]);
+        // 页面的tag改变的时候触发的回调函数
+        const handleTagChange = function (tag: Tag, checked: boolean) {
+            // console.log(tag);
+            // console.log(checked);
+            selectedTags.value = checked
+                ? [...selectedTags.value, tag]
+                : selectedTags.value.filter((t) => t !== tag);
+        };
+        // obj.tags是要上传到数据库的tag (监听页面tag的变化,然后将它的_id赋值给要传给数据库的tag)
+        watchEffect(() => {
+            obj.tags = selectedTags.value.map((item) => {
+                return item._id as string;
+            });
+            // console.log(obj.tags);
+        });
+
+        // 用来处理collapse的开关
+        const optionKey = ref(['1']);
+        const tagKey = ref(['1']);
+
+        // 用来生成单选区的列表
         const statusList = [
             {
                 label: '草稿',
@@ -108,7 +151,6 @@ export default defineComponent({
                 value: 'publish'
             }
         ];
-
         const visibleList = [
             {
                 label: '可见',
@@ -119,7 +161,6 @@ export default defineComponent({
                 value: true
             }
         ];
-
         const typeList = [
             {
                 label: '文章',
@@ -160,6 +201,8 @@ export default defineComponent({
                 obj.state = 'draft';
                 obj.invisible = false;
                 obj.type = 'article';
+                // 这里重置的是已选择的tag 因为传给后台的tag会根据这个改变而改变
+                selectedTags.value = [];
                 editor && editor.reset();
             }
         };
@@ -191,12 +234,17 @@ export default defineComponent({
         };
 
         onMounted(() => {
+            // 新建编辑器
             editor = new Editor({
                 el: unref(editorRef)!,
                 height: '500px',
                 initialEditType: 'markdown',
                 previewStyle: 'vertical',
                 plugins: [bilibiliPlugin]
+            });
+            // 获取tag列表
+            getTag().then((res) => {
+                data.tagList = res.data.data;
             });
         });
 
@@ -209,7 +257,12 @@ export default defineComponent({
             typeList,
             initTable,
             clickTab,
-            publish
+            publish,
+            optionKey,
+            tagKey,
+            data,
+            selectedTags,
+            handleTagChange
         };
     }
 });
@@ -246,6 +299,12 @@ export default defineComponent({
                 font-size: 26px;
                 margin-right: 10px;
             }
+        }
+    }
+    .ant-collapse {
+        margin-bottom: 20px;
+        & ::v-deep(.ant-collapse-header) {
+            text-align: left;
         }
     }
 }

@@ -6,7 +6,7 @@ export interface Article {
     content?: string;
     type: ArticleType;
     state: ArticleState;
-    tag?: Array<string>;
+    tags: Array<string>;
     invisible: boolean;
 }
 
@@ -24,3 +24,9 @@ export interface MenuItem extends SubMenuItem {
     children?: Array<SubMenuItem>;
 }
 export type HeaderMenu = Array<MenuItem>;
+
+export interface Tag {
+    _id?: string;
+    name?: string;
+    color?: string;
+}

@@ -1,5 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 import { UserDocument } from './user';
+import { TagDocument } from './tag';
 
 export type ArticleType = 'message' | 'article';
 export type ArticleState = 'publish' | 'draft';
@@ -10,7 +11,7 @@ const articleSchema = new Schema({
     content: String,
     type: { type: String, enum: ['message', 'article'], required: true, default: 'article' },
     state: { type: String, enum: ['publish', 'draft'], required: true, default: 'draft' },
-    tags: { type: [String] },
+    tags: { type: [{ type: Schema.Types.ObjectId, ref: 'Tag' }] },
     // comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', require: true }],
     creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     invisible: { type: Boolean, default: false, required: true },
@@ -36,7 +37,7 @@ export interface ArticleDocument extends Document {
     // 文章状态 分为 publish 和 draft
     state: ArticleState;
     // 文章标签
-    tags: [string];
+    tags: [TagDocument | Schema.Types.ObjectId];
     // 文章评论
     // comments: [CommentDocument];
     // 创建者

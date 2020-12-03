@@ -13,6 +13,7 @@ import article from './routes/article';
 import file from './routes/file';
 import comment from './routes/comment';
 import platform from './routes/platform';
+import tag from './routes/tag';
 
 import haveSession from './middlewares/haveSession';
 import log from './middlewares/log';
@@ -87,5 +88,7 @@ app.use(comment.routes());
 app.use(comment.allowedMethods());
 app.use(platform.routes());
 app.use(platform.allowedMethods());
+app.use(tag.routes());
+app.use(tag.allowedMethods());
 
 export default app;

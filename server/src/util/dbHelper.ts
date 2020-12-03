@@ -1,4 +1,4 @@
-import { Model, Document } from 'mongoose';
+import { Model, Document, QueryPopulateOptions } from 'mongoose';
 import { Pagination } from 'src/types/global';
 
 /**
@@ -12,7 +12,10 @@ export async function getPagination<T extends Document>(
     model: Model<T>,
     pageSize: number,
     pageNumber: number,
-    option: Record<string, unknown>
+    option: Record<string, unknown>,
+    populateOptions?:
+        | { path: string | any; select?: string | any; model?: any; match?: any; options?: any }
+        | { options: QueryPopulateOptions | QueryPopulateOptions[] }
 ): Promise<Pagination<T>> {
     const result: Pagination<T> = {
         total: 0,
@@ -20,10 +23,18 @@ export async function getPagination<T extends Document>(
     };
 
     result.total = await model.find(option as any).countDocuments();
-    result.data = await model
-        .find(option as any)
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize);
+    if (populateOptions) {
+        result.data = await model
+            .find(option as any)
+            .populate(populateOptions)
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize);
+    } else {
+        result.data = await model
+            .find(option as any)
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize);
+    }
 
     return result;
 }

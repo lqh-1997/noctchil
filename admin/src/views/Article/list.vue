@@ -47,8 +47,8 @@
         >
             <template v-slot:tags="{ text: tags }">
                 <span>
-                    <a-tag v-for="tag in tags" :key="tag" color="blue">
-                        {{ tag.toUpperCase() }}
+                    <a-tag v-for="tag in tags" :key="tag._id" :color="tag.color">
+                        {{ tag.name.toUpperCase() }}
                     </a-tag>
                 </span>
             </template>

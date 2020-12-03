@@ -1,11 +1,11 @@
 import type { DefaultState, Context } from 'koa';
-import type { ArticleDocument } from '../models/article';
 
 import * as Router from 'koa-router';
 import * as mongoose from 'mongoose';
 
 import Article from '../models/article';
 import isAdmin from '../middlewares/isAdmin';
+import { updateTag } from './tag';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { getPagination } from 'src/util/dbHelper';
 
@@ -24,11 +24,11 @@ router.prefix('/api');
  * @apiParam {String} article[content] 文章内容
  * @apiParam {String} article[type] 文章类型'message | article'
  * @apiParam {String} article[state] 文章状态'draft | publish'
- * @apiParam {Array} article[tag] 文章标签
+ * @apiParam {Array} article[tags] 文章标签
  * @apiParam {Boolean} article[invisible] 文章是否不允许查看
  */
 router.post('/article', isAdmin, async (ctx) => {
-    const { title, desc, content, type, state, tag, invisible } = ctx.request.body;
+    const { title, desc, content, type, state, tags, invisible } = ctx.request.body;
     try {
         let article = await Article.findOne({ title });
         if (article) {
@@ -45,11 +45,17 @@ router.post('/article', isAdmin, async (ctx) => {
             content,
             type,
             state,
-            tag,
+            tags,
             invisible,
             creator: ctx.session && ctx.session.userId
         });
-        await article.save();
+        const res = await article.save();
+        if (tags && tags.length > 0) {
+            tags.forEach(async (tag: mongoose.Schema.Types.ObjectId) => {
+                // 添加
+                await updateTag(tag, res._id, true);
+            });
+        }
         ctx.body = new SuccessModule('文章创建成功');
     } catch (err) {
         ctx.body = new ErrorModule(err);
@@ -63,15 +69,11 @@ router.post('/article', isAdmin, async (ctx) => {
  * @apiDescription 和创建文章差不多、不改的东西可以不传
  */
 router.put('/article', isAdmin, async (ctx) => {
-    const { id, title, desc, content, type, state, tag, invisible } = ctx.request.body;
-    if (!title) {
-        ctx.body = new ErrorModule('文章标题不得为空');
-        return;
-    }
-    let res: null | ArticleDocument = null;
     // 防止id输入错误
     try {
-        res = await Article.findOneAndUpdate(
+        const { id, title, desc, content, type, state, tags, invisible } = ctx.request.body;
+        // 这里返回的是旧的数据用来和新的tags做比较
+        const res = await Article.findOneAndUpdate(
             { _id: id },
             {
                 title,
@@ -79,7 +81,7 @@ router.put('/article', isAdmin, async (ctx) => {
                 content,
                 type,
                 state,
-                tag,
+                tags,
                 invisible,
                 updateTime: new Date()
             },
@@ -88,7 +90,32 @@ router.put('/article', isAdmin, async (ctx) => {
                 runValidators: true
             }
         );
-        res ? (ctx.body = new SuccessModule('修改成功')) : (ctx.body = new ErrorModule('修改失败'));
+        if (!res) {
+            ctx.body = new ErrorModule('修改失败');
+            return;
+        }
+
+        // 不对tags做修改直接返回
+        if (!tags) {
+            ctx.body = new SuccessModule('修改成功');
+            return;
+        }
+
+        // FIXME 复杂度有点小高 不过tags数量不会多
+        tags.forEach(async (tag: mongoose.Schema.Types.ObjectId) => {
+            // 旧的没有 新的有
+            if (res!.tags.indexOf(tag) === -1) {
+                // 添加
+                await updateTag(tag, id, true);
+            }
+        });
+        res!.tags.forEach(async (tag) => {
+            // 旧的有 新的没有
+            if (tags.indexOF(tag) === -1) {
+                // 删除
+                await updateTag(tag as mongoose.Schema.Types.ObjectId, id, false);
+            }
+        });
     } catch (err) {
         ctx.body = new ErrorModule(err);
     }
@@ -111,7 +138,7 @@ router.get('/article/client', async (ctx) => {
         return;
     }
     try {
-        const res = await Article.findById(id);
+        const res = await Article.findById(id).populate({ path: 'tags', select: '-article' });
         if (res) {
             // 不能查找草稿以及隐藏类型的
             if (res.state !== option.state || res.invisible !== option.invisible) {
@@ -145,7 +172,7 @@ router.get('/article/admin', isAdmin, async (ctx) => {
         return;
     }
     try {
-        const res = await Article.findById(id);
+        const res = await Article.findById(id).populate({ path: 'tags', select: '-article' });
         if (res) {
             ctx.body = new SuccessModule('查询成功', res);
         } else {
@@ -166,7 +193,8 @@ router.get('/articles/client', async (ctx) => {
     // 先将筛选条件设置为发布类和非隐藏类
     const option: any = {
         state: 'publish',
-        invisible: false
+        invisible: false,
+        tags: { $eq: '5fc7654816c3541164915682' }
     };
     try {
         // 用户传入pageSize pageNumber 和type
@@ -175,7 +203,10 @@ router.get('/articles/client', async (ctx) => {
         const { type } = ctx.request.query;
         type && (option.type = type);
 
-        const res = await getPagination(Article, pageSize, pageNumber, option);
+        const res = await getPagination(Article, pageSize, pageNumber, option, {
+            path: 'tags',
+            select: '-article'
+        });
         ctx.body = new SuccessModule('查询成功', res);
     } catch (err) {
         ctx.body = new ErrorModule(err);
@@ -203,7 +234,10 @@ router.get('/articles/admin', isAdmin, async (ctx) => {
         state && (option.state = state);
         invisible && (option.invisible = invisible);
 
-        const res = await getPagination(Article, pageSize, pageNumber, option);
+        const res = await getPagination(Article, pageSize, pageNumber, option, {
+            path: 'tags',
+            select: '-article'
+        });
         ctx.body = new SuccessModule('查询成功', res);
     } catch (err) {
         ctx.body = new ErrorModule(err);
@@ -218,7 +252,8 @@ router.get('/articles/admin', isAdmin, async (ctx) => {
  * @apiParam {Boolean} doLike 喜欢还是不喜欢 true当然是喜欢
  */
 router.put('/article/like', async (ctx) => {
-    let { id, doLike = true } = ctx.request.query;
+    const { id } = ctx.request.query;
+    let { doLike = true } = ctx.request.query;
     doLike = JSON.parse(doLike);
     try {
         const res = await Article.findById(id);
@@ -235,6 +270,11 @@ router.put('/article/like', async (ctx) => {
     } catch (err) {
         ctx.body = new ErrorModule(err);
     }
+});
+
+router.get('/article/tag', async (ctx) => {
+    const { tag } = ctx.request.query;
+    const res = await Article.find();
 });
 
 export default router;
