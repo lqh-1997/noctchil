@@ -50,17 +50,18 @@
                     </div>
                 </a-collapse-panel>
             </a-collapse>
-            <a-collapse expand-icon-position="right" v-model:activeKey="tagKey">
+            <a-collapse
+                expand-icon-position="right"
+                v-model:activeKey="tagKey"
+                class="collapse-tag-box"
+            >
                 <a-collapse-panel key="1" header="标签">
-                    <!-- <a-tag v-for="item of data.tagList" :key="item._id" :color="item.color">
-                        {{ item.name }}
-                    </a-tag> -->
                     <template v-for="tag of data.tagList" :key="tag._id">
                         <a-checkable-tag
                             :checked="selectedTags.indexOf(tag) > -1"
                             @change="(checked) => handleTagChange(tag, checked)"
                         >
-                            {{ tag.name }}
+                            {{ tag.name.length > 15 ? `${tag.name.slice(0, 15)}...` : tag.name }}
                         </a-checkable-tag>
                     </template>
                 </a-collapse-panel>
@@ -299,6 +300,9 @@ export default defineComponent({
                 font-size: 26px;
                 margin-right: 10px;
             }
+        }
+        .collapse-tag-box {
+            line-height: 28px;
         }
     }
     .ant-collapse {

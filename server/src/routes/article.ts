@@ -5,7 +5,6 @@ import * as mongoose from 'mongoose';
 
 import Article from '../models/article';
 import isAdmin from '../middlewares/isAdmin';
-import { updateTag } from './tag';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { getPagination } from 'src/util/dbHelper';
 
@@ -49,13 +48,7 @@ router.post('/article', isAdmin, async (ctx) => {
             invisible,
             creator: ctx.session && ctx.session.userId
         });
-        const res = await article.save();
-        if (tags && tags.length > 0) {
-            tags.forEach(async (tag: mongoose.Schema.Types.ObjectId) => {
-                // 添加
-                await updateTag(tag, res._id, true);
-            });
-        }
+        await article.save();
         ctx.body = new SuccessModule('文章创建成功');
     } catch (err) {
         ctx.body = new ErrorModule(err);
@@ -94,28 +87,7 @@ router.put('/article', isAdmin, async (ctx) => {
             ctx.body = new ErrorModule('修改失败');
             return;
         }
-
-        // 不对tags做修改直接返回
-        if (!tags) {
-            ctx.body = new SuccessModule('修改成功');
-            return;
-        }
-
-        // FIXME 复杂度有点小高 不过tags数量不会多
-        tags.forEach(async (tag: mongoose.Schema.Types.ObjectId) => {
-            // 旧的没有 新的有
-            if (res!.tags.indexOf(tag) === -1) {
-                // 添加
-                await updateTag(tag, id, true);
-            }
-        });
-        res!.tags.forEach(async (tag) => {
-            // 旧的有 新的没有
-            if (tags.indexOF(tag) === -1) {
-                // 删除
-                await updateTag(tag as mongoose.Schema.Types.ObjectId, id, false);
-            }
-        });
+        ctx.body = new SuccessModule('修改成功');
     } catch (err) {
         ctx.body = new ErrorModule(err);
     }
@@ -125,6 +97,8 @@ router.put('/article', isAdmin, async (ctx) => {
  * @api {get} /article/client 获取单个文章
  * @apiName GetArticleByClient
  * @apiGroup Article
+ *
+ * @apiParam {String} id 文章id 通过query?key=value
  * @apiDescription 决定由前端来控制获取到的文章类型。获取单个文章，同时使文章查看数目+1
  */
 router.get('/article/client', async (ctx) => {
@@ -163,6 +137,8 @@ router.get('/article/client', async (ctx) => {
  * @api {get} /article/admin 获取单个文章
  * @apiName GetArticleByAdmin
  * @apiGroup Article
+ *
+ * @apiParam {String} id 文章id 通过query?key=value
  * @apiDescription 管理员查看文章，不会使文章查看数目+1
  */
 router.get('/article/admin', isAdmin, async (ctx) => {
@@ -187,25 +163,28 @@ router.get('/article/admin', isAdmin, async (ctx) => {
  * @api {get} /articles/client 分页查找所有文章信息
  * @apiName GetArticlePaginationByClient
  * @apiGroup Article
+ * @apiParam {Number} pageSize 一页大小
+ * @apiParam {Number} pageNumber 页数
+ * @apiParam {String} [type] 文章类型'message | article'
+ * @apiParam {String} [tags] 标签id
  * @apiDescription 前台使用 不能查找草稿类型的以及隐藏类型的
  */
 router.get('/articles/client', async (ctx) => {
     // 先将筛选条件设置为发布类和非隐藏类
     const option: any = {
         state: 'publish',
-        invisible: false,
-        tags: { $eq: '5fc7654816c3541164915682' }
+        invisible: false
     };
     try {
-        // 用户传入pageSize pageNumber 和type
+        // 用户传入pageSize pageNumber type 和 tag
         const pageSize = parseInt(ctx.request.query.pageSize);
         const pageNumber = parseInt(ctx.request.query.pageNumber);
-        const { type } = ctx.request.query;
+        const { type, tags } = ctx.request.query;
         type && (option.type = type);
+        tags && (option.tags = { $elemMatch: { $eq: tags } });
 
         const res = await getPagination(Article, pageSize, pageNumber, option, {
-            path: 'tags',
-            select: '-article'
+            path: 'tags'
         });
         ctx.body = new SuccessModule('查询成功', res);
     } catch (err) {
@@ -222,6 +201,7 @@ router.get('/articles/client', async (ctx) => {
  * @apiParam {String} [type] 文章类型'message | article'
  * @apiParam {String} [state] 文章状态'draft | publish'
  * @apiParam {Boolean} [invisible] 文章是否可见
+ * @apiParam {String} [tags] 标签id
  * @apiDescription 后台使用 不输入的类型将会全部查找
  */
 router.get('/articles/admin', isAdmin, async (ctx) => {
@@ -229,14 +209,14 @@ router.get('/articles/admin', isAdmin, async (ctx) => {
     try {
         const pageSize = parseInt(ctx.request.query.pageSize);
         const pageNumber = parseInt(ctx.request.query.pageNumber);
-        const { type, state, invisible } = ctx.request.query;
+        const { type, state, invisible, tags } = ctx.request.query;
         type && (option.type = type);
         state && (option.state = state);
         invisible && (option.invisible = invisible);
+        tags && (option.tags = { $elemMatch: { $eq: tags } });
 
         const res = await getPagination(Article, pageSize, pageNumber, option, {
-            path: 'tags',
-            select: '-article'
+            path: 'tags'
         });
         ctx.body = new SuccessModule('查询成功', res);
     } catch (err) {
@@ -270,11 +250,6 @@ router.put('/article/like', async (ctx) => {
     } catch (err) {
         ctx.body = new ErrorModule(err);
     }
-});
-
-router.get('/article/tag', async (ctx) => {
-    const { tag } = ctx.request.query;
-    const res = await Article.find();
 });
 
 export default router;

@@ -17,11 +17,10 @@
 import { defineComponent, onMounted, reactive, createVNode } from 'vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { Modal, Tag } from 'ant-design-vue';
-import MyTag from '/@/components/MyTag/index.vue';
 import { deleteTag, getTag } from '../../api/tag';
 export default defineComponent({
+    name: 'tag',
     components: {
-        MyTag,
         ATag: Tag
     },
     setup() {

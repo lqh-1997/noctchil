@@ -3,53 +3,19 @@ import type { DefaultState, Context } from 'koa';
 import * as Router from 'koa-router';
 
 import Tag from '../models/tag';
+import Article from '../models/article';
 import isAdmin from '../middlewares/isAdmin';
-import { Schema } from 'mongoose';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { createRandomColor } from '../util/createHelper';
+import { Schema } from 'mongoose';
 
 const router = new Router<DefaultState, Context>();
 
 router.prefix('/api');
 
-/**
- * 跟随文章的变化更新tag
- * @param tagId
- * @param articleId
- * @param add true就是添加tag false就是删除tag
- */
-export async function updateTag(
-    tagId: Schema.Types.ObjectId,
-    articleId: Schema.Types.ObjectId,
-    add = true
-) {
-    const res = await Tag.findOne({ _id: tagId });
-    if (!res) {
-        return;
-    }
-    const article = res.article;
-    if (add) {
-        // 不存在当前文章id 则添加tag
-        if (article.indexOf(articleId) === -1) {
-            article.push(articleId);
-        }
-    } else {
-        // 存在当前文章id 则删除tag
-        const index = article.indexOf(articleId);
-        if (index !== -1) {
-            article.splice(index, 1);
-        }
-    }
-    await Tag.findOneAndUpdate(
-        { _id: tagId },
-        {
-            article
-        },
-        {
-            omitUndefined: true,
-            runValidators: true
-        }
-    );
+async function tagHasDependence(tag: Schema.Types.ObjectId): Promise<boolean> {
+    const res = await Article.find({ tags: { $elemMatch: { $eq: tag } } });
+    return res.length !== 0;
 }
 
 /**
@@ -96,8 +62,7 @@ router.post('/tag', isAdmin, async (ctx) => {
  * @api {delete} /tag 删除标签
  * @apiName deleteTag
  * @apiGroup Tag
- * @apiParam {Object} Tag 通过body传递过来标签对象
- * @apiParam {String} Tag[id] 标签id
+ * @apiParam {String} [id] 标签id
  */
 router.delete('/tag', isAdmin, async (ctx) => {
     const { id } = ctx.request.query;
@@ -106,11 +71,8 @@ router.delete('/tag', isAdmin, async (ctx) => {
         if (!res) {
             throw '不存在该tag';
         }
-        // FIXME 什么傻吊错误 我吐了
-        // @ts-ignore
-        if (res.article.length !== 0) {
-            // 有依赖的文章就不给删
-            throw '该tag有依赖的文章，无法删除';
+        if (await tagHasDependence(id)) {
+            throw '标签存在依赖文章';
         }
         await Tag.findByIdAndDelete(id);
         ctx.body = new SuccessModule('删除成功');

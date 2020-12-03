@@ -45,9 +45,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watchEffect } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { HomeOutlined, EditOutlined } from '@ant-design/icons-vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { Menu } from 'ant-design-vue';
 import { menuPrefix } from '/@/router/index';
@@ -63,25 +63,23 @@ export default defineComponent({
     },
     setup() {
         const router = useRouter();
+        const route = useRoute();
         const store = useStore();
+
+        const routes = route.path.split('/');
         const selectKeys = ref(['']);
         const openKeys = ref(['']);
+        // 初始化菜单栏 因为固定为二级菜单所以如果长度为3代表为无下拉菜单的模式
+        if (routes.length === 3) {
+            openKeys.value = [];
+            selectKeys.value = [routes[2]];
+        } else {
+            openKeys.value = [routes[2]];
+            selectKeys.value = [routes[3]];
+        }
 
         const storeComputed = computed(() => {
             return store.state.apply.routes;
-        });
-
-        const route = computed(() => {
-            return store.state.apply.routes[0].children[0];
-        });
-
-        watchEffect(() => {
-            // 判断它是单级路由还是二级路由 selectKey代表当前选择的菜单栏
-            selectKeys.value = route.value.children
-                ? [route.value.children[0].path]
-                : [route.value.path];
-            // openKeys代表当前打开的菜单列表
-            openKeys.value = [route.value.path];
         });
 
         // 重定向
