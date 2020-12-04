@@ -27,15 +27,23 @@ router.prefix('/api');
  * @apiParam {Boolean} article[invisible] 文章是否不允许查看
  */
 router.post('/article', isAdmin, async (ctx) => {
-    const { title, desc, content, type, state, tags, invisible } = ctx.request.body;
+    let title = ctx.request.body.title;
+    const { desc, content, type, state, tags, invisible } = ctx.request.body;
     try {
+        // 没有标题且是吐槽类型(自动生成一个不重复的文章类型，有可能重复，可以用个哈希表存，不过我懒就当他不可能重复了)
+        if (type === 'message') {
+            title = '吐槽' + String(Math.random()).slice(4, 9) + Date.now();
+        }
+
+        // 没有标题且(没传类型或者是文章类型)
+        if (!title && (!type || type === 'article')) {
+            ctx.body = new ErrorModule('文章标题不得为空');
+            return;
+        }
+
         let article = await Article.findOne({ title });
         if (article) {
             ctx.body = new ErrorModule('文章名已存在');
-            return;
-        }
-        if (!title) {
-            ctx.body = new ErrorModule('文章标题不得为空');
             return;
         }
         article = new Article({

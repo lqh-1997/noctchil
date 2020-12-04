@@ -44,13 +44,18 @@
             :pagination="pagination"
             rowKey="_id"
             @change="pageChange"
+            :loading="tableLoading"
+            bordered
         >
             <template v-slot:tags="{ text: tags }">
                 <span>
-                    <a-tag v-for="tag in tags" :key="tag._id" :color="tag.color">
-                        {{ tag.name.toUpperCase() }}
+                    <a-tag v-for="tag in tags" :key="tag._id" :color="tag.color" :title="tag.name">
+                        {{ tag.name.length > 7 ? `${tag.name.slice(0, 7)}...` : tag.name }}
                     </a-tag>
                 </span>
+            </template>
+            <template v-slot:createTime="{ text: createTime }">
+                <span>{{ createTime.replace('T', ' ').replace(/\.[0-9]{3}Z$/, '') }}</span>
             </template>
             <template v-slot:state="{ text: state }">
                 <span v-if="state === 'draft'" style="color: #52c41a">草稿</span>
@@ -64,15 +69,20 @@
                 <span v-if="invisible" style="color: #f5222d">是</span>
                 <span v-else style="color: #3cff0b">否</span>
             </template>
+            <template #operation="{ record }">
+                <a-button @click="show(record)" type="link">编辑</a-button>
+            </template>
         </a-table>
+        <MyDialog></MyDialog>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watchEffect } from 'vue';
-import { Table, Tag, Divider, Select } from 'ant-design-vue';
+import { defineComponent, reactive, ref, watchEffect } from 'vue';
+import { Table, Tag, Divider, Select, Button, notification } from 'ant-design-vue';
 import { getArticle } from '/@/api/article';
 import { ArticleState, ArticleType } from '/@/types/instance';
+import MyDialog from '/@/components/MyDialog/index.vue';
 export default defineComponent({
     name: 'articleList',
     components: {
@@ -80,7 +90,9 @@ export default defineComponent({
         ASelectOption: Select.Option,
         ATable: Table,
         ATag: Tag,
-        ADivider: Divider
+        ADivider: Divider,
+        AButton: Button,
+        MyDialog
     },
     setup() {
         // select的列表内容
@@ -132,44 +144,53 @@ export default defineComponent({
             {
                 title: '文章名',
                 dataIndex: 'title',
-                key: 'title',
-                width: 300
+                width: 200,
+                align: 'center'
             },
             {
                 title: '创建时间',
                 dataIndex: 'createTime',
-                key: 'createTime',
-                width: 200
+                slots: { customRender: 'createTime' },
+                width: 200,
+                align: 'center'
             },
             {
                 title: '类型',
-                key: 'type',
                 dataIndex: 'type',
                 slots: { customRender: 'type' },
-                width: 100
+                width: 100,
+                align: 'center'
             },
             {
                 title: '状态',
                 dataIndex: 'state',
-                key: 'state',
                 slots: { customRender: 'state' },
-                width: 100
+                width: 100,
+                align: 'center'
             },
             {
                 title: '隐藏',
                 dataIndex: 'invisible',
-                key: 'invisible',
                 slots: { customRender: 'invisible' },
-                width: 100
+                width: 100,
+                align: 'center'
             },
             {
                 title: '标签',
                 dataIndex: 'tags',
-                key: 'tags',
                 slots: { customRender: 'tags' },
-                width: 200
+                width: 150,
+                align: 'center'
+            },
+            {
+                title: '操作',
+                dataIndex: 'operation',
+                slots: { customRender: 'operation' },
+                width: 100,
+                align: 'center'
             }
         ];
+        const tableLoading = ref<boolean>(false);
 
         // 分页的配置信息
         const pagination = reactive({
@@ -202,6 +223,7 @@ export default defineComponent({
 
         // 根据选择的信息获取文章的列表内容
         function handleGetArticle() {
+            tableLoading.value = true;
             getArticle(
                 options.pageNumber,
                 options.pageSize,
@@ -212,6 +234,7 @@ export default defineComponent({
                 // console.log(res.data.data);
                 data.articleList = res.data.data.data;
                 pagination.total = res.data.data.total;
+                tableLoading.value = false;
             });
         }
 
@@ -240,6 +263,14 @@ export default defineComponent({
 
         watchEffect(handleGetArticle);
 
+        // TODO 打开dialog dialog也没写完
+        function show(mes: string) {
+            console.log(mes);
+            notification.info({
+                message: '施工中，只给创建不给修改'
+            });
+        }
+
         return {
             options,
             typeList,
@@ -247,10 +278,12 @@ export default defineComponent({
             invisibleList,
             data,
             columns,
+            tableLoading,
             handleGetArticle,
             pagination,
             pageChange,
-            changeSelectValue
+            changeSelectValue,
+            show
         };
     }
 });

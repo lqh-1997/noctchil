@@ -4,7 +4,7 @@
             :total="total"
             layout="prev, pager, next"
             class="pagination"
-            @current-change="handleGetArticleList"
+            @current-change="changePageNumber"
         ></el-pagination>
 
         <transition-group
@@ -25,9 +25,7 @@
                     <h1>
                         <nuxt-link to="#">暂无文章</nuxt-link>
                     </h1>
-                    <article>
-                        没有啊 给爷爬
-                    </article>
+                    <article>没有啊 给爷爬</article>
                 </div>
                 <ul class="info">
                     <li class="hidden">来自未来</li>
@@ -81,6 +79,20 @@
                             <nuxt-link :to="'/article/' + item._id">{{ item.title }}</nuxt-link>
                         </h1>
                         <article>
+                            <div>
+                                <el-tag
+                                    v-for="tag of item.tags"
+                                    :key="tag._id"
+                                    :color="tag.color"
+                                    :hit="false"
+                                    size="mini"
+                                    effect="dark"
+                                    @click="clickTag(tag._id)"
+                                >
+                                    {{ tag.name }}
+                                </el-tag>
+                            </div>
+
                             {{ item.desc }}
                         </article>
                     </div>
@@ -152,7 +164,11 @@ export default {
         };
     },
     methods: {
-        handleGetArticleList(val) {
+        clickTag(id) {
+            // 重置第一页
+            this.$emit('handleGetArticleList', 1, id);
+        },
+        changePageNumber(val) {
             this.$emit('handleGetArticleList', val);
         },
         changeFavorite(beLiked, id) {
@@ -303,11 +319,20 @@ section {
             }
             article {
                 transition: all 0.3s ease;
-                height: 44px;
-                margin: 0 20px 30px 20px;
+                height: 54px;
+                margin: 0 20px 20px 20px;
                 @include text-overflow(2);
                 line-height: 22px;
                 opacity: 0;
+                display: flex;
+                flex-direction: column;
+                .el-tag {
+                    border-style: none;
+                    margin-right: 5px;
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
             }
         }
         ul {

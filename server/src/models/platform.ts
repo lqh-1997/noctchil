@@ -3,8 +3,6 @@ import { Schema, model, Document } from 'mongoose';
 
 export type linkJumpType = '_blank' | '_self';
 
-// 这里能不能优化一下 深拷贝 + Object.assign ?
-// FIXME 这里的enum不起作用
 const subMenuItem = new Schema({
     name: { type: String, require: true, default: '占坑' },
     url: { type: String, default: '#' },

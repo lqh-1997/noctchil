@@ -24,13 +24,14 @@ export function getArticleById(env, articleId) {
     });
 }
 
-export function getAllArticle(env, pageNumber, pageSize) {
+export function getAllArticle(env, pageNumber, pageSize, tags) {
     return env.$axios({
         method: 'GET',
         url: '/articles/client',
         params: {
             pageNumber,
-            pageSize
+            pageSize,
+            tags
         }
     });
 }

@@ -15,8 +15,8 @@ export default {
         MyArticle
     },
     methods: {
-        getArticleList(pageNumber) {
-            getAllArticle(this, pageNumber, this.pageSize).then((res) => {
+        getArticleList(pageNumber, tags) {
+            getAllArticle(this, pageNumber, this.pageSize, tags).then((res) => {
                 this.total = res.data.data.total;
                 this.articleList = res.data.data.data;
             });

@@ -28,12 +28,14 @@ export async function getPagination<T extends Document>(
             .find(option as any)
             .populate(populateOptions)
             .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
+            .limit(pageSize)
+            .sort({ createTime: 'desc' });
     } else {
         result.data = await model
             .find(option as any)
             .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize);
+            .limit(pageSize)
+            .sort({ createTime: 'desc' });
     }
 
     return result;

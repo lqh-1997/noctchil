@@ -40,7 +40,7 @@ export default {
     margin: 0 auto;
     padding: 0;
     overflow: visible;
-    min-height: 200px;
+    min-height: 500px;
 }
 .el-footer {
     padding: 0;
