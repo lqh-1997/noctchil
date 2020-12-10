@@ -1,5 +1,5 @@
 import { ActionContext } from 'vuex';
-import { MyStore } from '..';
+import { State } from '..';
 import { getUserInfo } from '/@/api/user';
 
 export interface UserStore {
@@ -36,8 +36,8 @@ const userStore = {
         }
     },
     actions: {
-        getUserInfo({ commit }: ActionContext<UserStore, MyStore>) {
-            return new Promise((resolve, reject) => {
+        getUserInfo({ commit }: ActionContext<UserStore, State>) {
+            return new Promise<void>((resolve, reject) => {
                 getUserInfo()
                     .then((res) => {
                         const { data } = res.data;

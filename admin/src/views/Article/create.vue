@@ -2,19 +2,14 @@
     <div class="container">
         <div class="left-container">
             <div v-if="obj.type === 'article'">
-                <a-input
-                    id="title"
-                    v-model:value="obj.title"
-                    placeholder="请输入文章名"
-                    size="large"
-                />
+                <MyFocus v-model:value="obj.title" text="文章名称"></MyFocus>
             </div>
             <div v-if="obj.type === 'article'">
-                <a-text-area
+                <MyTextArea
                     v-model:value="obj.desc"
-                    placeholder="请输入文章描述"
+                    text="文章描述"
                     @keydown="clickTab"
-                />
+                ></MyTextArea>
             </div>
             <div ref="editorRef" id="editor"></div>
         </div>
@@ -73,30 +68,32 @@
 </template>
 
 <script lang="ts">
-import { bilibiliPlugin } from '/@/utils/tuiEditorPlugin';
-import { createVNode, defineComponent, onMounted, reactive, ref, unref, watchEffect } from 'vue';
-import { Button, Input, Radio, Modal, message, Collapse, Tag as ATag } from 'ant-design-vue';
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import Editor from '@toast-ui/editor';
 import Svg from '/@/components/Icon/index.vue';
+import MyFocus from '/@/components/MyInput/index.vue';
+import MyTextArea from '/@/components/MyTextArea/index.vue';
+import { bilibiliPlugin } from '/@/utils/tuiEditorPlugin';
+import { createVNode, defineComponent, onMounted, reactive, ref, unref, watchEffect } from 'vue';
+import { Button, Radio, Modal, message, Collapse, Tag as ATag } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { createArticle } from '/@/api/article';
+import { getTag } from '/@/api/tag';
 // Editor's Dependency Style
 import 'codemirror/lib/codemirror.css';
 // Editor's Style
 import '@toast-ui/editor/dist/toastui-editor.css';
 import type { Article, Tag } from '/@/types/instance';
-import { createArticle } from '/@/api/article';
-import { getTag } from '/@/api/tag';
 
 export default defineComponent({
     name: 'articleCreate',
     components: {
-        AButton: Button,
-        AInput: Input,
-        ATextArea: Input.TextArea,
-        ACollapse: Collapse,
-        ACollapsePanel: Collapse.Panel,
         Svg,
+        MyFocus,
+        MyTextArea,
+        AButton: Button,
+        ACollapse: Collapse,
         ARadioGroup: Radio.Group,
+        ACollapsePanel: Collapse.Panel,
         ACheckableTag: ATag.CheckableTag
     },
     setup() {
@@ -123,8 +120,6 @@ export default defineComponent({
         const selectedTags = ref<Array<Tag>>([]);
         // 页面的tag改变的时候触发的回调函数
         const handleTagChange = function (tag: Tag, checked: boolean) {
-            // console.log(tag);
-            // console.log(checked);
             selectedTags.value = checked
                 ? [...selectedTags.value, tag]
                 : selectedTags.value.filter((t) => t !== tag);

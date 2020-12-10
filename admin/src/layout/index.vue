@@ -1,8 +1,8 @@
 <template>
     <a-layout>
-        <LeftSide v-model:collapsed="collapsed"></LeftSide>
+        <LeftSide></LeftSide>
         <a-layout>
-            <TopSide :collapsed="collapsed" @collapseHandler="toggleCollapse"></TopSide>
+            <TopSide></TopSide>
             <main style="overflow-y: auto; height: 100%; position: relative">
                 <!-- <BetterScroll tag="main" style="overflow: hidden; height: 100%" ref="test"> -->
                 <router-view v-slot="{ Component }">
@@ -18,7 +18,7 @@
 
 <script lang="ts">
 // FIXME betterScroll 会导致鼠标的默认行为被prevent 导致比如说不能拖动选择文字等 所以暂时将其注释
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 // import BetterScroll from '/@/components/Better-Scroll/index.vue';
 import { Layout } from 'ant-design-vue';
@@ -33,20 +33,7 @@ export default defineComponent({
         MenuFoldOutlined,
         ALayout: Layout
     },
-    setup() {
-        const collapsed = ref(false);
-        // const test = ref<any>(null);
-
-        const toggleCollapse = function () {
-            collapsed.value = !collapsed.value;
-        };
-
-        return {
-            collapsed,
-            toggleCollapse
-            // test
-        };
-    }
+    setup() {}
 });
 </script>
 

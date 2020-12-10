@@ -1,16 +1,20 @@
 <template>
-    <div></div>
+    <div>我就是logo</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+import { useStore } from 'vuex';
+import { key } from '/@/store';
 
 export default defineComponent({
     name: 'logo',
-    props: {
-        collapsed: {
-            type: Boolean
-        }
+    setup() {
+        const store = useStore(key);
+        const collapse = computed(() => store.state.apply.collapse);
+        return {
+            collapse
+        };
     }
 });
 </script>
@@ -19,5 +23,8 @@ export default defineComponent({
 div {
     height: 48px;
     width: 100%;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
 }
 </style>

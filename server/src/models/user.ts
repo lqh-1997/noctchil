@@ -8,7 +8,7 @@ const userSchema = new Schema({
     avatar: String,
     email: String,
     url: String,
-    status: { type: Boolean, default: false, required: true },
+    status: { type: Boolean, default: true },
     isAdmin: { type: Boolean, default: false },
     last_login_time: { type: Date, default: Date.now },
     valid: { type: Boolean, default: true, required: true, select: false }

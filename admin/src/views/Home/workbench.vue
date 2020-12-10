@@ -1,5 +1,14 @@
 <template>
-    <div style="height: 100%">这里毛都没有</div>
+    <div class="home">
+        <div class="tips">
+            <title>Welcome</title>
+            <article>
+                这里是Fantasy!<br />
+                这里暂时什么功能都没有, 以后也可能什么都没有!!<br />
+                所以说凑合一下, 就酱, byeBye!!!
+            </article>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -11,16 +20,30 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.canvas {
-    border: 1px solid black;
-    position: absolute;
-    padding: 0;
-    margin: auto;
-    display: block;
-    top: 0;
-    right: 0;
-    left: 0;
-    transform: scale(1.2);
-    bottom: 0;
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .tips {
+        margin-top: 30px;
+        height: 300px;
+        width: 80%;
+        background: linear-gradient(to right, #8975fb 0%, #746be7 35%),
+            linear-gradient(to bottom, #8975fb 0%, #6f4ceb 50%), #6f4ceb;
+        border-radius: 20px;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        title {
+            display: block;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        article {
+            font-size: 16px;
+            margin-top: 8px;
+        }
+    }
 }
 </style>

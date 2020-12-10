@@ -5,26 +5,36 @@
         collapsible
         ref="siderRef"
         breakpoint="md"
+        theme="light"
+        width="258"
     >
         <BetterScroll :specifiedIndexAsContent="2" class="scroll" ref="scroll">
+            <!-- FIXME 改变侧边栏的大小 更改下一个组件的selectKeys会触发bug 应该可以通过子组件emit来解决 解除注释同时要将上方的specifiedIndexAsContent改为2 -->
             <div
                 class="drag-bar"
-                v-show="!collapsed"
+                v-show="!collapse"
                 ref="dragBarRef"
                 @mousedown="handleMouseDown"
             ></div>
-            <Logo :collapsed="collapsed"></Logo>
-            <SideBar></SideBar>
+            <Logo></Logo>
+            <SideBar
+                v-model:selectKeys="selectKeys"
+                v-model:openKeys="openKeys"
+                @resetMenuWidth="setMenuWidth"
+            ></SideBar>
         </BetterScroll>
     </a-layout-sider>
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, ref, unref, nextTick } from 'vue';
+import { defineComponent, ref, unref, nextTick, watch, computed } from 'vue';
 import { Layout } from 'ant-design-vue';
 import Logo from './Logo.vue';
 import SideBar from './SideBar.vue';
 import BetterScroll from '/@/components/Better-Scroll/index.vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { key } from '/@/store/index';
 
 export default defineComponent({
     name: 'leftSide',
@@ -34,14 +44,7 @@ export default defineComponent({
         BetterScroll,
         ALayoutSider: Layout.Sider
     },
-    props: {
-        collapsed: {
-            type: Boolean,
-            default: false
-        }
-    },
-    emits: ['update:collapsed'],
-    setup(props) {
+    setup() {
         // 拉动条的ref 为div html
         const dragBarRef = ref<HTMLDivElement | null>(null);
         // 左侧菜单的ref 为一个组件
@@ -49,34 +52,53 @@ export default defineComponent({
         // 滚动条
         const scroll = ref<any>(null);
 
-        let collapse = ref(false);
+        const store = useStore(key);
+        const route = useRoute();
+        const routes = route.path.split('/');
+        const selectKeys = ref(['']);
+        const openKeys = ref(['']);
+        const preOpenKeys = ref(['']);
+        // 初始化菜单栏 因为固定为二级菜单所以如果长度为3代表为无下拉菜单的模式
+        if (routes.length === 3) {
+            openKeys.value = [];
+            preOpenKeys.value = [];
+            selectKeys.value = [routes[2]];
+        } else {
+            preOpenKeys.value = [routes[2]];
+            openKeys.value = [routes[2]];
+            selectKeys.value = [routes[3]];
+        }
 
-        // 监听父组件传来的collapsed
-        watchEffect(() => {
-            collapse.value = props.collapsed;
-            if (!unref(siderRef)) {
-                return;
-            }
-            const siderEl = unref(siderRef).$el;
-            const dragBarEl = unref(dragBarRef);
-            if (!dragBarEl || !dragBarEl.style.left || collapse.value) {
-                return;
-            }
-            setMenuWidth(siderEl, dragBarEl);
+        const collapse = computed(() => store.state.apply.collapse);
+
+        // preOpenKey用来在collapse为true的时候
+        watch(openKeys, (_, oldValue) => {
+            preOpenKeys.value = oldValue;
         });
+        watch(
+            () => store.state.apply.collapse,
+            () => {
+                openKeys.value = store.state.apply.collapse ? [] : preOpenKeys.value;
+                setMenuWidth();
+            }
+        );
 
         // 设置菜单的宽度
-        const setMenuWidth = function (siderEl: HTMLDivElement, dragBarEl: HTMLDivElement) {
+        function setMenuWidth() {
+            const siderEl = unref(siderRef).$el;
+            const dragBarEl = unref(dragBarRef);
+            if (!dragBarEl || !dragBarEl.style.left || store.state.apply.collapse) {
+                return;
+            }
             const width = parseInt(dragBarEl.style.left) + 'px';
             nextTick(() => {
                 siderEl.style.cssText = `min-width: ${width}; min-height: ${width}; width: ${width};flex-basis: ${width};`;
             });
-        };
+        }
 
         // 监听鼠标点击拖动栏
-        // FIXME 缩小再放大再点击 会重新渲染menu的宽高...
+        // 缩小再放大再点击 会重新渲染menu的宽高...
         function handleMouseDown(e: MouseEvent) {
-            const siderEl = unref(siderRef).$el;
             const dragBarEl = unref(dragBarRef);
             const startPosition = e.clientX;
             if (!dragBarEl) {
@@ -85,7 +107,7 @@ export default defineComponent({
             const startX = window.getComputedStyle(dragBarEl, null).left;
             // TODO 防抖
             handleMouseMove(dragBarEl, startPosition, startX);
-            handleMouseUp(siderEl, dragBarEl);
+            handleMouseUp();
         }
 
         // 配合监听拖动栏 监听鼠标移动
@@ -102,20 +124,23 @@ export default defineComponent({
         }
 
         // 配合监听拖动栏 监听鼠标抬起
-        function handleMouseUp(siderEl: any, dragBarEl: any) {
+        function handleMouseUp() {
             document.onmouseup = function () {
                 document.onmousemove = null;
                 document.onmouseup = null;
-                setMenuWidth(siderEl, dragBarEl);
+                setMenuWidth();
             };
         }
 
         return {
             dragBarRef,
             siderRef,
-            collapse,
             handleMouseDown,
-            scroll
+            scroll,
+            setMenuWidth,
+            openKeys,
+            selectKeys,
+            collapse
         };
     }
 });

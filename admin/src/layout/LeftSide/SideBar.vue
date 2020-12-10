@@ -1,10 +1,9 @@
 <template>
     <!-- 此菜单仅支持一级子菜单 若要支持多级 递归调用sub-menu -->
     <a-menu
-        theme="dark"
         mode="inline"
-        v-model:openKeys="openKeys"
-        v-model:selectedKeys="selectKeys"
+        v-model:openKeys="openKey"
+        v-model:selectedKeys="selectKey"
         :forceSubMenuRender="true"
         @click="redirect"
     >
@@ -45,15 +44,23 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, PropType, ref, watch } from 'vue';
 import { HomeOutlined, EditOutlined } from '@ant-design/icons-vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { Menu } from 'ant-design-vue';
 import { menuPrefix } from '/@/router/index';
+import { key } from '/@/store';
 export default defineComponent({
     name: 'SideBar',
-    props: {},
+    props: {
+        openKeys: {
+            type: Array as PropType<string[]>
+        },
+        selectKeys: {
+            type: Array as PropType<string[]>
+        }
+    },
     components: {
         HomeOutlined,
         EditOutlined,
@@ -61,25 +68,39 @@ export default defineComponent({
         ASubMenu: Menu.SubMenu,
         AMenuItem: Menu.Item
     },
-    setup() {
+    setup(props, { emit }) {
         const router = useRouter();
-        const route = useRoute();
-        const store = useStore();
+        const store = useStore(key);
 
-        const routes = route.path.split('/');
-        const selectKeys = ref(['']);
-        const openKeys = ref(['']);
-        // 初始化菜单栏 因为固定为二级菜单所以如果长度为3代表为无下拉菜单的模式
-        if (routes.length === 3) {
-            openKeys.value = [];
-            selectKeys.value = [routes[2]];
-        } else {
-            openKeys.value = [routes[2]];
-            selectKeys.value = [routes[3]];
-        }
+        const storeComputed = computed(() => store.state.apply.routes);
 
-        const storeComputed = computed(() => {
-            return store.state.apply.routes;
+        // 获取子组件传来的菜单列表
+        const openKey = ref(props.openKeys);
+        const selectKey = ref(props.selectKeys);
+
+        // 为了实现双向绑定 父组件改变的时候传递给子组件
+        // props是read only的 不知道有没有更好的监听的实现方式 我觉得现在这样写很傻逼
+        watch(
+            () => props.openKeys,
+            (value) => {
+                openKey.value = value;
+            }
+        );
+        watch(
+            () => props.selectKeys,
+            (value) => {
+                selectKey.value = value;
+            }
+        );
+        // 为了实现双向绑定 子组件改变的时候emit给父组件
+        watch(openKey, (value) => {
+            emit('update:openKeys', value);
+            emit('resetMenuWidth');
+        });
+
+        watch(selectKey, (value) => {
+            emit('update:selectKeys', value);
+            emit('resetMenuWidth');
         });
 
         // 重定向
@@ -89,13 +110,19 @@ export default defineComponent({
         };
 
         return {
-            openKeys,
-            selectKeys,
             redirect,
-            storeComputed
+            storeComputed,
+            openKey,
+            selectKey
         };
     }
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.ant-menu-inline,
+.ant-menu-vertical,
+.ant-menu-vertical-left {
+    border: none;
+}
+</style>

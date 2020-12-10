@@ -10,7 +10,7 @@ let lastUserId = '';
 let redirect = false;
 
 // 权限改变router
-router.beforeEach(async (to, _from, next) => {
+router.beforeEach(async (to, _from) => {
     // 刷新或第一次开网页导致 userId为空 就向服务器获取一次 如果未登录服务器返回0 已登录服务器返回相应的userId
     if (getAuthorize() === null) {
         await setAuthorize();
@@ -29,24 +29,24 @@ router.beforeEach(async (to, _from, next) => {
         // 已经登录还要访问未登录列表的话就强行跳转
         if (unAuthorizeList.indexOf(to.path) !== -1) {
             // router.push(`/${menuPrefix}`);
-            next(`/${menuPrefix}`);
+            return `/${menuPrefix}`;
         } else {
             // 判断是否是重定向进来的 否就重定向(解决添加路由过后，却依旧无法访问到页面的问题)
             // FIXME 重定向的时候会报一个warning[No match found for location with path] 而且没办法catch到 虽然似乎不影响
             if (!redirect) {
-                next({ ...to, replace: true });
                 redirect = true;
+                return to.fullPath;
             } else {
-                next();
+                return;
             }
         }
     } else {
         // 未登录还要访问其他内容 一律推到login界面
         if (unAuthorizeList.indexOf(to.path) === -1) {
             // router.push(`/login`);
-            next('/login');
+            return '/login';
         } else {
-            next();
+            return;
         }
     }
 });

@@ -16,6 +16,7 @@
     "cSpell.words": [
         "Antd",
         "bilibili",
+        "codemirror",
         "echarts",
         "esnext",
         "nicename",
@@ -26,6 +27,7 @@
         "rgba",
         "scrollbar",
         "sider",
+        "toastui",
         "unref"
     ],
     "editor.codeActionsOnSave": {
