@@ -67,7 +67,8 @@ router.post('/article', isAdmin, async (ctx) => {
  * @api {put} /article 更新文章
  * @apiName UpdateArticle
  * @apiGroup Article
- * @apiDescription 和创建文章差不多、不改的东西可以不传
+ * @apiDescription 和创建文章差不多、不改的东西可以不传 区别是一定要带上id
+ * @apiParam {String} article[id] 文章id
  */
 router.put('/article', isAdmin, async (ctx) => {
     // 防止id输入错误

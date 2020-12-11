@@ -37,6 +37,12 @@
                     </a-select-option>
                 </a-select>
             </div>
+            <div>
+                <a-button type="primary">新增文章</a-button>
+            </div>
+            <div>
+                <a-button type="danger">删除文章</a-button>
+            </div>
         </div>
         <a-table
             :columns="columns"
@@ -45,7 +51,12 @@
             rowKey="_id"
             @change="pageChange"
             :loading="tableLoading"
-            bordered
+            :bordered="false"
+            size="small"
+            :rowSelection="{
+                columnWidth: 0,
+                onSelect: pageSelect
+            }"
         >
             <template v-slot:tags="{ text: tags }">
                 <span>
@@ -70,7 +81,7 @@
                 <span v-else style="color: #3cff0b">否</span>
             </template>
             <template #operation="{ record }">
-                <a-button @click="show(record)" type="link">编辑</a-button>
+                <a-button @click="updateArticle(record)" type="link">编辑</a-button>
             </template>
         </a-table>
         <MyDialog></MyDialog>
@@ -79,10 +90,11 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, watchEffect } from 'vue';
-import { Table, Tag, Divider, Select, Button, notification } from 'ant-design-vue';
+import { Table, Tag, Divider, Select, Button } from 'ant-design-vue';
 import { getArticle } from '/@/api/article';
 import { ArticleState, ArticleType } from '/@/types/instance';
 import MyDialog from '/@/components/MyDialog/index.vue';
+import { useRouter } from 'vue-router';
 export default defineComponent({
     name: 'articleList',
     components: {
@@ -95,6 +107,8 @@ export default defineComponent({
         MyDialog
     },
     setup() {
+        const router = useRouter();
+
         // select的列表内容
         const typeList = [
             {
@@ -144,50 +158,43 @@ export default defineComponent({
             {
                 title: '文章名',
                 dataIndex: 'title',
-                width: 200,
-                align: 'center'
+                width: 200
             },
             {
                 title: '创建时间',
                 dataIndex: 'createTime',
                 slots: { customRender: 'createTime' },
-                width: 200,
-                align: 'center'
+                width: 200
             },
             {
                 title: '类型',
                 dataIndex: 'type',
                 slots: { customRender: 'type' },
-                width: 100,
-                align: 'center'
+                width: 100
             },
             {
                 title: '状态',
                 dataIndex: 'state',
                 slots: { customRender: 'state' },
-                width: 100,
-                align: 'center'
+                width: 100
             },
             {
                 title: '隐藏',
                 dataIndex: 'invisible',
                 slots: { customRender: 'invisible' },
-                width: 100,
-                align: 'center'
+                width: 100
             },
             {
                 title: '标签',
                 dataIndex: 'tags',
                 slots: { customRender: 'tags' },
-                width: 150,
-                align: 'center'
+                width: 150
             },
             {
                 title: '操作',
                 dataIndex: 'operation',
                 slots: { customRender: 'operation' },
-                width: 100,
-                align: 'center'
+                width: 100
             }
         ];
         const tableLoading = ref<boolean>(false);
@@ -263,12 +270,14 @@ export default defineComponent({
 
         watchEffect(handleGetArticle);
 
-        // TODO 打开dialog dialog也没写完
-        function show(mes: string) {
-            console.log(mes);
-            notification.info({
-                message: '施工中，只给创建不给修改'
-            });
+        // 跳转到更新文章页面
+        function updateArticle(obj: any) {
+            router.push({ name: 'articleUpdate', params: { articleId: obj._id } });
+        }
+
+        function pageSelect(key: any, row: any) {
+            console.log(key);
+            console.log(row);
         }
 
         return {
@@ -283,7 +292,8 @@ export default defineComponent({
             pagination,
             pageChange,
             changeSelectValue,
-            show
+            updateArticle,
+            pageSelect
         };
     }
 });

@@ -13,6 +13,16 @@ body * {
     padding: 0;
 }
 
-.ant-table-thead > tr > th {
-    background-color: white;
+.ant-table {
+    $radius: 30px;
+    border-radius: $radius;
+    .ant-table-thead > tr:first-child > th:first-child {
+        border-radius: $radius;
+    }
+    .ant-table-thead > tr:first-child > th:last-child {
+        border-radius: $radius;
+    }
+    .ant-table-thead > tr > th {
+        background-color: white;
+    }
 }

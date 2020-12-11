@@ -110,7 +110,11 @@ export default defineComponent({
     },
     setup(props) {
         // 文章标识放在params里面
-        const route = useRoute();
+        let articleId: string;
+        if (props.edit) {
+            const route = useRoute();
+            articleId = <string>route.params.articleId;
+        }
 
         // 用来初始化editor
         const editorRef = ref<HTMLElement | null>(null);
@@ -263,12 +267,12 @@ export default defineComponent({
                 icon: createVNode(ExclamationCircleOutlined),
                 onOk() {
                     // 将文章基本信息和editor的内容结合
-                    updateArticle(Object.assign(obj, { content: editor && editor.getHtml() })).then(
-                        (res) => {
-                            initOldObj();
-                            message.success(res.data.message);
-                        }
-                    );
+                    updateArticle(
+                        Object.assign(obj, { content: editor && editor.getHtml(), id: articleId })
+                    ).then((res) => {
+                        initOldObj();
+                        message.success(res.data.message);
+                    });
                 },
                 onCancel() {}
             });
@@ -297,8 +301,7 @@ export default defineComponent({
                 tagsObj.list = res.data.data;
                 // 如果是edit状态则异步获取文章信息 如果获取tag失败就单纯弹个错误
                 if (props.edit) {
-                    console.log(route);
-                    getArticleById(<string>route.params.articleId).then((res) => {
+                    getArticleById(articleId).then((res) => {
                         const data = res.data.data;
                         // 初始化上传时的数据
                         obj.title = data.title;
