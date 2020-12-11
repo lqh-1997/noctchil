@@ -22,8 +22,12 @@ const appStore = {
         setRoutes(state: ApplyStore, routes: RouteRecordRaw[]) {
             state.routes = routes;
         },
-        toggleCollapse(state: ApplyStore) {
-            state.collapse = !state.collapse;
+        toggleCollapse(state: ApplyStore, value?: boolean) {
+            if (value === undefined) {
+                state.collapse = !state.collapse;
+                return;
+            }
+            state.collapse = value;
         }
     }
 };

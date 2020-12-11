@@ -21,6 +21,16 @@ export function getArticle(
     });
 }
 
+export function getArticleById(id: string) {
+    return service({
+        url: '/article/admin',
+        method: 'GET',
+        params: {
+            id
+        }
+    });
+}
+
 export function createArticle(article: Article) {
     return service({
         url: '/article',

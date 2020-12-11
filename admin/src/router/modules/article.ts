@@ -34,6 +34,15 @@ export const articleRouter: RouteRecordRaw = {
             meta: {
                 title: '标签管理'
             }
+        },
+        {
+            path: 'update/:articleId',
+            name: 'articleUpdate',
+            component: () => import('/@/views/Article/Update.vue'),
+            meta: {
+                title: '更新文章',
+                hidden: true
+            }
         }
     ]
 };

@@ -1,5 +1,5 @@
 <template>
-    <ArticleTemplate :edit="false"></ArticleTemplate>
+    <ArticleTemplate :edit="true"></ArticleTemplate>
 </template>
 
 <script lang="ts">

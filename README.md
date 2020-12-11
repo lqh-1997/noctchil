@@ -13,7 +13,7 @@
 
 #### 服务端
 
--   [ ] typescript?
+-   [ ] typescript
 
 ### 后端
 

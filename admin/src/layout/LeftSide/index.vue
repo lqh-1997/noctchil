@@ -1,6 +1,6 @@
 <template>
     <a-layout-sider
-        v-model:collapsed="collapse"
+        v-model:collapsed="collapsed"
         :trigger="null"
         collapsible
         ref="siderRef"
@@ -12,7 +12,7 @@
             <!-- FIXME 改变侧边栏的大小 更改下一个组件的selectKeys会触发bug 应该可以通过子组件emit来解决 解除注释同时要将上方的specifiedIndexAsContent改为2 -->
             <div
                 class="drag-bar"
-                v-show="!collapse"
+                v-show="!collapsed"
                 ref="dragBarRef"
                 @mousedown="handleMouseDown"
             ></div>
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, unref, nextTick, watch, computed } from 'vue';
+import { defineComponent, ref, unref, nextTick, watch, watchEffect } from 'vue';
 import { Layout } from 'ant-design-vue';
 import Logo from './Logo.vue';
 import SideBar from './SideBar.vue';
@@ -69,25 +69,27 @@ export default defineComponent({
             selectKeys.value = [routes[3]];
         }
 
-        const collapse = computed(() => store.state.apply.collapse);
+        const collapsed = ref(false);
+        watchEffect(() => {
+            collapsed.value = store.state.apply.collapse;
+        });
 
-        // preOpenKey用来在collapse为true的时候
+        // preOpenKey用来在collapse为true的时, 防止openKey有值导致左边栏的inline模式弹框
         watch(openKeys, (_, oldValue) => {
             preOpenKeys.value = oldValue;
         });
-        watch(
-            () => store.state.apply.collapse,
-            () => {
-                openKeys.value = store.state.apply.collapse ? [] : preOpenKeys.value;
-                setMenuWidth();
-            }
-        );
+        // 监听collapsed变化 设置菜单栏宽度 改变store中菜单栏collapse状态
+        watch(collapsed, (value) => {
+            store.commit('toggleCollapse', value);
+            openKeys.value = value ? [] : preOpenKeys.value;
+            setMenuWidth();
+        });
 
         // 设置菜单的宽度
         function setMenuWidth() {
             const siderEl = unref(siderRef).$el;
             const dragBarEl = unref(dragBarRef);
-            if (!dragBarEl || !dragBarEl.style.left || store.state.apply.collapse) {
+            if (!dragBarEl || !dragBarEl.style.left || collapsed.value) {
                 return;
             }
             const width = parseInt(dragBarEl.style.left) + 'px';
@@ -140,7 +142,7 @@ export default defineComponent({
             setMenuWidth,
             openKeys,
             selectKeys,
-            collapse
+            collapsed
         };
     }
 });
