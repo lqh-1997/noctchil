@@ -149,6 +149,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import '../../assets/scss/global.scss';
 $dragWidth: 5px;
 .drag-bar {
     position: absolute;
@@ -160,7 +161,8 @@ $dragWidth: 5px;
     background-color: rgba(0, 0, 0, 0);
     &:hover {
         cursor: col-resize;
-        background-color: rgba(0, 170, 200, 0.6);
+        background-color: $defaultColor;
+        opacity: 0.4;
     }
 }
 .scroll {

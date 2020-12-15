@@ -69,19 +69,19 @@
                 <span>{{ createTime.replace('T', ' ').replace(/\.[0-9]{3}Z$/, '') }}</span>
             </template>
             <template v-slot:state="{ text: state }">
-                <span v-if="state === 'draft'" style="color: #52c41a">草稿</span>
-                <span v-else style="color: #40a9ff">发布中</span>
+                <span v-if="state === 'draft'">草稿</span>
+                <span v-else :style="`color: ${color}`">发布中</span>
             </template>
             <template v-slot:type="{ text: type }">
-                <span v-if="type === 'article'" style="color: #ca750b">文章</span>
-                <span v-else style="color: #faad14">吐槽</span>
+                <span v-if="type === 'article'">文章</span>
+                <span v-else :style="`color: ${color}`">吐槽</span>
             </template>
             <template v-slot:invisible="{ text: invisible }">
-                <span v-if="invisible" style="color: #f5222d">是</span>
-                <span v-else style="color: #3cff0b">否</span>
+                <span v-if="invisible">是</span>
+                <span v-else :style="`color: ${color}`">否</span>
             </template>
             <template #operation="{ record }">
-                <a-button @click="updateArticle(record)" type="link">编辑</a-button>
+                <a-button @click="updateArticle(record)" size="middle">编辑</a-button>
             </template>
         </a-table>
         <MyDialog></MyDialog>
@@ -91,6 +91,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, watchEffect } from 'vue';
 import { Table, Tag, Divider, Select, Button } from 'ant-design-vue';
+import { globalSetting } from '/@/config/global';
 import { getArticle } from '/@/api/article';
 import { ArticleState, ArticleType } from '/@/types/instance';
 import MyDialog from '/@/components/MyDialog/index.vue';
@@ -293,7 +294,8 @@ export default defineComponent({
             pageChange,
             changeSelectValue,
             updateArticle,
-            pageSelect
+            pageSelect,
+            color: globalSetting.defaultColor
         };
     }
 });

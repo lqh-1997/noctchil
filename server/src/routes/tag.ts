@@ -51,8 +51,8 @@ router.post('/tag', isAdmin, async (ctx) => {
             color,
             name
         });
-        await tag.save();
-        ctx.body = new SuccessModule('创建成功');
+        const newTag = await tag.save();
+        ctx.body = new SuccessModule('创建成功', newTag._id);
     } catch (err) {
         ctx.body = new ErrorModule(err);
     }

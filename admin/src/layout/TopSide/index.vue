@@ -81,6 +81,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import '../../assets/scss/global.scss';
 .ant-layout-header {
     display: flex;
     background-color: #fff;
@@ -95,7 +96,7 @@ export default defineComponent({
             cursor: pointer;
             transition: all 0.3s ease;
             &:hover {
-                color: #1890ff;
+                color: $defaultColor;
             }
         }
     }
