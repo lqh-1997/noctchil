@@ -38,10 +38,10 @@
                 </a-select>
             </div>
             <div>
-                <a-button type="primary">新增文章</a-button>
+                <a-button type="primary" @click="createArticle">新增文章</a-button>
             </div>
             <div>
-                <a-button type="danger">删除文章</a-button>
+                <a-button type="danger" @click="removeArticle">删除文章</a-button>
             </div>
         </div>
         <a-table
@@ -81,7 +81,7 @@
                 <span v-else :style="`color: ${color}`">否</span>
             </template>
             <template #operation="{ record }">
-                <a-button @click="updateArticle(record)" size="middle">编辑</a-button>
+                <a-button @click="updateArticle(record)">编辑</a-button>
             </template>
         </a-table>
         <MyDialog></MyDialog>
@@ -89,13 +89,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watchEffect } from 'vue';
-import { Table, Tag, Divider, Select, Button } from 'ant-design-vue';
+import { createVNode, defineComponent, reactive, ref, watchEffect } from 'vue';
+import { Table, Tag, Divider, Select, Button, message, Modal } from 'ant-design-vue';
 import { globalSetting } from '/@/config/global';
-import { getArticle } from '/@/api/article';
+import { deleteArticles, getArticle } from '/@/api/article';
 import { ArticleState, ArticleType } from '/@/types/instance';
 import MyDialog from '/@/components/MyDialog/index.vue';
 import { useRouter } from 'vue-router';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 export default defineComponent({
     name: 'articleList',
     components: {
@@ -226,7 +227,8 @@ export default defineComponent({
 
         // 文章的列表内容
         let data = reactive<any>({
-            articleList: []
+            articleList: [],
+            selectedList: []
         });
 
         // 根据选择的信息获取文章的列表内容
@@ -275,10 +277,43 @@ export default defineComponent({
         function updateArticle(obj: any) {
             router.push({ name: 'articleUpdate', params: { articleId: obj._id } });
         }
+        // 跳转到新建文章页面
+        function createArticle() {
+            router.push({ name: 'articleCreate' });
+        }
+        // 删除selectedList中的文章 删除之后重新像服务器发起一次请求 重置当前的文章列表
+        function removeArticle() {
+            const idList = data.selectedList.map((item: any) => {
+                return item._id;
+            });
+            if (!Array.isArray(idList) || idList.length === 0) {
+                message.info('你在删个🔨');
+                return;
+            }
+            Modal.confirm({
+                title: '确定删除文章' + idList.length + '篇?',
+                icon: createVNode(ExclamationCircleOutlined),
+                okText: '确定',
+                okType: 'danger',
+                cancelText: '取消',
+                onCancel() {},
+                onOk() {
+                    deleteArticles(idList).then((res) => {
+                        const { data } = res.data;
+                        if (data === 0) {
+                            message.info('删除了个寂寞');
+                        } else if (data.length) {
+                            message.success('成功删除文章' + data + '篇');
+                        }
+                        handleGetArticle();
+                    });
+                }
+            });
+        }
 
-        function pageSelect(key: any, row: any) {
-            console.log(key);
-            console.log(row);
+        function pageSelect(_key: any, _selected: boolean, selectedRows: any) {
+            data.selectedList = selectedRows;
+            // row ? data.selectedList.push()
         }
 
         return {
@@ -294,6 +329,8 @@ export default defineComponent({
             pageChange,
             changeSelectValue,
             updateArticle,
+            createArticle,
+            removeArticle,
             pageSelect,
             color: globalSetting.defaultColor
         };

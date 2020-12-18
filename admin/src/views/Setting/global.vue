@@ -2,13 +2,14 @@
     <div class="set-container">
         <div class="set-item">
             <h1>头部菜单</h1>
-            <a-button @click="addHeaderMenu">添加菜单</a-button>
+            <!-- <a-button @click="addHeaderMenu">添加菜单</a-button>
             <div v-for="(item, index) of headerMenu" :key="index">
                 <a-input-group compact>
                     <a-input style="width: 30%" v-model:value="item.name" />
                     <a-input style="width: 30%" v-model:value="item.url" />
                     <a-input style="width: 30%" v-model:value="item.target" />
                 </a-input-group>
+                <Svg iconClass="add" class="svg"></Svg>
                 <a-button @click="addHeaderSubMenu(index)">添加子菜单</a-button>
                 <template v-if="item.children">
                     <a-input-group
@@ -26,14 +27,23 @@
             <div style="text-align: center">
                 <a-button style="margin-right: 10px" @click="resetHeaderMenu">复原</a-button>
                 <a-button @click="submitHeaderMenu">修改</a-button>
-            </div>
+            </div> -->
+            <a-table
+                :columns="columns"
+                :data-source="[]"
+                rowKey="_id"
+                :loading="false"
+                :bordered="false"
+                size="small"
+            ></a-table>
         </div>
     </div>
 </template>
 
 <script lang="ts">
+import Svg from '/@/components/Icon/index.vue';
 import { defineComponent, onMounted, reactive, toRefs } from 'vue';
-import { Form, Input, Button, message, Modal } from 'ant-design-vue';
+import { Form, Input, Button, message, Modal, Table } from 'ant-design-vue';
 import { getHeaderMenu, updateHeaderMenu } from '../../api/platform';
 import { HeaderMenu } from '../../types/instance';
 import { deepClone } from '/@/utils/helper';
@@ -43,7 +53,9 @@ export default defineComponent({
         AForm: Form,
         AInput: Input,
         AInputGroup: Input.Group,
-        AButton: Button
+        AButton: Button,
+        ATable: Table,
+        Svg
     },
     setup() {
         // TODO 删除未做 改成策略模式?
@@ -66,6 +78,38 @@ export default defineComponent({
             ]
         });
         let headerMenuBackup: HeaderMenu;
+
+        const columns = [
+            {
+                title: '文章名',
+                dataIndex: 'title',
+                width: 200
+            },
+            {
+                title: '创建时间',
+                dataIndex: 'createTime',
+                slots: { customRender: 'createTime' },
+                width: 200
+            },
+            {
+                title: '类型',
+                dataIndex: 'type',
+                slots: { customRender: 'type' },
+                width: 100
+            },
+            {
+                title: '状态',
+                dataIndex: 'state',
+                slots: { customRender: 'state' },
+                width: 100
+            },
+            {
+                title: '操作',
+                dataIndex: 'operation',
+                slots: { customRender: 'operation' },
+                width: 100
+            }
+        ];
 
         // 添加头部菜单
         function addHeaderMenu() {
@@ -125,7 +169,8 @@ export default defineComponent({
             resetHeaderMenu,
             submitHeaderMenu,
             addHeaderMenu,
-            addHeaderSubMenu
+            addHeaderSubMenu,
+            columns
         };
     }
 });
@@ -143,5 +188,9 @@ export default defineComponent({
         font-weight: bold;
         margin-bottom: 20px;
     }
+}
+.svg {
+    font-size: 16px;
+    color: black;
 }
 </style>

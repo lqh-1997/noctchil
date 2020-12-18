@@ -20,7 +20,7 @@ export function deleteTag(id: string) {
     return service({
         method: 'DELETE',
         url: '/tag',
-        params: {
+        data: {
             id
         }
     });

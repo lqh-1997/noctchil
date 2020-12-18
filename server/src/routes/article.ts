@@ -261,4 +261,23 @@ router.put('/article/like', async (ctx) => {
     }
 });
 
+/**
+ * @api {delete} /articles 批量删除文章
+ * @apiName DeleteArticles
+ * @apiGroup Article
+ * @apiParam {Array} idList 文章的id列表
+ */
+router.delete('/articles', isAdmin, async (ctx) => {
+    try {
+        const { idList } = ctx.request.body;
+        const deleteState = await Article.deleteMany({ _id: { $in: idList } });
+        if (deleteState.ok !== 1) {
+            throw '未知错误';
+        }
+        ctx.body = new SuccessModule('删除成功', deleteState.deletedCount);
+    } catch (err) {
+        ctx.body = new ErrorModule(err);
+    }
+});
+
 export default router;

@@ -88,6 +88,7 @@ export default defineComponent({
     padding: 0;
     flex-wrap: nowrap;
     justify-content: space-between;
+    box-shadow: rgba(48, 48, 48, 0.24) 0 0 2px 2px;
     .left {
         .trigger {
             font-size: 20px;

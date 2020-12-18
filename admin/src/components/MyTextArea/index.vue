@@ -78,6 +78,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import '../../assets/scss/global.scss';
 .text-area-effect {
     width: 100%;
     position: relative;
@@ -103,7 +104,7 @@ export default defineComponent({
         left: 0;
         width: 0;
         height: 2px;
-        background-color: #3399ff;
+        background-color: $defaultColor;
         transition: 0.3s;
     }
     .effect ~ .focus-border:after {
@@ -120,7 +121,7 @@ export default defineComponent({
         left: 0;
         width: 2px;
         height: 0;
-        background-color: #3399ff;
+        background-color: $defaultColor;
         transition: 0.4s;
     }
     .effect ~ .focus-border i:after {
@@ -159,7 +160,7 @@ export default defineComponent({
         top: -18px;
         left: 0;
         font-size: 12px;
-        color: #3399ff;
+        color: $defaultColor;
         transition: 0.3s;
     }
 }

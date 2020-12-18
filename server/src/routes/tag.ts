@@ -65,7 +65,7 @@ router.post('/tag', isAdmin, async (ctx) => {
  * @apiParam {String} [id] 标签id
  */
 router.delete('/tag', isAdmin, async (ctx) => {
-    const { id } = ctx.request.query;
+    const { id } = ctx.request.body;
     try {
         const res = await Tag.findById(id);
         if (!res) {

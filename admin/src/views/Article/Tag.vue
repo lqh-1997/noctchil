@@ -101,7 +101,6 @@ export default defineComponent({
                     _id: res.data.data
                 });
                 tagName.value = '';
-                console.log(data.list);
             });
         }
 

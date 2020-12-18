@@ -46,3 +46,13 @@ export function updateArticle(article: Article) {
         data: article
     });
 }
+
+export function deleteArticles(idList: Array<string>) {
+    return service({
+        url: '/articles',
+        method: 'DELETE',
+        data: {
+            idList
+        }
+    });
+}

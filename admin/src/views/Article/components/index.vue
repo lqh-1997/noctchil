@@ -291,7 +291,7 @@ export default defineComponent({
             // 新建编辑器
             editor = new Editor({
                 el: unref(editorRef)!,
-                height: '500px',
+                height: '600px',
                 initialEditType: 'markdown',
                 previewStyle: 'vertical',
                 plugins: [bilibiliPlugin]
