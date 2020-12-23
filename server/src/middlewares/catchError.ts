@@ -6,6 +6,7 @@ export default function catchError() {
         try {
             await next();
         } catch (err) {
+            ctx.status = err.statusCode || err.status || 500;
             ctx.body = new ErrorModule(err);
         }
     };

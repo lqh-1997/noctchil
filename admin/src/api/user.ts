@@ -30,3 +30,11 @@ export function getUserInfo() {
         url: '/user'
     });
 }
+
+export function updateUserInfo(data: any) {
+    return service({
+        method: 'PUT',
+        url: '/user',
+        data
+    });
+}

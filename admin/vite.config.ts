@@ -1,5 +1,6 @@
 import type { UserConfig } from 'vite';
 import { resolve } from 'path';
+import { getServerIp } from './src/utils/helper';
 
 const pathResolve = function (dir: string) {
     return resolve(__dirname, dir);
@@ -17,7 +18,7 @@ const viteConfig: UserConfig = {
     // 本地代理
     proxy: {
         '/api': {
-            target: 'http://localhost:8000'
+            target: getServerIp()
         }
     },
     // 配置Dep优化行为

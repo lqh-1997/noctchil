@@ -5,7 +5,7 @@ const userSchema = new Schema({
     password: { type: String, select: false },
     nicename: String,
     salt: { type: String, select: false, required: true },
-    avatar: String,
+    avatar: { type: String, default: '/avatar/default.webp' },
     email: String,
     url: String,
     status: { type: Boolean, default: true },

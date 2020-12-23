@@ -966,19 +966,14 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
-cropper@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.npm.taobao.org/cropper/download/cropper-4.1.0.tgz#3c2faaa78f730a3c71814cee61e17c7a674b943f"
-  integrity sha1-PC+qp49zCjxxgUzuYeF8emdLlD8=
+cross-env@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.npm.taobao.org/cross-env/download/cross-env-7.0.3.tgz#865264b29677dc015ba8418918965dd232fc54cf"
+  integrity sha1-hlJkspZ33AFbqEGJGJZd0jL8VM8=
   dependencies:
-    cropperjs "^1.5.6"
+    cross-spawn "^7.0.1"
 
-cropperjs@^1.5.6:
-  version "1.5.9"
-  resolved "https://registry.npm.taobao.org/cropperjs/download/cropperjs-1.5.9.tgz#4ff9d31e02ad04d2fc5df0044207c2ad53d99da8"
-  integrity sha1-T/nTHgKtBNL8XfAEQgfCrVPZnag=
-
-cross-spawn@^7.0.0, cross-spawn@^7.0.2:
+cross-spawn@^7.0.0, cross-spawn@^7.0.1, cross-spawn@^7.0.2:
   version "7.0.3"
   resolved "https://registry.npm.taobao.org/cross-spawn/download/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
   integrity sha1-9zqFudXUHQRVUcF34ogtSshXKKY=

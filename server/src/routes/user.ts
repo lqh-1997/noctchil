@@ -121,14 +121,15 @@ router.post('/logout', isLogin, async (ctx: Context) => {
  */
 router.put('/user', isLogin, async (ctx: Context) => {
     const id = ctx.session && ctx.session.userId;
-    const { nicename, email, url } = ctx.request.body;
+    const { nicename, email, url, avatar } = ctx.request.body;
     try {
         const res = await User.findOneAndUpdate(
             { _id: id },
             {
                 nicename,
                 email,
-                url
+                url,
+                avatar
             },
             {
                 omitUndefined: true

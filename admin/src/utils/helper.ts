@@ -1,3 +1,4 @@
+import { globalSetting } from '../config/global';
 // function debounce(fn: Function, wait: number) {
 //     let timer: NodeJS.Timeout;
 //     return function (this: any, ...rest: any[]) {
@@ -41,4 +42,14 @@ export function deepClone<T extends {}>(obj: T): T {
         }
     }
     return newObj;
+}
+
+export function isDevMode() {
+    return process.env.NODE_ENV === 'development';
+}
+
+export function getServerIp() {
+    return (function () {
+        return isDevMode() ? globalSetting.devServerIp : globalSetting.prodServerIp;
+    })();
 }

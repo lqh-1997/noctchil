@@ -7,26 +7,26 @@ import fs = require('fs');
  * @returns {Array[string]} 不包含path的文件夹下所有文件数组
  */
 export function getAllFile(path: string, pre = '/'): string[] {
-	let files = fs.readdirSync(path);
-	let res: string[] = [];
-	files = files.filter((item) => {
-		// 获取文件路径
-		const doc = path + '/' + item;
-		// 利用statSync判断是不是文件夹 递归循环的入口 如果是文件夹则从数组中去掉该行
-		if (fs.statSync(doc).isDirectory()) {
-			// 如果有多个文件夹则将返回值全部concat到res里面
-			res = [...getAllFile(doc, item + '/'), ...res];
-			return false;
-		}
-		return true;
-	});
-	// 合并当前的以及递归得到的
-	res = [...files, ...res];
-	// 给路径加上当前的路径前缀
-	res = res.map((item) => {
-		return pre + item;
-	});
-	return res;
+    let files = fs.readdirSync(path);
+    let res: string[] = [];
+    files = files.filter((item) => {
+        // 获取文件路径
+        const doc = path + '/' + item;
+        // 利用statSync判断是不是文件夹 递归循环的入口 如果是文件夹则从数组中去掉该行
+        if (fs.statSync(doc).isDirectory()) {
+            // 如果有多个文件夹则将返回值全部concat到res里面
+            res = [...getAllFile(doc, item + '/'), ...res];
+            return false;
+        }
+        return true;
+    });
+    // 合并当前的以及递归得到的
+    res = [...files, ...res];
+    // 给路径加上当前的路径前缀
+    res = res.map((item) => {
+        return pre + item;
+    });
+    return res;
 }
 
 /**
@@ -35,8 +35,8 @@ export function getAllFile(path: string, pre = '/'): string[] {
  * @return {Array[string]} 不包含path的文件夹下所有图片数组
  */
 export function getAllImage(path: string): string[] {
-	const files = getAllFile(path);
-	return files.filter((item) => /(.png|.jpg|.gif|.jpeg)$/.test(item));
+    const files = getAllFile(path);
+    return files.filter((item) => /(.png|.jpg|.gif|.jpeg|.webp)$/.test(item));
 }
 
 /**
@@ -44,18 +44,17 @@ export function getAllImage(path: string): string[] {
  * @param path
  */
 export function createFolder(path: string): void {
-	console.log(path);
-	let exist = false;
-	// 可以传递三个参数 http://nodejs.cn/api/fs.html#fs_fs_access_path_mode_callback 第二个可选
-	// 第三个为回调 若err不存在则代表文件存在
-	fs.access(path, (err) => {
-		exist = !err;
-	});
-	if (!exist) {
-		fs.mkdir(path, { recursive: true }, (err) => {
-			if (err) throw err;
-		});
-	}
+    let exist = false;
+    // 可以传递三个参数 http://nodejs.cn/api/fs.html#fs_fs_access_path_mode_callback 第二个可选
+    // 第三个为回调 若err不存在则代表文件存在
+    fs.access(path, (err) => {
+        exist = !err;
+    });
+    if (!exist) {
+        fs.mkdir(path, { recursive: true }, (err) => {
+            if (err) throw err;
+        });
+    }
 }
 
 // export function createFile(path: string) {

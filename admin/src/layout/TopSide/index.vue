@@ -10,10 +10,7 @@
                 <!-- 两层div解决dropdown导致css无法正常生效的bug -->
                 <div>
                     <div class="right-info">
-                        <img
-                            class="avatar"
-                            src="https://mirror-gold-cdn.xitu.io/17273f8a79d2684278a?imageView2/1/w/180/h/180/q/85/format/webp/interlace/1"
-                        />
+                        <img class="avatar" :src="avatar" />
                         <span class="avatar-username">{{ username }}</span>
                     </div>
                 </div>
@@ -60,6 +57,7 @@ export default defineComponent({
         });
 
         const username = computed(() => store.state.user.nicename);
+        const avatar = computed(() => store.state.user.avatar);
         const collapse = computed(() => store.state.apply.collapse);
 
         const toggleCollapse = function () {
@@ -70,12 +68,13 @@ export default defineComponent({
             console.log(e);
         };
 
+        // FIXME 注销为什么会请求一个undefined啊
         const signOut = async function () {
             await removeAuthorize();
             router.push('/login');
         };
 
-        return { toggleCollapse, clickHead, myRoute, signOut, username, collapse };
+        return { toggleCollapse, clickHead, myRoute, signOut, username, collapse, avatar };
     }
 });
 </script>

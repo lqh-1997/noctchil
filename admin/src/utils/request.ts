@@ -3,7 +3,7 @@ import { message } from 'ant-design-vue';
 
 const service = axios.create({
     baseURL: '/api/',
-    timeout: 5000
+    timeout: 50000
 });
 
 service.interceptors.response.use(
