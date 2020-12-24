@@ -57,6 +57,17 @@ export function createFolder(path: string): void {
     }
 }
 
+/**
+ * 判断文件是否是图片类型
+ * @param name 文件名称
+ */
+export function isImage(name: string): boolean {
+    const typeList = ['webp', 'jpeg', 'png', 'gif', 'jpg'];
+    const dot = name.indexOf('.');
+    const suffix = name.substring(dot + 1).toLowerCase();
+    return typeList.indexOf(suffix) !== -1;
+}
+
 // export function createFile(path: string) {
 //     const index = path.lastIndexOf('\\');
 //     createFolder(path.slice(0, index));

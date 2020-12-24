@@ -4,7 +4,7 @@
             <h1>头像设置</h1>
             <div class="header-upload">
                 <div class="header-container">
-                    <img style="height: 200px; width: 200px" :src="avatar" />
+                    <img style="height: 200px; width: 200px; object-fit: cover" :src="avatar" />
                 </div>
                 <a-upload name="avatar" :customRequest="handleUpdate">
                     <a-button> <upload-outlined /> Click to Upload </a-button>
