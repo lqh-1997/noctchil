@@ -8,6 +8,8 @@ import './permission';
 
 const app = createApp(App).use(router).use(store, key);
 
+app.config.globalProperties.foo = 'bar';
+
 app.mount('#app');
 
 export default app;
