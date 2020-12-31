@@ -3301,10 +3301,17 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
+<<<<<<< HEAD
 systeminformation@^4.32:
   version "4.33.1"
   resolved "https://registry.npm.taobao.org/systeminformation/download/systeminformation-4.33.1.tgz#25e1491303cfdba897c4b836d2a1d0164a3cf734"
   integrity sha1-JeFJEwPP26iXxLg20qHQFko89zQ=
+=======
+systeminformation@^4.23.3:
+  version "4.32.0"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.32.0.tgz#37e0919ef32d25fe1bfaf2d817eb4a0f2950c358"
+  integrity sha512-8/LM0EvwhW34+n3fzmcl4swG7Ngx8h8s/5MooXlIJKyMbSiO9juCqftdQIpwa3NneKrca1uYO55JHZeYJUaSZw==
+>>>>>>> 3bd65081fa6e964ad873a757c6ca0e4c459d0e2d
 
 table@^6.0.4:
   version "6.0.4"
