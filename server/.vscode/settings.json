@@ -25,7 +25,8 @@
         "rgba",
         "scrollbar",
         "sider",
-        "unref"
+        "unref",
+        "vnode"
     ],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
