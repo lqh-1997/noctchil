@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import MyArticle from '../../components/MyArticle';
-import { getAllArticle } from '../../api/article';
+import MyArticle from '@/components/layout/MyArticle';
+import { getAllArticle } from '@/api/article';
 export default {
     layout: 'home',
     components: {

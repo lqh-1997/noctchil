@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import myHeader from '@/components/MyHeader';
-import description from '@/components/Description';
-import myFooter from '@/components/MyFooter';
+import myHeader from '@/components/layout/MyHeader';
+import description from '@/components/layout/Description';
+import myFooter from '@/components/layout/MyFooter';
 export default {
     components: {
         myHeader,

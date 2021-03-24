@@ -131,11 +131,11 @@
 </template>
 
 <script>
-import SideFlow from './SideFlow/index';
-import SvgIcon from './SvgIcon';
-import Favorite from './Favorite';
-import { timeFromDbToTime } from '../util/timeFormat';
-import { likeArticle } from '../api/article';
+import SideFlow from '@/components/SideFlow/index';
+import SvgIcon from '@/components/SvgIcon';
+import Favorite from '@/components/Favorite';
+import { timeFromDbToTime } from '@/util/timeFormat';
+import { likeArticle } from '@/api/article';
 export default {
     layout: 'home',
     components: {

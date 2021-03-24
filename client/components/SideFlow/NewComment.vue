@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import { timeFromDbToTime } from '../../util/timeFormat';
-import { getLatestComment } from '../../api/comment';
+import { timeFromDbToTime } from '@/util/timeFormat';
+import { getLatestComment } from '@/api/comment';
 export default {
     data() {
         return {

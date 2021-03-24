@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import MyViewer from '../../components/MyViewer';
+import MyViewer from '@/components/layout/MyViewer';
 import Comment from '../../components/Comment';
 import Reply from '../../components/Reply';
 import SideFlow from '../../components/SideFlow/index';

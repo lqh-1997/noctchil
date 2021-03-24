@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Bubbles from '@/components/Bubbles.vue';
+import Bubbles from '@/components/effect/Bubbles.vue';
 // import SvgIcon from '@/components/SvgIcon.vue';
 export default {
     components: {

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { login } from '../api/user';
+import { login } from '@/api/user';
 import { mapMutations } from 'vuex';
 export default {
     data() {
