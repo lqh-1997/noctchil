@@ -45,7 +45,7 @@ router.post('/tag', isAdmin, async (ctx) => {
     const { name } = ctx.request.body;
     try {
         if (!color) {
-            color = createRandomColor(true);
+            color = createRandomColor('dark');
         }
         const tag = new Tag({
             color,

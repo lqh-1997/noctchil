@@ -7,6 +7,7 @@ import Article from '../models/article';
 import isAdmin from '../middlewares/isAdmin';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { getPagination } from 'src/util/dbHelper';
+import { isString } from 'src/util/utils';
 
 const { ObjectId } = mongoose.Types;
 const router = new Router<DefaultState, Context>();
@@ -116,7 +117,7 @@ router.get('/article/client', async (ctx) => {
         state: 'publish',
         invisible: false
     };
-    if (!ObjectId.isValid(id)) {
+    if (!id || Array.isArray(id) || !ObjectId.isValid(id)) {
         ctx.body = new ErrorModule('请输入合法id');
         return;
     }
@@ -152,7 +153,7 @@ router.get('/article/client', async (ctx) => {
  */
 router.get('/article/admin', isAdmin, async (ctx) => {
     const { id } = ctx.request.query;
-    if (!ObjectId.isValid(id)) {
+    if (!id || Array.isArray(id) || !ObjectId.isValid(id)) {
         ctx.body = new ErrorModule('请输入合法id');
         return;
     }
@@ -186,8 +187,16 @@ router.get('/articles/client', async (ctx) => {
     };
     try {
         // 用户传入pageSize pageNumber type 和 tag
-        const pageSize = parseInt(ctx.request.query.pageSize);
-        const pageNumber = parseInt(ctx.request.query.pageNumber);
+        let pageSize: any = ctx.request.query.pageSize;
+        let pageNumber: any = ctx.request.query.pageNumber;
+
+        if (!isString(pageSize) || !isString(pageNumber)) {
+            ctx.body = new ErrorModule('参数类型错误');
+            return;
+        }
+
+        pageSize = parseInt(pageSize);
+        pageNumber = parseInt(pageNumber);
         const { type, tags } = ctx.request.query;
         type && (option.type = type);
         tags && (option.tags = { $elemMatch: { $eq: tags } });
@@ -216,8 +225,17 @@ router.get('/articles/client', async (ctx) => {
 router.get('/articles/admin', isAdmin, async (ctx) => {
     const option: any = {};
     try {
-        const pageSize = parseInt(ctx.request.query.pageSize);
-        const pageNumber = parseInt(ctx.request.query.pageNumber);
+        let pageSize: any = ctx.request.query.pageSize;
+        let pageNumber: any = ctx.request.query.pageNumber;
+
+        if (!isString(pageSize) || !isString(pageNumber)) {
+            ctx.body = new ErrorModule('参数类型错误');
+            return;
+        }
+
+        pageSize = parseInt(pageSize);
+        pageNumber = parseInt(pageNumber);
+
         const { type, state, invisible, tags } = ctx.request.query;
         type && (option.type = type);
         state && (option.state = state);
@@ -242,7 +260,13 @@ router.get('/articles/admin', isAdmin, async (ctx) => {
  */
 router.put('/article/like', async (ctx) => {
     const { id } = ctx.request.query;
-    let { doLike = true } = ctx.request.query;
+    let { doLike = 'true' } = ctx.request.query;
+
+    if (doLike !== 'true' && doLike !== 'false') {
+        ctx.body = new ErrorModule('参数类型错误');
+        return;
+    }
+
     doLike = JSON.parse(doLike);
     try {
         const res = await Article.findById(id);

@@ -9,6 +9,7 @@ import isLogin from '../middlewares/isLogin';
 import { errorCapture } from '../util/error';
 import { SuccessModule, ErrorModule } from '../util/resModel';
 import { htmlToBriefContent } from 'src/util/dbHelper';
+import { isNumber, isString } from '../util/utils';
 
 const { ObjectId } = mongoose.Types;
 const router = new Router<DefaultState, Context>();
@@ -86,8 +87,14 @@ router.get('/comments/article/:articleId', async (ctx) => {
  * @apiParam {Boolean} doLike 喜欢还是不喜欢 true当然是喜欢
  */
 router.put('/comment/like', async (ctx) => {
-    let { id, doLike = true } = ctx.request.query;
+    let { id, doLike = 'true' } = ctx.request.query;
+
+    if (doLike !== 'true' && doLike !== 'false') {
+        ctx.body = new ErrorModule('参数类型错误');
+        return;
+    }
     doLike = JSON.parse(doLike);
+
     let res = null;
     try {
         res = await Comment.findById(id);
@@ -121,18 +128,23 @@ router.put('/comment/like', async (ctx) => {
  * @apiParam {Number} [titleLength=10] 若标题长度超过或等于多少, 则将后面部分改为省略号
  */
 router.get('/comments/latest', async (ctx) => {
-    const num = isNaN(parseInt(ctx.request.query.number)) ? 10 : parseInt(ctx.request.query.number);
-    const contentLength = isNaN(parseInt(ctx.request.query.contentLength))
-        ? 28
-        : parseInt(ctx.request.query.contentLength);
-    const titleLength = isNaN(parseInt(ctx.request.query.titleLength))
-        ? 10
-        : parseInt(ctx.request.query.titleLength);
+    let number: any = ctx.request.query.number;
+    let contentLength: any = ctx.request.query.contentLength;
+    let titleLength: any = ctx.request.query.titleLength;
+
+    if (!isString(number) || !isString(contentLength) || !isString(titleLength)) {
+        ctx.body = new ErrorModule('参数类型错误');
+        return;
+    }
+
+    number = isNumber(parseInt(number)) ? parseInt(number) : 10;
+    contentLength = isNumber(parseInt(contentLength)) ? parseInt(contentLength) : 28;
+    titleLength = isNumber(parseInt(titleLength)) ? parseInt(titleLength) : 10;
 
     try {
         let res = await Comment.find({}, {})
             .sort({ createTime: 'desc' })
-            .limit(num)
+            .limit(number)
             .populate('creator', '_id nicename')
             .populate('from', '_id title meta');
         res.forEach((res) => {
