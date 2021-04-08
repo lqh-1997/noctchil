@@ -13,6 +13,7 @@
         "forceConsistentCasingInFileNames": false,
         "suppressImplicitAnyIndexErrors": true,
         "allowSyntheticDefaultImports": true,
+        "isolatedModules": true,
         "lib": ["dom", "esnext"],
         "paths": {
             "/@/*": ["src/*"]

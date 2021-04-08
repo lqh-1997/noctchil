@@ -23,7 +23,6 @@ import { uploadAvatar } from '../../api/file';
 import { updateUserInfo } from '/@/api/user';
 import { useStore } from 'vuex';
 import { key } from '/@/store/index';
-import { getServerIp } from '/@/utils/helper';
 export default defineComponent({
     components: {
         AUpload: Upload,
@@ -77,7 +76,7 @@ export default defineComponent({
                 cancelText: '否',
                 onOk() {
                     updateUserInfo({ avatar: userAvatar.value }).then(() => {
-                        store.commit('setAvatar', getServerIp() + userAvatar.value);
+                        store.commit('setAvatar', process.env.VITE_SERVER_SITE + userAvatar.value);
                         message.success('更新成功');
                     });
                 },

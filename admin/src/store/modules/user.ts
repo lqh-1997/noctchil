@@ -1,7 +1,6 @@
 import { ActionContext } from 'vuex';
 import { State } from '..';
 import { getUserInfo } from '/@/api/user';
-import { getServerIp } from '/@/utils/helper';
 import { globalSetting } from '../../config/global';
 
 export interface UserStore {
@@ -12,13 +11,15 @@ export interface UserStore {
     avatar: string;
 }
 
+const serverIp = import.meta.env.VITE_SERVER_SITE;
+
 const userStore = {
     state: (): UserStore => ({
         userId: null,
         username: null,
         nicename: null,
         isAdmin: false,
-        avatar: getServerIp() + globalSetting.defaultAvatar
+        avatar: serverIp + globalSetting.defaultAvatar
     }),
     getters: {
         getUserId(state: UserStore) {
@@ -39,7 +40,7 @@ const userStore = {
             state.isAdmin = isAdmin;
         },
         setAvatar(state: UserStore, avatar?: string) {
-            state.avatar = avatar ? avatar : getServerIp() + globalSetting.defaultAvatar;
+            state.avatar = avatar ? avatar : serverIp + globalSetting.defaultAvatar;
         }
     },
     actions: {
@@ -52,7 +53,7 @@ const userStore = {
                         commit('setUsername', data.username);
                         commit('setNicename', data.nicename);
                         commit('setIsAdmin', data.isAdmin || false);
-                        commit('setAvatar', getServerIp() + data.avatar);
+                        commit('setAvatar', serverIp + data.avatar);
                         resolve();
                     })
                     .catch((err) => {

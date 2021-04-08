@@ -1,26 +1,22 @@
-import type { ConfigEnv, UserConfig } from 'vite';
-import { loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import autoprefixer from 'autoprefixer';
+import type { UserConfigExport } from 'vite';
+import { loadEnv } from 'vite';
 import { resolve } from 'path';
-import { getServerIp } from './src/utils/helper';
 import { wrapperEnv } from './src/utils/vite';
-
-const pathResolve = function (dir: string) {
-    return resolve(__dirname, dir);
-};
 
 const root = process.cwd();
 
-export default ({ command, mode }: ConfigEnv): UserConfig => {
+export default ({ command, mode }): UserConfigExport => {
     const env = loadEnv(mode, root);
     const viteEnv = wrapperEnv(env);
-    const { VITE_PORT } = viteEnv;
+    const { VITE_PORT, VITE_SERVER_SITE } = viteEnv;
     return {
         plugins: [vue()],
         resolve: {
             // 别名
             alias: {
-                '/@': pathResolve('src')
+                '/@': resolve(__dirname, 'src')
             }
         },
         // 配置Dep优化行为
@@ -38,19 +34,25 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
                     },
                     javascriptEnabled: true
                 }
+            },
+            postcss: {
+                plugins: [autoprefixer()]
             }
         },
         server: {
-            // 端口号
             port: VITE_PORT,
-            // 浏览器
+            strictPort: true,
+            // https: true,
             open: false,
-            // 本地代理
             proxy: {
-                '/api': {
-                    target: getServerIp()
+                '^/api': {
+                    target: VITE_SERVER_SITE,
+                    changeOrigin: true
                 }
             }
+        },
+        build: {
+            sourcemap: true
         }
     };
 };

@@ -1,5 +1,5 @@
 import service from '../utils/request';
-import type { ArticleType, ArticleState, Article } from '/@/types/instance.d.ts';
+import type { Article, ArticleState, ArticleType } from '../types/instance';
 
 export function getArticle(
     pageNumber: number,

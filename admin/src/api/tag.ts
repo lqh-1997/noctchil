@@ -1,5 +1,5 @@
-import { Tag } from '../types/instance';
 import service from '../utils/request';
+import type { Tag } from '../types/instance';
 
 export function getTag() {
     return service({

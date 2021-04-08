@@ -1,5 +1,6 @@
 export interface ViteEnv {
     VITE_PORT?: number;
+    VITE_SERVER_SITE?: string;
 }
 
 export function wrapperEnv(envConf: any): ViteEnv {

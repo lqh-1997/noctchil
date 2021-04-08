@@ -1,5 +1,5 @@
 import service from '../utils/request';
-import { HeaderMenu } from '/@/types/instance';
+import type { HeaderMenu } from '/@/types/instance';
 
 export function getHeaderMenu() {
     return service({
