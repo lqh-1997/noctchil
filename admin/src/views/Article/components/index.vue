@@ -2,7 +2,7 @@
     <div class="container">
         <div class="left-container">
             <div v-if="obj.type === 'article'">
-                <MyFocus v-model:value="obj.title" text="文章名称"></MyFocus>
+                <ExtendOutLineInput v-model:value="obj.title" text="文章名称"></ExtendOutLineInput>
             </div>
             <div v-if="obj.type === 'article'">
                 <MyTextArea
@@ -72,7 +72,7 @@
 <script lang="ts">
 import Editor from '@toast-ui/editor';
 import Svg from '/@/components/Icon/index.vue';
-import MyFocus from '/@/components/MyInput/index.vue';
+import ExtendOutLineInput from '/@/components/MyInput/ExtendOutLine.vue';
 import MyTextArea from '/@/components/MyTextArea/index.vue';
 import { createVNode, defineComponent, onMounted, PropType, reactive, ref, unref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -100,7 +100,7 @@ export default defineComponent({
     },
     components: {
         Svg,
-        MyFocus,
+        ExtendOutLineInput,
         MyTextArea,
         AButton: Button,
         ACollapse: Collapse,

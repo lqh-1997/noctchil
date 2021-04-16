@@ -17,15 +17,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, watchEffect } from 'vue';
+import { computed, defineComponent, ref, watchEffect } from 'vue';
 export default defineComponent({
     props: {
         value: {
-            type: [String, Number] as PropType<number | string>,
-            default: null
+            type: [String, Number],
+            default: ''
         },
         text: {
-            type: String as PropType<string>,
+            type: String,
             default: '输入框'
         }
     },

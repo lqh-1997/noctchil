@@ -8,6 +8,7 @@ import { wrapperEnv } from './src/utils/vite';
 const root = process.cwd();
 
 export default ({ command, mode }): UserConfigExport => {
+    // 在定义vite options的时候vite还没解析项目目录下的配置文件 无法通过process.env.VITE._PORT获取到配置信息
     const env = loadEnv(mode, root);
     const viteEnv = wrapperEnv(env);
     const { VITE_PORT, VITE_SERVER_SITE } = viteEnv;

@@ -3,6 +3,11 @@ export interface ViteEnv {
     VITE_SERVER_SITE?: string;
 }
 
+/**
+ * 获取环境文件中的常量
+ * @param envConf
+ * @returns
+ */
 export function wrapperEnv(envConf: any): ViteEnv {
     const ret: ViteEnv = {};
 

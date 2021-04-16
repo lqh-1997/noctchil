@@ -1,26 +1,5 @@
 <template>
-    <!-- <div class="login">
-        <a-form :model="formData" :rules="formRules" ref="formRef">
-            <a-form-item name="account" required>
-                <a-input v-model:value="formData.account" />
-            </a-form-item>
-            <a-form-item name="password" required>
-                <a-input-password v-model:value="formData.password" />
-            </a-form-item>
-            <a-form-item>
-                <a-button
-                    type="primary"
-                    size="large"
-                    class="rounded-sm"
-                    block
-                    @click.prevent="login"
-                    :loading="formState.loading"
-                    >登录</a-button
-                >
-            </a-form-item>
-        </a-form>
-    </div> -->
-    <div class="user">
+    <div class="user" v-myLoading="true">
         <div class="container">
             <div class="base">
                 <div class="base-info">
@@ -34,20 +13,46 @@
                     <a-button size="large" ghost @click="toggleAction">登录</a-button>
                 </div>
             </div>
-            <div class="slider" :class="sliderClass"></div>
+            <div class="slider" :class="sliderClass">
+                <div class="login">
+                    <h1>登录</h1>
+                    <form class="form">
+                        <NoOutLineInput
+                            v-model="formData.account"
+                            placeholder="请输入用户名"
+                        ></NoOutLineInput>
+                        <NoOutLineInput
+                            v-model="formData.password"
+                            placeholder="请输入密码"
+                        ></NoOutLineInput>
+                        <AButton @click.prevent="handleLogin" block type="primary" ghost>
+                            登录
+                        </AButton>
+                    </form>
+                </div>
+                <div class="signUp">
+                    <h1>注册</h1>
+                    <form>
+                        <NoOutLineInput></NoOutLineInput>
+                        <NoOutLineInput></NoOutLineInput>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import toggleUI from './toggleUI';
-import { defineComponent, reactive, ref, unref } from 'vue';
+import NoOutLineInput from '/@/components/MyInput/NoOutLine.vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { message, Form, Button, Input } from 'ant-design-vue';
 import { login } from '/@/api/user';
 import { useRouter } from 'vue-router';
 import { setAuthorize } from '/@/utils/authorize';
 export default defineComponent({
     components: {
+        NoOutLineInput,
         AButton: Button,
         AFormItem: Form.Item,
         AForm: Form,
@@ -56,6 +61,7 @@ export default defineComponent({
     },
     setup() {
         const router = useRouter();
+
         // 表单的ref
         const formRef = ref<any>(null);
 
@@ -63,6 +69,7 @@ export default defineComponent({
             account: '',
             password: ''
         });
+        const loading = ref(false);
 
         const formState = reactive({
             loading: false
@@ -73,19 +80,13 @@ export default defineComponent({
             password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
         });
 
-        async function handleLogin() {
-            // 返回 ref 内部值或者文件本身
-            const form = unref(formRef);
-            try {
-                // 获取到表单中填入的对象
-                const data = await form.validate();
-                login({ username: data.account, password: data.password }).then(() => {
-                    setAuthorize().then(() => {
-                        message.success('登陆成功');
-                        router.push('/menu');
-                    });
+        function handleLogin() {
+            login({ username: formData.account, password: formData.password }).then(() => {
+                setAuthorize().then(() => {
+                    message.success('登陆成功');
+                    router.push('/menu');
                 });
-            } catch (err) {}
+            });
         }
 
         return {
@@ -94,7 +95,8 @@ export default defineComponent({
             formData,
             formState,
             formRules,
-            login: handleLogin
+            handleLogin,
+            loading
         };
     }
 });
@@ -102,6 +104,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import '../../assets/scss/global.scss';
+$innerPaddingLeft: 40px;
+$innerPaddingTop: 30px;
 .user {
     display: flex;
     height: 100%;
@@ -116,7 +120,7 @@ export default defineComponent({
         .base {
             width: 100%;
             min-height: 300px;
-            background-color: $defaultColor;
+            background: linear-gradient(to right bottom, #8874f8 0%, #5d5bff 50%, #593cfa 100%);
             display: flex;
             .base-info {
                 width: 50%;
@@ -134,19 +138,57 @@ export default defineComponent({
         }
         .slider {
             position: absolute;
-            height: 500px;
+            min-height: 500px;
             left: 30px;
             width: calc(50% - 30px);
             background: white;
             transform: translate3d(100%, 0, 0);
             transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
             box-shadow: 2px 0 15px rgba(0, 0, 0, 0.25);
+            .signUp,
+            .login {
+                left: $innerPaddingLeft;
+                top: $innerPaddingTop;
+                position: absolute;
+                visibility: hidden;
+                opacity: 0;
+                width: calc(100% - #{$innerPaddingLeft * 2});
+                height: calc(100% - #{$innerPaddingTop * 2});
+                display: flex;
+                flex-direction: column;
+                color: $defaultColor;
+                h1 {
+                    color: inherit;
+                    font-weight: bold;
+                    letter-spacing: 2px;
+                    font-family: 'Montserrat', sans-serif;
+                }
+                .form {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    height: 300px;
+                }
+            }
+            .login {
+                transform: translate3d(80px, 0, 0);
+            }
+            .signUp {
+                transform: translate3d(-80px, 0, 0);
+            }
         }
         .bounceLeft {
             animation: bounceLeft 1s forwards;
+            .signUp {
+                animation: showUp 1s forwards;
+            }
         }
         .bounceRight {
             animation: bounceRight 1s forwards;
+            .login {
+                animation: showUp 1s forwards;
+            }
         }
         @keyframes bounceRight {
             0% {
@@ -167,6 +209,13 @@ export default defineComponent({
                 transform: translate3d(-30px, 0, 0);
             }
             100% {
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        @keyframes showUp {
+            100% {
+                visibility: visible;
+                opacity: 1;
                 transform: translate3d(0, 0, 0);
             }
         }

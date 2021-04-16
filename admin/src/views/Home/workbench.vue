@@ -28,8 +28,7 @@ export default defineComponent({
         margin-top: 30px;
         height: 300px;
         width: 80%;
-        background: linear-gradient(to right, #8975fb 0%, #746be7 35%),
-            linear-gradient(to bottom, #8975fb 0%, #6f4ceb 50%), #6f4ceb;
+        background: linear-gradient(to right, #8975fb 0%, #746be7 35%), #6f4ceb;
         border-radius: 20px;
         color: white;
         display: flex;
