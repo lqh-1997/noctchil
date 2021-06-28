@@ -1,4 +1,4 @@
-import { Model, Document, QueryPopulateOptions } from 'mongoose';
+import { Model, Document } from 'mongoose';
 import { Pagination } from 'src/types/global';
 
 /**
@@ -15,7 +15,7 @@ export async function getPagination<T extends Document>(
     option: Record<string, unknown>,
     populateOptions?:
         | { path: string | any; select?: string | any; model?: any; match?: any; options?: any }
-        | { options: QueryPopulateOptions | QueryPopulateOptions[] }
+        | { options: any }
 ): Promise<Pagination<T>> {
     const result: Pagination<T> = {
         total: 0,
